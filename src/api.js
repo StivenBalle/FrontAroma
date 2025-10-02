@@ -70,3 +70,13 @@ export const logout = () => post("/api/auth/logout");
 
 export const createCheckout = (priceId) =>
   post("/api/create-checkout-session", { priceId });
+
+export const getUsers = (searchTerm = "") => {
+  const params = searchTerm ? `?search=${encodeURIComponent(searchTerm)}` : "";
+  return get(`/api/admin/users${params}`);
+};
+
+export const deleteUser = (userId) => del(`/api/admin/users/${userId}`);
+
+export const updateUserRole = (userId, newRole) =>
+  put(`/api/admin/users/${userId}/role`, { role: newRole });
