@@ -1,27 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
+import withAdminGuard from "../hocs/withAdminGuard.jsx";
 import Cafetera from "../components/Cafetera.jsx";
 import { getUsers } from "../api.js";
 import Swal from "sweetalert2";
 import "../App.css";
 
-const SearchUsersPage = () => {
-  const { user, loading: authLoading } = useAuth();
+const SearchUsersPageInner = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    if (authLoading) return;
-    if (!user || user.role !== "admin") {
-      Swal.fire({ icon: "warning", title: "Acceso denegado" }).then(() =>
-        navigate("/")
-      );
-      return;
-    }
-  }, [user, authLoading, navigate]);
 
   const handleSearch = async (e) => {
     e.preventDefault();
@@ -82,4 +71,4 @@ const SearchUsersPage = () => {
   );
 };
 
-export default SearchUsersPage;
+export default withAdminGuard(SearchUsersPageInner);

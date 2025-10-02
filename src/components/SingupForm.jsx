@@ -141,7 +141,11 @@ const SignupForm = ({ switchToLogin }) => {
           value={formData.name}
         />
       </div>
-      {errors.name && <p className="error">{errors.name}</p>}
+      {errors.name && (
+        <p style={{ color: "red", fontSize: "14px" }} className="error">
+          {errors.name}
+        </p>
+      )}
 
       {/* Email */}
       <div className="flex-column">
@@ -167,6 +171,9 @@ const SignupForm = ({ switchToLogin }) => {
           value={formData.email}
         />
       </div>
+      <p style={{ color: "red", fontSize: "14px" }} className="error">
+        {errors.email}
+      </p>
 
       {/* Teléfono */}
       <div className="flex-column">
@@ -195,7 +202,11 @@ const SignupForm = ({ switchToLogin }) => {
           value={formData.phone_number}
         />
       </div>
-      {errors.phone_number && <p className="error">{errors.phone_number}</p>}
+      {errors.phone_number && (
+        <p style={{ color: "red", fontSize: "14px" }} className="error">
+          {errors.phone_number}
+        </p>
+      )}
 
       {/* Contraseña */}
       <div className="flex-column">
@@ -220,7 +231,11 @@ const SignupForm = ({ switchToLogin }) => {
           value={formData.password}
         />
       </div>
-      {errors.password && <p className="error">{errors.password}</p>}
+      {errors.password && (
+        <p style={{ color: "red", fontSize: "14px" }} className="error">
+          {errors.password}
+        </p>
+      )}
 
       <button className="button-submit" type="submit">
         Regístrate

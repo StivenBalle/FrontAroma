@@ -1533,6 +1533,10 @@
   }
 }
 
+.loading-denied {
+  color: #d33;
+}
+
 /* Estilos para la página 404 */
 .not-found-page {
   display: flex;

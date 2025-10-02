@@ -1,38 +1,10 @@
-import React, { useEffect } from "react";
-import { useAuth } from "../context/AuthContext";
+import React from "react";
 import { useNavigate } from "react-router-dom";
-import Swal from "sweetalert2";
+import withAdminGuard from "../hocs/withAdminGuard.jsx";
 import "../App.css";
 
-const AdminOrders = () => {
-  const { user, loading } = useAuth();
+const AdminOrdersInner = () => {
   const navigate = useNavigate();
-
-  useEffect(() => {
-    if (loading) return;
-
-    if (!user || user.role !== "admin") {
-      Swal.fire({
-        icon: "warning",
-        title: "Acceso denegado",
-        text: "Solo administradores pueden ver esta página.",
-      }).then(() => {
-        navigate("/");
-      });
-      return;
-    }
-  }, [user, loading, navigate]);
-
-  if (loading) {
-    return (
-      <div className="loading-products">
-        <div className="loading-content">
-          <div className="spinner"></div>
-          <h3>Cargando información...</h3>
-        </div>
-      </div>
-    );
-  }
 
   const handleNavigate = (path) => {
     navigate(path);
@@ -157,4 +129,4 @@ const AdminOrders = () => {
   );
 };
 
-export default AdminOrders;
+export default withAdminGuard(AdminOrdersInner);

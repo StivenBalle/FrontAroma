@@ -49,7 +49,7 @@ export const AuthProvider = ({ children }) => {
       return { success: false, error: data.error };
     } catch (err) {
       console.error("❌ Error en login:", err.message);
-      return { success: false, error: "Error en el servidor" };
+      return { success: false, error: err.message };
     }
   };
 

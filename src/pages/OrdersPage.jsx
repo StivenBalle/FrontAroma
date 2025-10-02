@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
 import Cafetera from "../components/Cafetera.jsx";
+import withAdminGuard from "../hocs/withAdminGuard.jsx";
 import { getAdminOrders } from "../api.js";
 import Swal from "sweetalert2";
 import "../App.css";
 
-const OrdersPage = () => {
-  const { user, loading: authLoading } = useAuth();
+const OrdersPageInner = () => {
   const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
   const [filteredOrders, setFilteredOrders] = useState([]);
@@ -18,15 +17,8 @@ const OrdersPage = () => {
   const pageSize = 20;
 
   useEffect(() => {
-    if (authLoading) return;
-    if (!user || user.role !== "admin") {
-      Swal.fire({ icon: "warning", title: "Acceso denegado" }).then(() =>
-        navigate("/")
-      );
-      return;
-    }
     fetchOrders();
-  }, [user, authLoading, navigate]);
+  }, []);
 
   const fetchOrders = async () => {
     try {
@@ -36,7 +28,13 @@ const OrdersPage = () => {
       setFilteredOrders(data.orders || []);
       setCurrentPage(1);
     } catch (err) {
-      Swal.fire("Error", "No se pudieron cargar las órdenes", "error");
+      console.error("❌ Error en fetchOrders:", err);
+      // Manejo específico de errores de autenticación/acceso
+      if (err.status === 401 || err.status === 403) {
+        console.log("Error de acceso detectado; manejado por HOC");
+      } else {
+        Swal.fire("Error", "No se pudieron cargar las órdenes", "error");
+      }
     } finally {
       setPageLoading(false);
     }
@@ -70,17 +68,6 @@ const OrdersPage = () => {
     currentPage > 1 && setCurrentPage(currentPage - 1);
   const handleNext = () =>
     currentPage < totalPages && setCurrentPage(currentPage + 1);
-
-  if (authLoading || pageLoading) {
-    return (
-      <div className="loading-products">
-        <div className="loading-content">
-          <div className="spinner"></div>
-          <h3>Cargando información...</h3>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="admin-page">
@@ -219,4 +206,4 @@ const OrdersPage = () => {
   );
 };
 
-export default OrdersPage;
+export default withAdminGuard(OrdersPageInner);
