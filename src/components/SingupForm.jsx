@@ -142,7 +142,7 @@ const SignupForm = ({ switchToLogin }) => {
         />
       </div>
       {errors.name && (
-        <p style={{ color: "red", fontSize: "14px" }} className="error">
+        <p style={{ color: "red", fontSize: "9px" }} className="error">
           {errors.name}
         </p>
       )}
@@ -171,7 +171,7 @@ const SignupForm = ({ switchToLogin }) => {
           value={formData.email}
         />
       </div>
-      <p style={{ color: "red", fontSize: "14px" }} className="error">
+      <p style={{ color: "red", fontSize: "9px" }} className="error">
         {errors.email}
       </p>
 
@@ -203,7 +203,7 @@ const SignupForm = ({ switchToLogin }) => {
         />
       </div>
       {errors.phone_number && (
-        <p style={{ color: "red", fontSize: "14px" }} className="error">
+        <p style={{ color: "red", fontSize: "9px" }} className="error">
           {errors.phone_number}
         </p>
       )}
@@ -232,7 +232,7 @@ const SignupForm = ({ switchToLogin }) => {
         />
       </div>
       {errors.password && (
-        <p style={{ color: "red", fontSize: "14px" }} className="error">
+        <p style={{ color: "red", fontSize: "9px" }} className="error">
           {errors.password}
         </p>
       )}

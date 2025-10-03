@@ -12,9 +12,25 @@ export const AuthProvider = ({ children }) => {
   const openAuthModal = () => setAuthModalOpen(true);
   const closeAuthModal = () => setAuthModalOpen(false);
 
+  // Verifica si las cookies están aceptadas
+  const hasCookieConsent = () => {
+    const cookies = document.cookie.split(";").reduce((acc, cookie) => {
+      const [name, value] = cookie.trim().split("=");
+      acc[name] = value;
+      return acc;
+    }, {});
+    return cookies["cookie_consent"] === "true";
+  };
+
   useEffect(() => {
     const checkAuth = async () => {
       try {
+        if (!hasCookieConsent()) {
+          console.log("Cookies no aceptadas; no se intenta cargar perfil.");
+          setUser(null);
+          setLoading(false);
+          return;
+        }
         const data = await getProfile();
         console.log("Perfil cargado:", data);
         setUser(data);
@@ -31,6 +47,15 @@ export const AuthProvider = ({ children }) => {
 
   const loginUser = async (email, password) => {
     try {
+      // Verifica consentimiento de cookies antes del login
+      if (!hasCookieConsent()) {
+        Swal.fire({
+          icon: "warning",
+          title: "Cookies necesarias",
+          text: "Debes aceptar las cookies para iniciar sesión. Por favor, haz clic en 'Aceptar Cookies' en el aviso.",
+        });
+        return { success: false, error: "Cookies no aceptadas" };
+      }
       const data = await login(email, password);
       if (data.message === "✅ Login exitoso") {
         setUser(data.user);

@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { useState, useEffect } from "react";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
@@ -15,11 +16,42 @@ import OrdersPage from "./pages/OrdersPage.jsx";
 import SearchUsersPage from "./pages/SearchUsersPage.jsx";
 import DeleteUsersPage from "./pages/DeleteUsersPage.jsx";
 import ChangeRolePage from "./pages/ChangeRolePage.jsx";
+import CookieConsent from "./components/CookieConsent.jsx";
 
 function App() {
+  const [showCookieConsent, setShowCookieConsent] = useState(false);
+
+  useEffect(() => {
+    const cookies = document.cookie.split(";").reduce((acc, cookie) => {
+      const [name, value] = cookie.trim().split("=");
+      acc[name] = value;
+      return acc;
+    }, {});
+    if (!cookies["cookie_consent"]) {
+      setShowCookieConsent(true);
+    }
+  }, []);
+
+  const handleAcceptCookies = () => {
+    setShowCookieConsent(false);
+  };
+
+  const handleDeclineCookies = () => {
+    setShowCookieConsent(false);
+  };
+
   return (
     <AuthProvider>
       <Header />
+
+      {showCookieConsent && (
+        <div className="cookie-consent-container">
+          <CookieConsent
+            onAccept={handleAcceptCookies}
+            onDecline={handleDeclineCookies}
+          />
+        </div>
+      )}
 
       <Routes>
         <Route path="/" element={<Home />} />

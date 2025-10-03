@@ -1818,6 +1818,42 @@
     flex-direction: column;
     gap: 10px;
   }
+  .cookie-consent-card {
+    width: 95%;
+    max-width: 320px;
+  }
+
+  .content {
+    padding: 1rem;
+  }
+
+  .icon-cookie {
+    margin: -2.5rem auto 1rem;
+    transform: scale(0.8);
+  }
+
+  .title {
+    font-size: 1rem;
+  }
+
+  .description {
+    font-size: 0.8rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .more-options,
+  .accept-button {
+    font-size: 0.8rem;
+    padding: 0.4rem 1rem;
+  }
+
+  .accept-button {
+    right: 1rem;
+  }
+
+  .more-options {
+    left: 1rem;
+  }
 }
 
 /* From uiverse.io by @satyamchaudharydev */
@@ -2017,5 +2053,125 @@
 @media (min-width: 1024px) {
   .admin-cards-container {
     grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* Cookie Consent Card */
+.cookie-consent-card {
+  --shadow: rgba(60, 64, 67, 0.3) 0 1px 2px 0,
+    rgba(60, 64, 67, 0.15) 0 2px 6px 2px;
+  width: 90%;
+  max-width: 400px;
+  background-color: white;
+  border-radius: 1.5rem;
+  box-shadow: var(--shadow);
+  margin: 20px auto;
+  z-index: 1000;
+}
+
+.cookie-consent-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1.5rem;
+  position: relative;
+}
+
+.icon-cookie {
+  position: relative;
+  margin: -3rem auto 1.5rem;
+}
+
+.title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  text-align: left;
+  color: #4b5563;
+  font-family: "Georgia", serif;
+}
+
+.description {
+  width: 100%;
+  margin-bottom: 2rem;
+  font-size: 0.9rem;
+  text-align: justify;
+  color: #4b5563;
+}
+
+.privacy-link {
+  font-weight: 600;
+  color: #634647;
+  transition: color 0.3s;
+}
+
+.privacy-link:hover {
+  color: #845556;
+  text-decoration: underline;
+}
+
+.more-options {
+  position: absolute;
+  bottom: 1rem;
+  padding: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #4b5563;
+  background-color: transparent;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.accept-button {
+  position: absolute;
+  right: 1.5rem;
+  bottom: 1rem;
+  padding: 0.5rem 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #634647;
+  background-color: #ddad81;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.accept-button:hover {
+  background-color: #634647;
+  color: #ddad81;
+}
+
+@media (max-width: 480px) {
+  .cookie-consent-card {
+    width: 98%;
+    max-width: 300px;
+  }
+
+  .icon {
+    transform: scale(0.7);
+  }
+
+  .title {
+    font-size: 0.9rem;
+  }
+
+  .description {
+    font-size: 0.75rem;
   }
 }
