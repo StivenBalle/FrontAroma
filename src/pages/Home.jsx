@@ -219,8 +219,8 @@ function App() {
         <div className="tittle-tostado">
           <h2>Tipos de tostado</h2>
           <p>
-            En café Aroma de la serrania tenemos varios tipos de tostados
-            diferentes según tu tipo de preferencia.
+            En café Aroma de la serrania tenemos varios tipos de tostados según
+            tu tipo de preferencia.
           </p>
           <img src={tostado} alt="Tostado" />
         </div>

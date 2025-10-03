@@ -54,7 +54,10 @@ export const AuthProvider = ({ children }) => {
           title: "Cookies necesarias",
           text: "Debes aceptar las cookies para iniciar sesión. Por favor, haz clic en 'Aceptar Cookies' en el aviso.",
         });
-        return { success: false, error: "Cookies no aceptadas" };
+        return {
+          success: false,
+          error: "Por favor acepte las cookies para poder iniciar sesión.",
+        };
       }
       const data = await login(email, password);
       if (data.message === "✅ Login exitoso") {
