@@ -82,8 +82,8 @@ export const updateUserRole = (userId, newRole) =>
   put(`/api/admin/users/${userId}/role`, { role: newRole });
 
 // Nueva función para Google Login
-export const googleLogin = (credential) =>
-  post("/api/auth/google", { credential });
+export const googleLogin = ({ credential, nonce }) =>
+  post("/api/auth/google", { credential, nonce });
 
 // Nueva función para actualizar teléfono
 export const updatePhone = (phone_number) =>

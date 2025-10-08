@@ -104,7 +104,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   // Nueva función para Google Login
-  const googleLoginUser = async (credential) => {
+  const googleLoginUser = async (credential, nonce) => {
     if (!hasCookieConsent()) {
       Swal.fire(
         "Error",
@@ -114,7 +114,7 @@ export const AuthProvider = ({ children }) => {
       return { success: false, error: "Cookies no aceptadas" };
     }
     try {
-      const data = await googleLogin(credential);
+      const data = await googleLogin(credential, nonce);
       if (data.message === "✅ Google login exitoso") {
         setUser(data.user);
         setAuthModalOpen(false);

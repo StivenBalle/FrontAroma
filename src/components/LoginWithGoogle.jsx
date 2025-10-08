@@ -3,10 +3,18 @@ import { AuthContext } from "../context/AuthContext.jsx";
 import Swal from "sweetalert2";
 import "../styles/header.css";
 
+function generateNonce() {
+  const array = new Uint32Array(8);
+  crypto.getRandomValues(array);
+  return Array.from(array, (dec) => dec.toString(16)).join("");
+}
+
 const LoginWithGoogle = () => {
   const { googleLogin, closeAuthModal } = useContext(AuthContext);
 
   useEffect(() => {
+    const nonce = generateNonce();
+
     // Cargar el script de Google Identity Services
     const script = document.createElement("script");
     script.src = "https://accounts.google.com/gsi/client";
@@ -19,7 +27,10 @@ const LoginWithGoogle = () => {
           client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
           callback: async (response) => {
             try {
-              const result = await googleLogin(response.credential);
+              const result = await googleLogin({
+                credential: response.credential,
+                nonce: nonce,
+              });
               if (result.success) {
                 closeAuthModal();
               } else {
@@ -38,6 +49,7 @@ const LoginWithGoogle = () => {
           auto_select: false,
           itp_support: true,
           use_fedcm_for_prompt: true,
+          nonce: nonce,
         });
 
         window.google.accounts.id.renderButton(
