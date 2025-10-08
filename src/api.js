@@ -80,3 +80,11 @@ export const deleteUser = (userId) => del(`/api/admin/users/${userId}`);
 
 export const updateUserRole = (userId, newRole) =>
   put(`/api/admin/users/${userId}/role`, { role: newRole });
+
+// Nueva función para Google Login
+export const googleLogin = (credential) =>
+  post("/api/auth/google", { credential });
+
+// Nueva función para actualizar teléfono
+export const updatePhone = (phone_number) =>
+  put("/api/auth/update-phone", { phone_number });

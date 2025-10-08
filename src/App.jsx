@@ -17,6 +17,7 @@ import SearchUsersPage from "./pages/SearchUsersPage.jsx";
 import DeleteUsersPage from "./pages/DeleteUsersPage.jsx";
 import ChangeRolePage from "./pages/ChangeRolePage.jsx";
 import CookieConsent from "./components/CookieConsent.jsx";
+import PhoneInput from "./components/PhoneInput.jsx";
 
 function App() {
   const [showCookieConsent, setShowCookieConsent] = useState(false);
@@ -53,6 +54,7 @@ function App() {
         </div>
       )}
 
+      <PhoneInput />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/aromaHistoria" element={<Historia />} />
