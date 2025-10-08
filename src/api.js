@@ -88,3 +88,6 @@ export const googleLogin = ({ credential, nonce }) =>
 // Nueva función para actualizar teléfono
 export const updatePhone = (phone_number) =>
   put("/api/auth/update-phone", { phone_number });
+
+export const getPurchaseDetails = async (sessionId) =>
+  get(`/api/stripe/purchase/${sessionId}`);
