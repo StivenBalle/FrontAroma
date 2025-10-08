@@ -7,13 +7,6 @@ const LoginWithGoogle = () => {
   const { googleLogin, closeAuthModal } = useContext(AuthContext);
 
   useEffect(() => {
-    // Verificar VITE_GOOGLE_CLIENT_ID
-    if (!import.meta.env.VITE_GOOGLE_CLIENT_ID) {
-      console.error("❌ VITE_GOOGLE_CLIENT_ID no está definido en .env");
-      Swal.fire("Error", "Configuración de Google no disponible", "error");
-      return;
-    }
-
     // Cargar el script de Google Identity Services
     const script = document.createElement("script");
     script.src = "https://accounts.google.com/gsi/client";
@@ -28,13 +21,6 @@ const LoginWithGoogle = () => {
             try {
               const result = await googleLogin(response.credential);
               if (result.success) {
-                Swal.fire({
-                  icon: "success",
-                  title: `Bienvenido, ${result.user?.name}`,
-                  text: "Has iniciado sesión con Google.",
-                  timer: 2000,
-                  showConfirmButton: false,
-                });
                 closeAuthModal();
               } else {
                 Swal.fire(
@@ -49,56 +35,15 @@ const LoginWithGoogle = () => {
             }
           },
           ux_mode: "popup",
-          auto_select: false, // Desactivamos auto_select para forzar el popup
-          itp_support: true, // Soporte para FedCM/ITP
+          auto_select: false,
+          itp_support: true,
+          use_fedcm_for_prompt: true,
         });
 
-        // Asociar el flujo de Google al botón personalizado
-        const googleButton = document.getElementById("login-btn-google");
-        if (googleButton) {
-          googleButton.onclick = () => {
-            if (!hasCookieConsent()) {
-              Swal.fire({
-                icon: "error",
-                title: "Cookies necesarias",
-                text: "Debes aceptar las cookies para iniciar sesión con Google.",
-              });
-              return;
-            }
-            window.google.accounts.id.prompt((notification) => {
-              if (
-                notification.isNotDisplayed() ||
-                notification.isSkippedMoment()
-              ) {
-                const reason =
-                  notification.getNotDisplayedReason() ||
-                  notification.getSkippedReason();
-                console.log("Prompt no mostrado o cancelado:", reason);
-                if (reason === "opt_out_or_no_session") {
-                  Swal.fire({
-                    icon: "info",
-                    title: "No estás logueado con Google",
-                    text: "Por favor, inicia sesión en tu cuenta de Google en el navegador y vuelve a intentarlo.",
-                  });
-                } else if (reason === "unknown_reason") {
-                  Swal.fire({
-                    icon: "warning",
-                    title: "No se pudo mostrar el inicio de sesión",
-                    text: "Asegúrate de no tener bloqueadores de popups o cookies de terceros desactivadas.",
-                  });
-                } else if (reason === "tap_outside") {
-                  console.log("Usuario hizo clic fuera del popup");
-                  // Ignoramos tap_outside para evitar alertas molestas
-                } else {
-                  console.log("Razón del fallo del prompt:", reason);
-                }
-              }
-            });
-          };
-        } else {
-          console.error("❌ Botón de Google no encontrado (#login-btn-google)");
-          Swal.fire("Error", "Botón de Google no encontrado", "error");
-        }
+        window.google.accounts.id.renderButton(
+          document.getElementById("login-btn-google"),
+          { theme: "outline", size: "large" }
+        );
       } catch (err) {
         console.error("❌ Error inicializando Google Sign-In:", err.message);
         Swal.fire("Error", "No se pudo inicializar Google Sign-In", "error");
@@ -116,16 +61,6 @@ const LoginWithGoogle = () => {
       }
     };
   }, [googleLogin, closeAuthModal]);
-
-  // Función para verificar consentimiento de cookies
-  const hasCookieConsent = () => {
-    const cookies = document.cookie.split(";").reduce((acc, cookie) => {
-      const [name, value] = cookie.trim().split("=");
-      acc[name] = value;
-      return acc;
-    }, {});
-    return cookies["cookie_consent"] === "true";
-  };
 
   return (
     <button

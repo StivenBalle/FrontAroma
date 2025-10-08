@@ -1167,6 +1167,14 @@
   cursor: pointer;
 }
 
+.profile-image {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #4a2c2a;
+}
+
 .sign:hover {
   background-color: #4d5050;
 }
@@ -1259,14 +1267,6 @@
   box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
   overflow: hidden;
   transition: width 0.3s ease, border-radius 0.3s ease;
-}
-
-.sign {
-  width: 100%;
-  transition-duration: 0.3s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .text {
@@ -1854,6 +1854,11 @@
   .more-options {
     left: 1rem;
   }
+
+  .profile-image {
+    width: 35px;
+    height: 35px;
+  }
 }
 
 /* From uiverse.io by @satyamchaudharydev */
@@ -2173,5 +2178,114 @@
 
   .description {
     font-size: 0.75rem;
+  }
+}
+
+/* Vista Teléfono */
+.form-container-phone {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  position: relative;
+  text-align: center;
+  animation: fadeIn 0.3s ease;
+}
+
+.close-btn-phone {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: none;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  color: #444;
+  transition: transform 0.2s ease;
+}
+
+.close-btn-phone:hover {
+  transform: rotate(90deg);
+  color: #e74c3c;
+}
+
+/* === Título y descripción === */
+.auth-form h2 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  text-align: left;
+  color: #634647;
+  font-family: "Georgia", serif;
+}
+
+.auth-form p {
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 20px;
+}
+
+/* === Grupo de entrada === */
+.form-group {
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 6px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  transition: border-color 0.3s ease;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+/* === Error === */
+.error {
+  color: #e74c3c;
+  font-size: 0.8rem;
+  margin-top: 5px;
+  display: block;
+}
+
+/* === Botón enviar === */
+.submit-btn {
+  width: 100%;
+  background: #007bff;
+  color: #fff;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.3s ease;
+}
+
+.submit-btn:hover {
+  background: #0056b3;
+}
+
+/* === Animación de entrada === */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

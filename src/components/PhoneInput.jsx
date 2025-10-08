@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import Swal from "sweetalert2";
 import "../App.css";
 
 const PhoneModal = () => {
@@ -27,8 +26,11 @@ const PhoneModal = () => {
 
   return (
     <div id="overlay" className="overlay">
-      <div className="form-container">
-        <button className="close-btn" onClick={() => setShowPhoneModal(false)}>
+      <div className="form-container-phone">
+        <button
+          className="close-btn-phone"
+          onClick={() => setShowPhoneModal(false)}
+        >
           ✕
         </button>
         <form className="auth-form" onSubmit={handleSubmit}>

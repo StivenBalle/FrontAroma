@@ -168,7 +168,26 @@ export default function Header() {
                     onClick={handleLogout}
                   >
                     <div className="sign" id="logout-initial">
-                      {user.name ? user.name.charAt(0).toUpperCase() : "U"}
+                      {user.image && user.image.trim() !== "" ? (
+                        <img
+                          src={user.image}
+                          alt="Foto de perfil"
+                          className="profile-image"
+                          onError={(e) => {
+                            e.target.style.display = "none";
+                            const parent = e.target.parentNode;
+                            const initial = document.createElement("span");
+                            initial.textContent = user.name
+                              ? user.name.charAt(0).toUpperCase()
+                              : "U";
+                            parent.appendChild(initial);
+                          }}
+                        />
+                      ) : (
+                        <span>
+                          {user.name ? user.name.charAt(0).toUpperCase() : "U"}
+                        </span>
+                      )}
                     </div>
                     <div className="text">Cerrar Sesión</div>
                   </button>
@@ -321,7 +340,26 @@ export default function Header() {
                 }}
               >
                 <div className="sign" id="logout-initial">
-                  {user.name ? user.name.charAt(0).toUpperCase() : "U"}
+                  {user.image && user.image.trim() !== "" ? (
+                    <img
+                      src={user.image}
+                      alt="Foto de perfil"
+                      className="profile-image"
+                      onError={(e) => {
+                        e.target.style.display = "none";
+                        const parent = e.target.parentNode;
+                        const initial = document.createElement("span");
+                        initial.textContent = user.name
+                          ? user.name.charAt(0).toUpperCase()
+                          : "U";
+                        parent.appendChild(initial);
+                      }}
+                    />
+                  ) : (
+                    <span>
+                      {user.name ? user.name.charAt(0).toUpperCase() : "U"}
+                    </span>
+                  )}
                 </div>
                 Cerrar Sesión
               </button>
