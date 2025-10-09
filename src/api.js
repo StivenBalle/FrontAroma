@@ -1,15 +1,12 @@
+import Swal from "sweetalert2";
 const API_URL = import.meta.env.VITE_API_URL;
 
-// 🔹 Cliente genérico
-async function request(path, { method = "GET", body } = {}) {
-  if (!API_URL) {
-    console.error(
-      "❌ API_URL no definida. Variables disponibles:",
-      import.meta.env
-    );
-    throw new Error("Configuración de API no disponible");
-  }
+let navigateRef = null;
+export const setNavigate = (navigate) => {
+  navigateRef = navigate;
+};
 
+async function request(path, { method = "GET", body } = {}) {
   const url = `${API_URL}${path}`;
   console.log(`🌐 Fetch: ${method} ${url}`);
 
@@ -33,6 +30,24 @@ async function request(path, { method = "GET", body } = {}) {
   }
 
   if (!res.ok) {
+    // ⚡ Detectar sesión expirada
+    if (res.status === 401 && data?.error === "Sesión expirada") {
+      if (navigateRef) {
+        await Swal.fire({
+          icon: "warning",
+          title: "Sesión expirada",
+          text: "Tu sesión ha terminado. Si deseas continuar disfrutando de nuestros servicios inicia sesión nuevamente",
+          confirmButtonText: "Aceptar",
+        });
+        navigateRef("/");
+      } else {
+        console.warn(
+          "Sesion expirada detectada pero `navigate` no está seteado"
+        );
+      }
+      throw new Error("Sesión expirada");
+    }
+
     const error = new Error(
       data?.error || `Error ${res.status}: ${res.statusText}`
     );
@@ -81,11 +96,9 @@ export const deleteUser = (userId) => del(`/api/admin/users/${userId}`);
 export const updateUserRole = (userId, newRole) =>
   put(`/api/admin/users/${userId}/role`, { role: newRole });
 
-// Nueva función para Google Login
 export const googleLogin = ({ credential, nonce }) =>
   post("/api/auth/google", { credential, nonce });
 
-// Nueva función para actualizar teléfono
 export const updatePhone = (phone_number) =>
   put("/api/auth/update-phone", { phone_number });
 

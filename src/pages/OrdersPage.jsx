@@ -72,7 +72,7 @@ const OrdersPageInner = () => {
   return (
     <div className="admin-page">
       <div className="page-header">
-        <h1>Buscar Compras</h1>
+        <h2>Buscar Compras</h2>
         <button onClick={() => navigate("/admin")} className="back-btn">
           ← Volver al Dashboard
         </button>

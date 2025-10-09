@@ -33,7 +33,7 @@ const SearchUsersPageInner = () => {
   return (
     <div className="admin-page">
       <div className="page-header">
-        <h1>Buscar Usuario</h1>
+        <h2>Buscar Usuario</h2>
         <button onClick={() => navigate("/admin")} className="back-btn">
           ← Volver al Dashboard
         </button>

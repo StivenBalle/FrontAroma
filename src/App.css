@@ -2020,6 +2020,14 @@
   margin-bottom: 20px;
 }
 
+.page-header h2 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  text-align: left;
+  color: #634647;
+  font-family: "Georgia", serif;
+}
+
 .back-btn {
   background: #4a2c2a;
   color: white;

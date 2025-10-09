@@ -54,7 +54,7 @@ const DeleteUsersPage = () => {
   return (
     <div className="admin-page">
       <div className="page-header">
-        <h1>Borrar Usuario</h1>
+        <h2>Borrar Usuario</h2>
         <button onClick={() => navigate("/admin")} className="back-btn">
           ← Volver al Dashboard
         </button>

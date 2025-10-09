@@ -1,4 +1,9 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useNavigate,
+} from "react-router-dom";
 import { useState, useEffect } from "react";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -18,9 +23,13 @@ import DeleteUsersPage from "./pages/DeleteUsersPage.jsx";
 import ChangeRolePage from "./pages/ChangeRolePage.jsx";
 import CookieConsent from "./components/CookieConsent.jsx";
 import PhoneInput from "./components/PhoneInput.jsx";
+import ScrollToTop from "./components/ScrollToTop.jsx";
+import { setNavigate } from "./api.js";
 
 function App() {
   const [showCookieConsent, setShowCookieConsent] = useState(false);
+  const navigate = useNavigate();
+  setNavigate(navigate);
 
   useEffect(() => {
     const cookies = document.cookie.split(";").reduce((acc, cookie) => {
@@ -44,6 +53,7 @@ function App() {
   return (
     <AuthProvider>
       <Header />
+      <ScrollToTop />
 
       {showCookieConsent && (
         <div className="cookie-consent-container">

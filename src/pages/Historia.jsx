@@ -7,8 +7,8 @@ function Historia() {
       <div className="hero-tittle">
         <h1>Aroma de la Serrania</h1>
         <p>
-          Se construyó con el deseo de promover una cultura de café de la más
-          alta calidad.
+          Gracias al amor y la dedicación de la familia Andrades Contreras
+          podrás disfrutar de un café artesanal de alta calidad.
         </p>
       </div>
 
@@ -16,14 +16,7 @@ function Historia() {
         <div className="historia">
           <div className="historia-text">
             <h2>Nuestra Historia</h2>
-            <p>
-              Edwin Andrades se enamoró con el tema del café por una
-              casualidad...
-            </p>
-            <p>
-              En su regreso a Bogotá, su esposa trae consigo algunas de estas
-              cafeteras...
-            </p>
+            <p>Edwin Andrades es el cultivador de nuestro icónico café...</p>
           </div>
           <img src={rolloFotos} alt="Historia Café" />
         </div>
@@ -31,13 +24,23 @@ function Historia() {
 
       <section className="section">
         <div className="territorio">
-          <h2>
-            Nuestra Labor Es Explorar Cada Rincón Del Territorio Nacional Con El
-            Fin De Descubrir Cafés Únicos.
-          </h2>
+          <h2>Nuestra meta es poder llevarte un café puro y tradicional.</h2>
           <p>
-            La riqueza natural de Colombia y su biodiversidad son factores
-            fundamentales para la calidad de nuestro café...
+            En las tierras colombianas se encuentra la esencia que da vida a un
+            café puro y tradicional. Gracias a la riqueza de sus suelos
+            volcánicos, la altitud de las montañas y el clima tropical, cada
+            grano de café se nutre de condiciones únicas que realzan su aroma,
+            sabor y cuerpo. Las lluvias constantes, la temperatura equilibrada y
+            la dedicación de los caficultores permiten que el café colombiano
+            conserve su autenticidad, ofreciendo una bebida que refleja el
+            trabajo, la pasión y la tradición de una tierra que vive para el
+            café. Cada taza es el resultado de un proceso cuidadoso, desde la
+            siembra hasta la cosecha, que honra la herencia cafetera del país y
+            mantiene intacto el sabor natural de nuestras montañas.
+            <br /> Por eso, disfrutar un café con{" "}
+            <strong>Aroma de la serranía</strong> es conectarse con la historia,
+            la cultura y la pureza de una de las tierras más privilegiadas del
+            mundo para cultivarlo.
           </p>
           <div className="image-gallery">
             <img src="farm1.jpg" alt="Cultivo de café 1" />

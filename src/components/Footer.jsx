@@ -129,8 +129,11 @@ export default function Footer() {
       {/* Derechos reservados */}
       <div className="footer-text">
         <p>
-          © 2024 Café Aroma de la Serranía. Todos los derechos reservados.
-          Desarrollo web por: Brandon Ropero Correo: brandonropero90@gmail.com
+          © 2025 Café Aroma de la Serranía. Todos los derechos reservados.
+          <br />
+          Desarrollo web por: Brandon Stiven Ropero Ballesteros
+          <br />
+          Correo: brandonropero90@gmail.com
         </p>
       </div>
     </footer>

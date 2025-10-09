@@ -262,20 +262,20 @@ function App() {
         <h2>CENTROS DE EXPERIENCIA</h2>
         <div className="location-grid">
           <div className="location-card">
-            <img src="/api/placeholder/300/200" alt="Chapinero Alto" />
+            <img src="/api/placeholder/300/200" alt="Punto de venta oficial" />
             <div className="location-card-content">
-              <h3>Chapinero Alto</h3>
-              <p>Cra. 4 # 66 - 46</p>
+              <h3>Tienda donde Melo</h3>
+              <p>Cra. 39 # 10N - 10</p>
               <a href="#" className="btn">
                 MÁS INFORMACIÓN
               </a>
             </div>
           </div>
           <div className="location-card">
-            <img src="/api/placeholder/300/200" alt="Librería Lerner" />
+            <img src="/api/placeholder/300/200" alt="Lugar de procesamiento" />
             <div className="location-card-content">
-              <h3>Librería Lerner</h3>
-              <p>Cra. 11 # 93A - 43</p>
+              <h3>Lugar de procesamiento</h3>
+              <p>Cra. 39B # 11N - 15</p>
               <a href="#" className="btn">
                 MÁS INFORMACIÓN
               </a>
