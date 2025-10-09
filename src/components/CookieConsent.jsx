@@ -92,7 +92,7 @@ const CookieConsent = ({ onAccept, onDecline }) => {
         </p>
 
         <button className="more-options" onClick={handleDecline}>
-          Rechazar
+          Rechazar Cookies
         </button>
         <button className="accept-button" type="button" onClick={handleAccept}>
           Aceptar Cookies

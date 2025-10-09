@@ -120,15 +120,70 @@ const DeleteUsersPage = () => {
       ) : (
         <ul className="user-list">
           {paginatedUsers.map((user) => (
-            <li key={user.id}>
-              {user.name} ({user.email}) - Rol: {user.role}
-              <button
-                className="delete-btn"
-                onClick={() => handleDelete(user.id)}
-              >
-                Eliminar
-              </button>
-            </li>
+            <div key={user.id} className="user-card">
+              <div className="user-info">
+                <h3>{user.name}</h3>
+                <p>
+                  <strong>Email:</strong> {user.email}
+                </p>
+                <p>
+                  <strong>Rol:</strong> {user.role}
+                </p>
+              </div>
+
+              <div className="user-actions">
+                {/* Botón de eliminar (con tu estilo) */}
+                <button
+                  className="btn-delete-user"
+                  type="button"
+                  onClick={() => handleDelete(user.id)}
+                >
+                  <span className="button__text">Eliminar</span>
+                  <span className="button__icon">
+                    <svg
+                      className="svg"
+                      height="512"
+                      viewBox="0 0 512 512"
+                      width="512"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M112,112l20,320c.95,18.49,14.4,32,32,32H348c17.67,0,30.87-13.51,32-32l20-320"
+                        style={{
+                          fill: "none",
+                          stroke: "#fff",
+                          strokeLinecap: "round",
+                          strokeLinejoin: "round",
+                          strokeWidth: "32px",
+                        }}
+                      ></path>
+                      <line
+                        style={{
+                          stroke: "#fff",
+                          strokeLinecap: "round",
+                          strokeMiterlimit: 10,
+                          strokeWidth: "32px",
+                        }}
+                        x1="80"
+                        x2="432"
+                        y1="112"
+                        y2="112"
+                      ></line>
+                      <path
+                        d="M192,112V72h0a23.93,23.93,0,0,1,24-24h80a23.93,23.93,0,0,1,24,24h0v40"
+                        style={{
+                          fill: "none",
+                          stroke: "#fff",
+                          strokeLinecap: "round",
+                          strokeLinejoin: "round",
+                          strokeWidth: "32px",
+                        }}
+                      ></path>
+                    </svg>
+                  </span>
+                </button>
+              </div>
+            </div>
           ))}
         </ul>
       )}

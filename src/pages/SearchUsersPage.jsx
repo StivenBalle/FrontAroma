@@ -99,9 +99,17 @@ const SearchUsersPageInner = () => {
       ) : (
         <ul className="user-list">
           {paginatedUsers.map((user) => (
-            <li key={user.id}>
-              {user.name} ({user.email}) - Rol: {user.role}
-            </li>
+            <div key={user.id} className="user-card">
+              <div className="user-info">
+                <h3>{user.name}</h3>
+                <p>
+                  <strong>Email:</strong> {user.email}
+                </p>
+                <p>
+                  <strong>Rol:</strong> {user.role}
+                </p>
+              </div>
+            </div>
           ))}
         </ul>
       )}
