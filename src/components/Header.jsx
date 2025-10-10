@@ -197,7 +197,7 @@ export default function Header() {
 
             {/* Admin link */}
             {user && user.role === "admin" && (
-              <Link to="/admin/orders" className="tab">
+              <Link to="/admin" className="tab">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   class="w-5 h-5"
@@ -366,7 +366,7 @@ export default function Header() {
             )}
             {user && user.role === "admin" && (
               <Link
-                to="/admin/orders"
+                to="/admin"
                 className="mobile-menu-item"
                 onClick={closeMenu}
               >
