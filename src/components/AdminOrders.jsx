@@ -16,7 +16,7 @@ const AdminOrdersInner = () => {
       <div className="admin-cards-container">
         {/* Card 1: Buscar Compras */}
         <button
-          className="admin-card-button"
+          className="admin-card-button stats-card"
           onClick={() => handleNavigate("/admin/orders")}
         >
           <div className="card-icon">
@@ -42,21 +42,21 @@ const AdminOrdersInner = () => {
 
         {/* Card 2: Buscar Usuario */}
         <button
-          className="admin-card-button"
+          className="admin-card-button stats-card"
           onClick={() => handleNavigate("/admin/users/search")}
         >
           <div className="card-icon">
             <svg
               width="48"
-              height="48"
+              height="50"
               viewBox="0 0 24 24"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
             >
               <path
-                d="M15 19.128C15.864 19.373 16.939 19.5 18 19.5C18.531 19.5 19.04 19.474 19.529 19.426M5.471 19.426C8.418 18.837 10.189 17.928 11 15.973C11.811 17.928 13.582 18.837 16.529 19.426M5.471 19.426C4.981 19.474 4.47 19.5 3.938 19.5C2.879 19.5 1.804 19.373 0.94 19.128M3 16.438C3 15.852 3 15.26 3 14.667C3 11.757 5.757 9 8.667 9H15.333C18.243 9 21 11.757 21 14.667C21 15.26 21 15.852 21 16.438M6.5 6.5C6.5 8.709 8.291 10.5 10.5 10.5C12.709 10.5 14.5 8.709 14.5 6.5C14.5 4.291 12.709 2.5 10.5 2.5C8.291 2.5 6.5 4.291 6.5 6.5Z"
+                d="M12 2.5a5.5 5.5 0 0 1 3.096 10.047 9.005 9.005 0 0 1 5.9 8.181.75.75 0 1 1-1.499.044 7.5 7.5 0 0 0-14.993 0 .75.75 0 0 1-1.5-.045 9.005 9.005 0 0 1 5.9-8.18A5.5 5.5 0 0 1 12 2.5ZM8 8a4 4 0 1 0 8 0 4 4 0 0 0-8 0Z"
                 stroke="currentColor"
-                strokeWidth="2"
+                strokeWidth="1"
                 strokeLinecap="round"
                 strokeLinejoin="round"
               />
@@ -68,7 +68,7 @@ const AdminOrdersInner = () => {
 
         {/* Card 3: Borrar Usuario */}
         <button
-          className="admin-card-button"
+          className="admin-card-button stats-card"
           onClick={() => handleNavigate("/admin/users/delete")}
         >
           <div className="card-icon">
@@ -101,7 +101,7 @@ const AdminOrdersInner = () => {
 
         {/* Card 4: Cambiar Rol */}
         <button
-          className="admin-card-button"
+          className="admin-card-button stats-card"
           onClick={() => handleNavigate("/admin/users/role")}
         >
           <div className="card-icon">
@@ -123,6 +123,32 @@ const AdminOrdersInner = () => {
           </div>
           <h2>Cambiar Rol de Usuario</h2>
           <p>Promover o degradar a admin/user</p>
+        </button>
+
+        {/* 🆕 Card 5: Estadísticas */}
+        <button
+          className="admin-card-button stats-card"
+          onClick={() => handleNavigate("/admin/stats")}
+        >
+          <div className="card-icon">
+            <svg
+              width="48"
+              height="48"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M3 17H7V21H3V17ZM9 13H13V21H9V13ZM15 9H19V21H15V9Z"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </div>
+          <h2>Estadísticas</h2>
+          <p>Ventas, productos y usuarios nuevos</p>
         </button>
       </div>
     </div>

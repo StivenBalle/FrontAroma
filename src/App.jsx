@@ -24,6 +24,7 @@ import ChangeRolePage from "./pages/ChangeRolePage.jsx";
 import CookieConsent from "./components/CookieConsent.jsx";
 import PhoneInput from "./components/PhoneInput.jsx";
 import ScrollToTop from "./components/ScrollToTop.jsx";
+import AdminStats from "./pages/AdminStats.jsx";
 import { setNavigate } from "./api.js";
 
 function App() {
@@ -78,6 +79,7 @@ function App() {
         <Route path="/admin/users/search" element={<SearchUsersPage />} />
         <Route path="/admin/users/delete" element={<DeleteUsersPage />} />
         <Route path="/admin/users/role" element={<ChangeRolePage />} />
+        <Route path="/admin/stats" element={<AdminStats />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
 

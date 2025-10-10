@@ -413,8 +413,11 @@
 }
 
 .territorio {
-  text-align: center;
+  text-align: justify;
   animation: fadeIn 0.8s ease-in-out;
+  padding: 20px;
+  line-height: 1.6;
+  margin: 10px 0;
 }
 
 .territorio h2 {

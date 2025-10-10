@@ -14,6 +14,7 @@ const OrdersPageInner = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchLoading, setSearchLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(true);
   const pageSize = 20;
 
   useEffect(() => {
@@ -23,7 +24,7 @@ const OrdersPageInner = () => {
   const fetchOrders = async () => {
     try {
       const data = await getAdminOrders();
-      console.log("Órdenes recibidas en frontend:", data.orders); // Para depuración
+      console.log("Órdenes recibidas en frontend:", data.orders);
       setOrders(data.orders || []);
       setFilteredOrders(data.orders || []);
       setCurrentPage(1);
@@ -37,6 +38,7 @@ const OrdersPageInner = () => {
       }
     } finally {
       setPageLoading(false);
+      setLoading(false);
     }
   };
 
@@ -46,7 +48,7 @@ const OrdersPageInner = () => {
     const filtered = orders.filter((order) =>
       order.user_email?.toLowerCase().includes(searchTerm.toLowerCase())
     );
-    console.log("Órdenes filtradas:", filtered); // Para depuración
+    console.log("Órdenes filtradas:", filtered);
     setFilteredOrders(filtered);
     setCurrentPage(1);
     setTimeout(() => setSearchLoading(false), 500);
@@ -68,6 +70,17 @@ const OrdersPageInner = () => {
     currentPage > 1 && setCurrentPage(currentPage - 1);
   const handleNext = () =>
     currentPage < totalPages && setCurrentPage(currentPage + 1);
+
+  if (loading) {
+    return (
+      <div className="loading-products">
+        <div className="loading-content">
+          <div className="spinner"></div>
+          <h3>Cargando datos...</h3>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="admin-page">

@@ -91,7 +91,7 @@ const SignupForm = ({ switchToLogin }) => {
       }
     } catch (err) {
       console.error("❌ Error en registro:", err);
-      let errorMessage = "Error desconocido. Por favor intenta de nuevo.";
+      let errorMessage = "El email que quieres registrar ya existe.";
       if (err.message.includes("409")) {
         errorMessage = "El correo ya está registrado";
       } else if (err.message.includes("400")) {

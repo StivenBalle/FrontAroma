@@ -160,6 +160,7 @@ function App() {
 
       <section className="products" id="products">
         <h2>Nuestros Productos</h2>
+        <p>Has click en uno de nuestros productos para iniciar una compra.</p>
         {loading ? (
           <div className="loading-products">
             <div className="loading-content">

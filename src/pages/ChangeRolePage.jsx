@@ -112,7 +112,12 @@ const ChangeRolePageInner = () => {
       </form>
 
       {loading ? (
-        <div className="loading-products"></div>
+        <div className="loading-products">
+          <div className="loading-content">
+            <div className="spinner"></div>
+            <h3>Cargando datos...</h3>
+          </div>
+        </div>
       ) : users.length === 0 && searched ? (
         <div className="text_no_orders">
           <Cafetera />

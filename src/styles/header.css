@@ -106,21 +106,16 @@
 
 .products {
   position: relative;
-  padding: 3rem 1rem;
+  padding: 1rem;
   text-align: center;
   color: #4a4a4a;
-  background-image: url("../assets/background.png");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
 }
 
 .products h2 {
   font-size: 2.5rem;
   color: #7a5230;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   font-family: "Georgia", serif;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   background-color: white;
   border-radius: 5px;
 }
@@ -135,19 +130,12 @@
 }
 
 .product-card {
-  flex: 1 1 calc(25% - 1rem);
   min-width: 250px;
-  max-width: 300px;
+  max-width: 210px;
   background-color: #ffffff;
-  padding: 1rem;
   border-radius: 8px;
   text-align: center;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.product-card img {
-  max-width: 100%;
-  height: auto;
 }
 
 .product-card h3 {
@@ -164,7 +152,7 @@
   }
 
   .product-card img {
-    max-width: 100%;
+    max-width: 80%;
     height: auto;
     margin-bottom: 1rem;
   }
@@ -176,46 +164,13 @@
   }
 }
 
-/*Cards productos*/
-.product-card {
-  box-sizing: border-box;
-  width: 200px;
-  height: 380px;
-  margin-left: 10px;
-  background: rgba(217, 217, 217, 0.58);
-  border: 1px solid white;
-  box-shadow: 12px 17px 51px rgba(0, 0, 0, 0.22);
-  backdrop-filter: blur(6px);
-  border-radius: 17px;
-  text-align: center;
-  cursor: default;
-  transition: all 0.5s;
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  justify-content: space-around;
-  user-select: none;
-  font-weight: bolder;
-  color: black;
-}
-
-.product-card:hover {
-  border: 1px solid black;
-  transform: scale(1.05);
-}
-
 .product-card h3 {
   font-size: 1rem;
   margin: 0.5rem 0;
   width: 100%;
   text-align: center;
 }
-.product-card p {
-  font-size: 1rem;
-  margin: 0;
-  width: 100%;
-  text-align: center;
-}
+
 .product-card img {
   width: 100%;
   max-width: 200px;

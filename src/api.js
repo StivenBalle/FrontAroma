@@ -104,3 +104,9 @@ export const updatePhone = (phone_number) =>
 
 export const getPurchaseDetails = async (sessionId) =>
   get(`/api/stripe/purchase/${sessionId}`);
+
+export const getSalesByMonth = () => get("/api/admin/stats/sales-by-month");
+
+export const getTopProducts = () => get("/api/admin/stats/top-products");
+
+export const getUsersByMonth = () => get("/api/admin/stats/users-by-month");
