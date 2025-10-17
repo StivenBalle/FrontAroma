@@ -26,6 +26,7 @@ import PhoneInput from "./components/PhoneInput.jsx";
 import ScrollToTop from "./components/ScrollToTop.jsx";
 import AdminStats from "./pages/AdminStats.jsx";
 import { setNavigate } from "./api.js";
+import UserProfilePage from "./pages/UserProfilePage.jsx";
 
 function App() {
   const [showCookieConsent, setShowCookieConsent] = useState(false);
@@ -68,6 +69,7 @@ function App() {
       <PhoneInput />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/profile" element={<UserProfilePage />} />
         <Route path="/aromaHistoria" element={<Historia />} />
         <Route path="/preparacion" element={<Preparacion />} />
         <Route path="/terminos&condiciones" element={<Terminos />} />

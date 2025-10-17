@@ -12,12 +12,15 @@ async function request(path, { method = "GET", body } = {}) {
 
   const options = {
     method,
-    headers: { "Content-Type": "application/json" },
     credentials: "include",
   };
 
-  if (body) {
+  // Si el body NO es FormData, se envía como JSON
+  if (body && !(body instanceof FormData)) {
+    options.headers = { "Content-Type": "application/json" };
     options.body = JSON.stringify(body);
+  } else if (body instanceof FormData) {
+    options.body = body;
   }
 
   const res = await fetch(`${API_URL}${path}`, options);
@@ -110,3 +113,20 @@ export const getSalesByMonth = () => get("/api/admin/stats/sales-by-month");
 export const getTopProducts = () => get("/api/admin/stats/top-products");
 
 export const getUsersByMonth = () => get("/api/admin/stats/users-by-month");
+
+export const getUserProfile = () => get("/api/user/profile");
+
+export const getShippingAddress = () => get("/api/user/shipping-address");
+
+export const updateShippingAddress = (data) =>
+  put("/api/user/update/shipping-address", data);
+
+export const createShippingAddress = (data) =>
+  post("/api/user/add/shipping-address", data);
+
+export const updateUserProfile = (data) => put("/api/user/update", data);
+
+export const uploadProfileImage = (formData) =>
+  post("/api/user/profile-image", formData);
+
+export const deleteProfileImage = () => del("/api/user/delete-image");

@@ -75,10 +75,11 @@ const CookieConsent = ({ onAccept, onDecline }) => {
         <p className="title">Tu privacidad es importante para nosotros</p>
 
         <p className="description">
-          Tu seguridad mientras navegas es Aroma de la Serrania es nuestra
+          Tu seguridad mientras navegas en Aroma de la Serrania es nuestra
           prioridad. Al aceptar las cookies podras iniciar sesión y realizar
           compras en nuestro sitio web. Las cookies de sesión son esenciales
-          para la autenticación y no se almacenan permanentemente.
+          para que este sitio funcione correctamente y no se almacenan
+          permanentemente.
           <br />
           Para más información, consulta nuestra{" "}
           <a
@@ -92,7 +93,7 @@ const CookieConsent = ({ onAccept, onDecline }) => {
         </p>
 
         <button className="more-options" onClick={handleDecline}>
-          Rechazar Cookies
+          Rechazar
         </button>
         <button className="accept-button" type="button" onClick={handleAccept}>
           Aceptar Cookies

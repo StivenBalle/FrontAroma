@@ -66,7 +66,7 @@ const LoginForm = ({ switchToSignup }) => {
           <a href="#">¿Olvidaste tu contraseña?</a>
         </div>
 
-        <button className="sign" type="submit">
+        <button className="sign-login" type="submit">
           Iniciar Sesión
         </button>
       </form>

@@ -3,7 +3,7 @@ import {
   login,
   googleLogin,
   updatePhone,
-  getProfile,
+  getUserProfile,
   logout as apiLogout,
 } from "../api.js";
 import Swal from "sweetalert2";
@@ -38,7 +38,7 @@ export const AuthProvider = ({ children }) => {
           setLoading(false);
           return;
         }
-        const data = await getProfile();
+        const data = await getUserProfile();
         console.log("Perfil cargado:", data);
         setUser(data);
         if (!data.phone_number) {

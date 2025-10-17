@@ -160,7 +160,6 @@ function App() {
 
       <section className="products" id="products">
         <h2>Nuestros Productos</h2>
-        <p>Has click en uno de nuestros productos para iniciar una compra.</p>
         {loading ? (
           <div className="loading-products">
             <div className="loading-content">
@@ -181,37 +180,42 @@ function App() {
             </div>
           </div>
         ) : (
-          <div className="product-grid" id="bolsas">
-            {activePrices.map((price) => {
-              const product = products.find((p) => p.id === price.product);
-              if (!product) return null;
+          <>
+            <p>
+              Has click en uno de nuestros productos para iniciar una compra.
+            </p>
+            <div className="product-grid" id="bolsas">
+              {activePrices.map((price) => {
+                const product = products.find((p) => p.id === price.product);
+                if (!product) return null;
 
-              const amount = price.unit_amount / 100;
-              const formattedPrice = new Intl.NumberFormat("es-CO", {
-                style: "currency",
-                currency: price.currency.toUpperCase(),
-              }).format(amount);
+                const amount = price.unit_amount / 100;
+                const formattedPrice = new Intl.NumberFormat("es-CO", {
+                  style: "currency",
+                  currency: price.currency.toUpperCase(),
+                }).format(amount);
 
-              return (
-                <div
-                  key={price.id}
-                  className="product-card bolsa"
-                  data-price={price.id}
-                  onClick={() => handleCheckout(price.id)}
-                >
-                  <figure>
-                    <img
-                      src={product.images?.[0] || bolsaCafe}
-                      alt={product.name || "Producto sin nombre"}
-                    />
-                    <figcaption>
-                      {product.name || "Sin nombre"} <br /> {formattedPrice}
-                    </figcaption>
-                  </figure>
-                </div>
-              );
-            })}
-          </div>
+                return (
+                  <div
+                    key={price.id}
+                    className="product-card bolsa"
+                    data-price={price.id}
+                    onClick={() => handleCheckout(price.id)}
+                  >
+                    <figure>
+                      <img
+                        src={product.images?.[0] || bolsaCafe}
+                        alt={product.name || "Producto sin nombre"}
+                      />
+                      <figcaption>
+                        {product.name || "Sin nombre"} <br /> {formattedPrice}
+                      </figcaption>
+                    </figure>
+                  </div>
+                );
+              })}
+            </div>
+          </>
         )}
       </section>
 

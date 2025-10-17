@@ -4,38 +4,14 @@ import logoCafe from "../assets/LogoCafe.png";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import ShoppingHistory from "./ShoppingHistory";
-import Swal from "sweetalert2";
 
 export default function Header() {
-  const { user, logout, openAuthModal } = useAuth();
+  const { user, openAuthModal } = useAuth();
   const [historyOpen, setHistoryOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const toggleHistory = () => {
     setHistoryOpen(!historyOpen);
-  };
-  const handleLogout = () => {
-    Swal.fire({
-      icon: "question",
-      title: "¿Cerrar sesión?",
-      text: "¿Estás seguro de que quieres cerrar tu sesión?",
-      showCancelButton: true,
-      confirmButtonText: "Sí, cerrar",
-      cancelButtonText: "Cancelar",
-      confirmButtonColor: "#4a2c2a",
-      cancelButtonColor: "#d33",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        logout();
-        Swal.fire(
-          "✅ Sesión cerrada",
-          "Has cerrado sesión exitosamente",
-          "success"
-        ).then(() => {
-          window.location.reload();
-        });
-      }
-    });
   };
 
   const toggleMenu = () => {
@@ -44,6 +20,18 @@ export default function Header() {
 
   const closeMenu = () => {
     setIsMenuOpen(false);
+  };
+
+  const getImageUrl = (image) => {
+    if (!image || image.trim() === "") {
+      return null;
+    }
+
+    if (image.startsWith("http")) {
+      return image;
+    }
+
+    return `http://localhost:3000${image}`;
   };
 
   return (
@@ -160,17 +148,13 @@ export default function Header() {
                 </svg>
               </a>
             ) : (
-              <div className="user-profile auth-visible" id="user-profile">
-                <div className="user-info">
-                  <button
-                    className="logout-btn"
-                    id="logout-btn"
-                    onClick={handleLogout}
-                  >
-                    <div className="sign" id="logout-initial">
-                      {user.image && user.image.trim() !== "" ? (
+              <Link to="/profile" className="tab">
+                <div className="user-profile">
+                  <div className="user-info">
+                    <div className="sign">
+                      {getImageUrl(user.image) ? (
                         <img
-                          src={user.image}
+                          src={getImageUrl(user.image)}
                           alt="Foto de perfil"
                           className="profile-image"
                           onError={(e) => {
@@ -189,10 +173,9 @@ export default function Header() {
                         </span>
                       )}
                     </div>
-                    <div className="text">Cerrar Sesión</div>
-                  </button>
+                  </div>
                 </div>
-              </div>
+              </Link>
             )}
 
             {/* Admin link */}
@@ -332,17 +315,15 @@ export default function Header() {
                 Iniciar Sesión
               </a>
             ) : (
-              <button
+              <Link
+                to="/profile"
                 className="mobile-menu-item"
-                onClick={() => {
-                  handleLogout();
-                  closeMenu();
-                }}
+                onClick={closeMenu}
               >
-                <div className="sign" id="logout-initial">
-                  {user.image && user.image.trim() !== "" ? (
+                <div className="sign">
+                  {getImageUrl(user.image) ? (
                     <img
-                      src={user.image}
+                      src={getImageUrl(user.image)}
                       alt="Foto de perfil"
                       className="profile-image"
                       onError={(e) => {
@@ -361,8 +342,8 @@ export default function Header() {
                     </span>
                   )}
                 </div>
-                Cerrar Sesión
-              </button>
+                Perfil
+              </Link>
             )}
             {user && user.role === "admin" && (
               <Link
