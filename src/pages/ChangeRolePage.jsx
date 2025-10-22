@@ -137,7 +137,9 @@ const ChangeRolePageInner = () => {
                 </p>
               </div>
               <button
-                className="btn-role"
+                className={`btn-role ${
+                  user.role === "admin" ? "btn-admin" : "btn-user"
+                }`}
                 onClick={() => handleChangeRole(user.id, user.role)}
               >
                 Cambiar a {user.role === "admin" ? "User" : "Admin"}

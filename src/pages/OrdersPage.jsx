@@ -147,7 +147,7 @@ const OrdersPageInner = () => {
           <p>No hay órdenes registradas.</p>
         </div>
       ) : (
-        <>
+        <div className="table-wrapper">
           <table className="orders-table">
             <thead>
               <tr>
@@ -213,7 +213,7 @@ const OrdersPageInner = () => {
               ⇨
             </button>
           </div>
-        </>
+        </div>
       )}
     </div>
   );
