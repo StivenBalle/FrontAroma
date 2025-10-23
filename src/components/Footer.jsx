@@ -1,10 +1,23 @@
 import "../App.css";
 import { Link } from "react-router-dom";
+import LogoCafe from "../assets/LogoCafe.png";
 
 export default function Footer() {
   return (
     <footer className="footer">
       <div className="footer-content">
+        {/* Marca y descripción */}
+        <div className="footer-brand">
+          <div className="footer-logo">
+            <img src={LogoCafe} alt="Café Aroma" className="logo-footer" />
+            <h2>Café Aroma de la Serrania</h2>
+          </div>
+          <p>
+            Ofrecemos los mejores granos de café seleccionados cuidadosamente
+            para brindarte una experiencia única en cada taza.
+          </p>
+        </div>
+
         {/* Centro de distribución */}
         <div className="footer-text">
           <h3>Centro de distribución</h3>
@@ -21,12 +34,12 @@ export default function Footer() {
           <h3>Centro de procesamiento</h3>
           <p>Colombia</p>
           <p>Aguachica-Cesar</p>
-          <p>Asienda</p>
+          <p>Hacienda</p>
           <p>Celular: +57 3145266305</p>
           <p>Vereda Bombeadero</p>
         </div>
 
-        {/* Productos */}
+        {/* Enlaces e información */}
         <div className="footer-text">
           <h3>Información</h3>
           <ul>
@@ -36,13 +49,6 @@ export default function Footer() {
             <li>
               <Link to="/preparacion">Métodos de preparación</Link>
             </li>
-          </ul>
-        </div>
-
-        {/* Políticas */}
-        <div className="footer-text">
-          <h3>Políticas y Términos</h3>
-          <ul>
             <li>
               <Link to="/terminos&condiciones">Términos y Condiciones</Link>
             </li>
@@ -127,12 +133,11 @@ export default function Footer() {
       </div>
 
       {/* Derechos reservados */}
-      <div className="footer-text">
+      <div className="footer-rights">
         <p>
-          © 2025 Café Aroma de la Serranía. Todos los derechos reservados.
+          © 2025 Café Aroma de la Serranía. Todos los derechos reservados.{" "}
           <br />
-          Desarrollo web por: Brandon Stiven Ropero Ballesteros
-          <br />
+          Desarrollo web por: <b>Brandon Stiven Ropero Ballesteros</b> <br />
           Correo: brandonropero90@gmail.com
         </p>
       </div>

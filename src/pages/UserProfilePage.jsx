@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import Cafetera from "../components/Cafetera.jsx";
+import withSessionGuard from "../hocs/withSessionGuard";
 import Swal from "sweetalert2";
 import {
   getHistorial,
@@ -253,6 +254,11 @@ const UserProfilePage = () => {
     currentPage * pageSize
   );
 
+  const handlePrevious = () =>
+    currentPage > 1 && setCurrentPage(currentPage - 1);
+  const handleNext = () =>
+    currentPage < totalPages && setCurrentPage(currentPage + 1);
+
   if (loading) {
     return (
       <div className="loading-products">
@@ -493,9 +499,9 @@ const UserProfilePage = () => {
         )}
         <div className="pagination-btns">
           <button
+            onClick={handlePrevious}
             disabled={currentPage === 1}
-            onClick={() => setCurrentPage(currentPage - 1)}
-            className="pagination-button"
+            className="pagination-btn"
           >
             ⇦
           </button>
@@ -503,9 +509,9 @@ const UserProfilePage = () => {
             Página {currentPage} de {totalPages}
           </span>
           <button
+            onClick={handleNext}
             disabled={currentPage === totalPages}
-            onClick={() => setCurrentPage(currentPage + 1)}
-            className="pagination-button"
+            className="pagination-btn"
           >
             ⇨
           </button>
@@ -518,4 +524,4 @@ const UserProfilePage = () => {
   );
 };
 
-export default UserProfilePage;
+export default withSessionGuard(UserProfilePage);

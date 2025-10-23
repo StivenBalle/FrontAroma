@@ -2,8 +2,19 @@ import Swal from "sweetalert2";
 const API_URL = import.meta.env.VITE_API_URL;
 
 let navigateRef = null;
+let logoutCallback = null;
+let setUserRef = null;
+
 export const setNavigate = (navigate) => {
   navigateRef = navigate;
+};
+
+export const setLogoutHandler = (fn) => {
+  logoutCallback = fn;
+};
+
+export const setUserHandler = (fn) => {
+  setUserRef = fn;
 };
 
 async function request(path, { method = "GET", body } = {}) {
@@ -42,7 +53,11 @@ async function request(path, { method = "GET", body } = {}) {
           text: "Tu sesión ha terminado. Si deseas continuar disfrutando de nuestros servicios inicia sesión nuevamente",
           confirmButtonText: "Aceptar",
         });
-        navigateRef("/");
+        if (logoutCallback && setUserRef) {
+          setUserRef(null);
+          await logoutCallback();
+        }
+        window.location.reload();
       } else {
         console.warn(
           "Sesion expirada detectada pero `navigate` no está seteado"

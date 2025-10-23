@@ -5,6 +5,8 @@ import {
   updatePhone,
   getUserProfile,
   logout as apiLogout,
+  setLogoutHandler,
+  setUserHandler,
 } from "../api.js";
 import Swal from "sweetalert2";
 
@@ -30,6 +32,8 @@ export const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
+    setLogoutHandler(logout);
+    setUserHandler(setUser);
     const checkAuth = async () => {
       try {
         if (!hasCookieConsent()) {
@@ -97,9 +101,10 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     try {
       await apiLogout();
-      setUser(null);
     } catch (err) {
-      console.error("❌ Error al cerrar sesión:", err.message);
+      console.warn("Error cerrando sesión:", err.message);
+    } finally {
+      setUser(null);
     }
   };
 

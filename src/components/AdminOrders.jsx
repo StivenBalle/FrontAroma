@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import withAdminGuard from "../hocs/withAdminGuard.jsx";
+import withSessionGuard from "../hocs/withSessionGuard";
 import "../App.css";
 
 const AdminOrdersInner = () => {
@@ -155,4 +156,4 @@ const AdminOrdersInner = () => {
   );
 };
 
-export default withAdminGuard(AdminOrdersInner);
+export default withSessionGuard(withAdminGuard(AdminOrdersInner));
