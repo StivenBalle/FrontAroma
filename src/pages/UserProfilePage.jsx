@@ -458,63 +458,377 @@ const UserProfilePage = () => {
         </div>
       )}
 
-      <section className="orders-section">
-        <h2>Historial de Compras</h2>
-        {orders.length === 0 ? (
-          <div className="text_no_orders">
-            <Cafetera />
-            <p>No hay compras registradas.</p>
+      <section className="orders-section-modern">
+        <div className="orders-container">
+          <div className="orders-header">
+            <div className="orders-header-content">
+              <h2 className="orders-title">Historial de Compras</h2>
+              <p className="orders-subtitle">
+                Revisa todas tus órdenes y su estado actual
+              </p>
+            </div>
+            {orders.length > 0 && (
+              <div className="orders-stats">
+                <div className="stat-badge">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+                    />
+                  </svg>
+                  <span>
+                    {orders.length} {orders.length === 1 ? "Compra" : "Compras"}
+                  </span>
+                </div>
+              </div>
+            )}
           </div>
-        ) : (
-          <div className="table-wrapper">
-            <table className="orders-table">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Producto</th>
-                  <th>Precio</th>
-                  <th>Fecha</th>
-                  <th>Dirección</th>
-                  <th>Estado</th>
-                </tr>
-              </thead>
-              <tbody>
-                {paginatedOrders.map((order) => (
-                  <tr key={order.id}>
-                    <td>{order.id}</td>
-                    <td>{order.producto}</td>
-                    <td>${Number(order.precio).toFixed(2)}</td>
-                    <td>{new Date(order.fecha).toLocaleDateString("es-CO")}</td>
-                    <td>
-                      {order.shipping_address
-                        ? `${order.shipping_address.line1}, ${order.shipping_address.city}`
-                        : "N/A"}
-                    </td>
-                    <td>{order.status}</td>
-                  </tr>
+
+          {orders.length === 0 ? (
+            <div className="no-orders-modern">
+              <div className="no-orders-content">
+                <Cafetera />
+                <h3>No hay compras registradas</h3>
+                <p>Cuando realices tu primera compra, aparecerá aquí</p>
+              </div>
+            </div>
+          ) : (
+            <>
+              {/* Vista de tabla para desktop */}
+              <div className="table-wrapper-modern">
+                <table className="orders-table-modern">
+                  <thead>
+                    <tr>
+                      <th>
+                        <div className="th-content">
+                          <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14"
+                            />
+                          </svg>
+                          ID
+                        </div>
+                      </th>
+                      <th>
+                        <div className="th-content">
+                          <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
+                            />
+                          </svg>
+                          Producto
+                        </div>
+                      </th>
+                      <th>
+                        <div className="th-content">
+                          <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                            />
+                          </svg>
+                          Precio
+                        </div>
+                      </th>
+                      <th>
+                        <div className="th-content">
+                          <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                            />
+                          </svg>
+                          Fecha
+                        </div>
+                      </th>
+                      <th>
+                        <div className="th-content">
+                          <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                            />
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                            />
+                          </svg>
+                          Dirección
+                        </div>
+                      </th>
+                      <th>
+                        <div className="th-content">
+                          <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                            />
+                          </svg>
+                          Estado
+                        </div>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {paginatedOrders.map((order, index) => (
+                      <tr
+                        key={order.id}
+                        style={{ animationDelay: `${index * 0.05}s` }}
+                      >
+                        <td>
+                          <span className="order-id-badge">#{order.id}</span>
+                        </td>
+                        <td>
+                          <div className="product-cell">
+                            <span className="product-name">
+                              {order.producto}
+                            </span>
+                          </div>
+                        </td>
+                        <td>
+                          <span className="price-cell">
+                            ${Number(order.precio).toFixed(2)}
+                          </span>
+                        </td>
+                        <td>
+                          <span className="date-cell">
+                            {new Date(order.fecha).toLocaleDateString("es-CO", {
+                              year: "numeric",
+                              month: "short",
+                              day: "numeric",
+                            })}
+                          </span>
+                        </td>
+                        <td>
+                          <div className="address-cell">
+                            {order.shipping_address ? (
+                              <>
+                                <svg
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  stroke="currentColor"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                                  />
+                                </svg>
+                                <span>
+                                  {order.shipping_address.line1},{" "}
+                                  {order.shipping_address.city}
+                                </span>
+                              </>
+                            ) : (
+                              <span className="na-text">N/A</span>
+                            )}
+                          </div>
+                        </td>
+                        <td>
+                          <span
+                            className={`status-badge status-${order.status}`}
+                          >
+                            {order.status}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Vista de cards para móvil */}
+              <div className="orders-cards-mobile">
+                {paginatedOrders.map((order, index) => (
+                  <div
+                    key={order.id}
+                    className="order-card-mobile"
+                    style={{ animationDelay: `${index * 0.05}s` }}
+                  >
+                    <div className="order-card-header">
+                      <span className="order-id-badge">#{order.id}</span>
+                      <span className={`status-badge status-${order.status}`}>
+                        {order.status}
+                      </span>
+                    </div>
+                    <div className="order-card-body">
+                      <div className="order-card-row">
+                        <div className="order-card-label">
+                          <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
+                            />
+                          </svg>
+                          Producto
+                        </div>
+                        <div className="order-card-value">{order.producto}</div>
+                      </div>
+                      <div className="order-card-row">
+                        <div className="order-card-label">
+                          <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                            />
+                          </svg>
+                          Precio
+                        </div>
+                        <div className="order-card-value price-cell">
+                          ${Number(order.precio).toFixed(2)}
+                        </div>
+                      </div>
+                      <div className="order-card-row">
+                        <div className="order-card-label">
+                          <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                            />
+                          </svg>
+                          Fecha
+                        </div>
+                        <div className="order-card-value">
+                          {new Date(order.fecha).toLocaleDateString("es-CO", {
+                            year: "numeric",
+                            month: "short",
+                            day: "numeric",
+                          })}
+                        </div>
+                      </div>
+                      {order.shipping_address && (
+                        <div className="order-card-row">
+                          <div className="order-card-label">
+                            <svg
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                              />
+                            </svg>
+                            Dirección
+                          </div>
+                          <div className="order-card-value">
+                            {order.shipping_address.line1},{" "}
+                            {order.shipping_address.city}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-        <div className="pagination-btns">
-          <button
-            onClick={handlePrevious}
-            disabled={currentPage === 1}
-            className="pagination-btn"
-          >
-            ⇦
-          </button>
-          <span>
-            Página {currentPage} de {totalPages}
-          </span>
-          <button
-            onClick={handleNext}
-            disabled={currentPage === totalPages}
-            className="pagination-btn"
-          >
-            ⇨
-          </button>
+              </div>
+
+              {/* Paginación */}
+              {totalPages > 1 && (
+                <div className="pagination-modern">
+                  <button
+                    onClick={handlePrevious}
+                    disabled={currentPage === 1}
+                    className="pagination-btn-modern"
+                    aria-label="Página anterior"
+                  >
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M15 19l-7-7 7-7"
+                      />
+                    </svg>
+                    Anterior
+                  </button>
+                  <div className="pagination-info">
+                    <span className="current-page">{currentPage}</span>
+                    <span className="separator">/</span>
+                    <span className="total-pages">{totalPages}</span>
+                  </div>
+                  <button
+                    onClick={handleNext}
+                    disabled={currentPage === totalPages}
+                    className="pagination-btn-modern"
+                    aria-label="Página siguiente"
+                  >
+                    Siguiente
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 5l7 7-7 7"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              )}
+            </>
+          )}
         </div>
         <button onClick={handleLogout} className="logout-button">
           Cerrar Sesión

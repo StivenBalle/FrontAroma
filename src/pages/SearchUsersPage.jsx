@@ -71,23 +71,80 @@ const SearchUsersPageInner = () => {
 
   return (
     <div className="admin-page">
-      <div className="page-header">
-        <h2>Buscar Usuario</h2>
-        <button onClick={() => navigate("/admin")} className="back-btn">
-          ← Volver al Dashboard
+      <div className="admin-page-header">
+        <div className="header-left">
+          <h2 className="admin-page-title">Buscar Usuario</h2>
+          <p className="admin-page-subtitle">
+            Busca y administra todos los usuarios
+          </p>
+        </div>
+        <button onClick={() => navigate("/admin")} className="back-btn-modern">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M10 19l-7-7m0 0l7-7m-7 7h18"
+            />
+          </svg>
+          Volver al Dashboard
         </button>
       </div>
 
-      <form className="form_orders" onSubmit={handleSearch}>
-        <button type="submit"></button>
-        <input
-          className="input_search"
-          placeholder="Buscar por correo o nombre"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-        <button className="reset" type="reset" onClick={handleReset}></button>
-      </form>
+      <div className="search-section">
+        <form className="search-form-modern" onSubmit={handleSearch}>
+          <div className="search-input-wrapper">
+            <svg
+              className="search-icon"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
+            </svg>
+            <input
+              className="search-input-modern"
+              placeholder="Buscar por correo..."
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            {searchTerm && (
+              <button
+                className="clear-btn"
+                type="button"
+                onClick={handleReset}
+                aria-label="Limpiar búsqueda"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            )}
+          </div>
+          <button type="submit" className="search-btn-modern">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
+            </svg>
+            Buscar
+          </button>
+        </form>
+      </div>
 
       {loading ? (
         <div className="loading-products">
@@ -97,7 +154,7 @@ const SearchUsersPageInner = () => {
           </div>
         </div>
       ) : users.length === 0 && searched ? (
-        <div className="text_no_orders">
+        <div className="text-no-orders">
           <Cafetera />
           <p>No se encontraron usuarios.</p>
         </div>

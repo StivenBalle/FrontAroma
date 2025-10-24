@@ -56,10 +56,23 @@ const AdminStats = () => {
 
   return (
     <div className="admin-page">
-      <div className="page-header">
-        <h2>📊 Estadísticas Generales</h2>
-        <button onClick={() => navigate("/admin")} className="back-btn">
-          ← Volver al Dashboard
+      <div className="admin-page-header">
+        <div className="header-left">
+          <h2 className="admin-page-title">📊 Estadísticas Generales</h2>
+          <p className="admin-page-subtitle">
+            Visualiza el aumento en tus ventas
+          </p>
+        </div>
+        <button onClick={() => navigate("/admin")} className="back-btn-modern">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M10 19l-7-7m0 0l7-7m-7 7h18"
+            />
+          </svg>
+          Volver al Dashboard
         </button>
       </div>
       <div className="charts-grid">
