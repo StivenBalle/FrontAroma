@@ -77,21 +77,6 @@ const SearchUsersPageInner = () => {
     return acc;
   }, {});
 
-  const getProfileImage = (user) => {
-    if (!user?.image) return null;
-    let imagePath = user.image.trim();
-    if (imagePath.startsWith("https//")) {
-      imagePath = imagePath.replace("https//", "https://");
-    } else if (imagePath.startsWith("http//")) {
-      imagePath = imagePath.replace("http//", "http://");
-    }
-    if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
-      return imagePath;
-    }
-
-    return `https://backendaromaserrania.onrender.com${imagePath}`;
-  };
-
   return (
     <div className="admin-orders-page">
       {/* Header con botón de volver */}
@@ -260,12 +245,15 @@ const SearchUsersPageInner = () => {
               >
                 <div className="user-card-header">
                   <div className="user-avatar-large">
-                    {getProfileImage(user) ? (
+                    {user.image ? (
                       <img
-                        src={getProfileImage(user)}
-                        alt={user?.name || "Usuario"}
+                        src={user.image}
+                        alt={user.name || "Usuario"}
                         className="avatar-image"
-                        onError={(e) => (e.target.style.display = "none")}
+                        onError={(e) => {
+                          e.target.style.display = "none";
+                          e.target.nextSibling.style.display = "flex";
+                        }}
                       />
                     ) : null}
                     <span
