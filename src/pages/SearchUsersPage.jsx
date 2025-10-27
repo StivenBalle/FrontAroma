@@ -79,11 +79,19 @@ const SearchUsersPageInner = () => {
 
   const getProfileImage = (user) => {
     if (!user?.image) return null;
-    if (/^https?:\/\//i.test(user.image)) {
-      return user.image;
+
+    let imagePath = user.image;
+
+    if (imagePath.startsWith("https//")) {
+      imagePath = imagePath.replace("https//", "https://");
+    } else if (imagePath.startsWith("http//")) {
+      imagePath = imagePath.replace("http//", "http://");
+    }
+    if (/^https?:\/\//i.test(imagePath)) {
+      return imagePath;
     }
 
-    return `https://backendaromaserrania.onrender.com${user.image}`;
+    return `https://backendaromaserrania.onrender.com${imagePath}`;
   };
 
   return (
