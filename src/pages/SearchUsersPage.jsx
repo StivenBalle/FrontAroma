@@ -79,16 +79,12 @@ const SearchUsersPageInner = () => {
 
   const getProfileImage = (user) => {
     if (!user?.image) return null;
-
-    let imagePath = user.image;
-
-    if (imagePath.startsWith("https//")) {
-      imagePath = imagePath.replace("https//", "https://");
-    } else if (imagePath.startsWith("http//")) {
-      imagePath = imagePath.replace("http//", "http://");
-    }
-    if (/^https?:\/\//i.test(imagePath)) {
+    const imagePath = user.image.trim();
+    if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
       return imagePath;
+    }
+    if (imagePath.startsWith("https//")) {
+      return imagePath.replace("https//", "https://");
     }
 
     return `https://backendaromaserrania.onrender.com${imagePath}`;
