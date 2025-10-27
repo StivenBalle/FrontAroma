@@ -2,13 +2,14 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Cafetera from "../components/Cafetera.jsx";
 import withAdminGuard from "../hocs/withAdminGuard.jsx";
-import { getAdminOrders } from "../api.js";
+import { getAdminOrders, getUsers } from "../api.js";
 import Swal from "sweetalert2";
 import "../App.css";
 
 const OrdersPageInner = () => {
   const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
+  const [users, setUsers] = useState([]);
   const [filteredOrders, setFilteredOrders] = useState([]);
   const [pageLoading, setPageLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -23,10 +24,14 @@ const OrdersPageInner = () => {
 
   const fetchOrders = async () => {
     try {
-      const data = await getAdminOrders();
-      console.log("Órdenes recibidas en frontend:", data.orders);
-      setOrders(data.orders || []);
-      setFilteredOrders(data.orders || []);
+      const [ordersData, usersData] = await Promise.all([
+        getAdminOrders(),
+        getUsers(""),
+      ]);
+
+      setOrders(ordersData.orders || []);
+      setFilteredOrders(ordersData.orders || []);
+      setUsers(usersData.users || []);
       setCurrentPage(1);
     } catch (err) {
       console.error("❌ Error en fetchOrders:", err);
@@ -376,178 +381,178 @@ const OrdersPageInner = () => {
                 </tr>
               </thead>
               <tbody>
-                {paginatedOrders.map((order, index) => (
-                  <tr
-                    key={order.id}
-                    style={{ animationDelay: `${index * 0.03}s` }}
-                  >
-                    <td>
-                      <span className="order-id-badge">#{order.id}</span>
-                    </td>
-                    <td>
-                      <div className="user-cell">
-                        <div className="user-avatar">
-                          {order.user_name
-                            ? order.user_name[0].toUpperCase()
-                            : "U"}
-                        </div>
-                        <div className="user-info">
-                          <span className="user-name">{order.user_name}</span>
-                          <span className="user-email">{order.user_email}</span>
-                        </div>
-                      </div>
-                    </td>
-                    <td>
-                      <span className="product-name">{order.producto}</span>
-                    </td>
-                    <td>
-                      <span className="price-cell">
-                        ${Number(order.precio).toFixed(2)}
-                      </span>
-                    </td>
-                    <td>
-                      <div className="phone-cell">
-                        {order.phone ? (
-                          <>
-                            <svg
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                {paginatedOrders.map((order, index) => {
+                  const user = users.find((u) => u.email === order.user_email);
+                  const userImage = user?.image || null;
+                  return (
+                    <tr
+                      key={order.id}
+                      style={{ animationDelay: `${index * 0.03}s` }}
+                    >
+                      <td>
+                        <span className="order-id-badge">#{order.id}</span>
+                      </td>
+                      <td>
+                        <div className="user-cell">
+                          <div className="user-avatar-large">
+                            {user.image ? (
+                              <img
+                                src={userImage}
+                                alt={user.name || "Usuario"}
+                                className="avatar-image"
+                                onError={(e) => {
+                                  e.target.style.display = "none";
+                                  e.target.nextSibling.style.display = "flex";
+                                }}
                               />
-                            </svg>
-                            <span>{order.phone}</span>
-                          </>
-                        ) : (
-                          <span className="na-text">N/A</span>
-                        )}
-                      </div>
-                    </td>
-                    <td>
-                      <div className="address-cell">
-                        {order.shipping_address ? (
-                          <>
-                            <svg
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
+                            ) : null}
+                            <span
+                              className="avatar-letter"
+                              style={{
+                                display: user.image ? "none" : "flex",
+                              }}
                             >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                              />
-                            </svg>
-                            <div className="address-text">
-                              <span>{order.shipping_address.line1}</span>
-                              <span className="address-city">
-                                {order.shipping_address.city},{" "}
-                                {order.shipping_address.country}
-                              </span>
-                            </div>
-                          </>
-                        ) : (
-                          <span className="na-text">N/A</span>
-                        )}
-                      </div>
-                    </td>
-                    <td>
-                      <span className={`status-badge status-${order.status}`}>
-                        {order.status}
-                      </span>
-                    </td>
-                    <td>
-                      <span className="date-cell">
-                        {new Date(order.fecha).toLocaleDateString("es-CO", {
-                          year: "numeric",
-                          month: "short",
-                          day: "numeric",
-                        })}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
+                              {user.name ? user.name[0].toUpperCase() : "U"}
+                            </span>
+                          </div>
+                          <div className="user-info">
+                            <span className="user-name">{order.user_name}</span>
+                            <span className="user-email">
+                              {order.user_email}
+                            </span>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <span className="product-name">{order.producto}</span>
+                      </td>
+                      <td>
+                        <span className="price-cell">
+                          ${Number(order.precio).toFixed(2)}
+                        </span>
+                      </td>
+                      <td>
+                        <div className="phone-cell">
+                          {order.phone ? (
+                            <>
+                              <svg
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                                />
+                              </svg>
+                              <span>{order.phone}</span>
+                            </>
+                          ) : (
+                            <span className="na-text">N/A</span>
+                          )}
+                        </div>
+                      </td>
+                      <td>
+                        <div className="address-cell">
+                          {order.shipping_address ? (
+                            <>
+                              <svg
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                                />
+                              </svg>
+                              <div className="address-text">
+                                <span>{order.shipping_address.line1}</span>
+                                <span className="address-city">
+                                  {order.shipping_address.city},{" "}
+                                  {order.shipping_address.country}
+                                </span>
+                              </div>
+                            </>
+                          ) : (
+                            <span className="na-text">N/A</span>
+                          )}
+                        </div>
+                      </td>
+                      <td>
+                        <span className={`status-badge status-${order.status}`}>
+                          {order.status}
+                        </span>
+                      </td>
+                      <td>
+                        <span className="date-cell">
+                          {new Date(order.fecha).toLocaleDateString("es-CO", {
+                            year: "numeric",
+                            month: "short",
+                            day: "numeric",
+                          })}
+                        </span>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
 
           {/* Vista de cards para móvil */}
           <div className="orders-cards-mobile">
-            {paginatedOrders.map((order, index) => (
-              <div
-                key={order.id}
-                className="admin-order-card-mobile"
-                style={{ animationDelay: `${index * 0.05}s` }}
-              >
-                <div className="order-card-header">
-                  <span className="order-id-badge">#{order.id}</span>
-                  <span className={`status-badge status-${order.status}`}>
-                    {order.status}
-                  </span>
-                </div>
-                <div className="order-card-body">
-                  <div className="order-card-section">
-                    <div className="section-title">Cliente</div>
-                    <div className="user-cell-mobile">
-                      <div className="user-avatar-mobile">
-                        {order.user_name
-                          ? order.user_name[0].toUpperCase()
-                          : "U"}
+            {paginatedOrders.map((order, index) => {
+              const user = users.find((u) => u.email === order.user_email);
+              const userImage = user?.image || null;
+              return (
+                <div
+                  key={order.id}
+                  className="admin-order-card-mobile"
+                  style={{ animationDelay: `${index * 0.05}s` }}
+                >
+                  <div className="order-card-header">
+                    <span className="order-id-badge">#{order.id}</span>
+                    <span className={`status-badge status-${order.status}`}>
+                      {order.status}
+                    </span>
+                  </div>
+                  <div className="order-card-body">
+                    <div className="order-card-section">
+                      <div className="section-title">Cliente</div>
+                      <div className="user-cell-mobile">
+                        <div className="user-avatar-large">
+                          {user.image ? (
+                            <img
+                              src={userImage}
+                              alt={user.name || "Usuario"}
+                              className="avatar-image"
+                              onError={(e) => {
+                                e.target.style.display = "none";
+                                e.target.nextSibling.style.display = "flex";
+                              }}
+                            />
+                          ) : null}
+                          <span
+                            className="avatar-letter"
+                            style={{
+                              display: user.image ? "none" : "flex",
+                            }}
+                          >
+                            {user.name ? user.name[0].toUpperCase() : "U"}
+                          </span>
+                        </div>
+                        <div className="user-info-mobile">
+                          <span className="user-name">{order.user_name}</span>
+                          <span className="user-email">{order.user_email}</span>
+                        </div>
                       </div>
-                      <div className="user-info-mobile">
-                        <span className="user-name">{order.user_name}</span>
-                        <span className="user-email">{order.user_email}</span>
-                      </div>
                     </div>
-                  </div>
 
-                  <div className="order-card-row">
-                    <div className="order-card-label">
-                      <svg
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
-                        />
-                      </svg>
-                      Producto
-                    </div>
-                    <div className="order-card-value">{order.producto}</div>
-                  </div>
-
-                  <div className="order-card-row">
-                    <div className="order-card-label">
-                      <svg
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
-                      </svg>
-                      Precio
-                    </div>
-                    <div className="order-card-value price-cell">
-                      ${Number(order.precio).toFixed(2)}
-                    </div>
-                  </div>
-
-                  {order.phone && (
                     <div className="order-card-row">
                       <div className="order-card-label">
                         <svg
@@ -559,16 +564,14 @@ const OrdersPageInner = () => {
                             strokeLinecap="round"
                             strokeLinejoin="round"
                             strokeWidth={2}
-                            d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                            d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
                           />
                         </svg>
-                        Teléfono
+                        Producto
                       </div>
-                      <div className="order-card-value">{order.phone}</div>
+                      <div className="order-card-value">{order.producto}</div>
                     </div>
-                  )}
 
-                  {order.shipping_address && (
                     <div className="order-card-row">
                       <div className="order-card-label">
                         <svg
@@ -580,46 +583,90 @@ const OrdersPageInner = () => {
                             strokeLinecap="round"
                             strokeLinejoin="round"
                             strokeWidth={2}
-                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                            d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                           />
                         </svg>
-                        Dirección
+                        Precio
+                      </div>
+                      <div className="order-card-value price-cell">
+                        ${Number(order.precio).toFixed(2)}
+                      </div>
+                    </div>
+
+                    {order.phone && (
+                      <div className="order-card-row">
+                        <div className="order-card-label">
+                          <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                            />
+                          </svg>
+                          Teléfono
+                        </div>
+                        <div className="order-card-value">{order.phone}</div>
+                      </div>
+                    )}
+
+                    {order.shipping_address && (
+                      <div className="order-card-row">
+                        <div className="order-card-label">
+                          <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                            />
+                          </svg>
+                          Dirección
+                        </div>
+                        <div className="order-card-value">
+                          {order.shipping_address.line1},{" "}
+                          {order.shipping_address.city},{" "}
+                          {order.shipping_address.country}
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="order-card-row">
+                      <div className="order-card-label">
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                          />
+                        </svg>
+                        Fecha
                       </div>
                       <div className="order-card-value">
-                        {order.shipping_address.line1},{" "}
-                        {order.shipping_address.city},{" "}
-                        {order.shipping_address.country}
+                        {new Date(order.fecha).toLocaleDateString("es-CO", {
+                          year: "numeric",
+                          month: "short",
+                          day: "numeric",
+                        })}
                       </div>
-                    </div>
-                  )}
-
-                  <div className="order-card-row">
-                    <div className="order-card-label">
-                      <svg
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                        />
-                      </svg>
-                      Fecha
-                    </div>
-                    <div className="order-card-value">
-                      {new Date(order.fecha).toLocaleDateString("es-CO", {
-                        year: "numeric",
-                        month: "short",
-                        day: "numeric",
-                      })}
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
           {/* Paginación */}

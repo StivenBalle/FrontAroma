@@ -215,11 +215,10 @@
 }
 
 .product-name {
-  font-size: 1.375rem;
-  font-weight: 600;
-  color: #1f2937;
+  font-size: 1rem;
+  font-weight: 500;
   margin: 0;
-  line-height: 1.3;
+  line-height: 1.1;
   font-family: "Georgia", serif;
 }
 
@@ -2017,6 +2016,7 @@
   align-items: center;
   justify-content: space-between;
   margin-bottom: 2.5rem;
+  margin-top: 2rem;
   flex-wrap: wrap;
   gap: 1.5rem;
 }
@@ -2045,7 +2045,7 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
+  padding: 0.75rem;
   background: white;
   border: 2px solid #e5e7eb;
   border-radius: 0.75rem;
@@ -2054,6 +2054,7 @@
   cursor: pointer;
   transition: all 0.3s ease;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  font-family: "Georgia", serif;
 }
 
 .back-btn-modern:hover {
@@ -2225,14 +2226,16 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-family: "Georgia", serif;
 }
 
 .user-email {
-  font-size: 0.8125rem;
+  font-size: 0.7rem;
   color: #6b7280;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-family: "Georgia", serif;
 }
 
 /* ========== CELDA DE TELÉFONO ========== */
@@ -2319,6 +2322,13 @@
   flex: 1;
 }
 
+.users-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
 /* ========== RESPONSIVE ========== */
 @media (max-width: 1200px) {
   .admin-orders-table th,
@@ -2395,6 +2405,29 @@
     width: 100%;
     justify-content: center;
   }
+
+  .users-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .user-card-header {
+    padding: 1.5rem 1rem 1rem;
+  }
+
+  .user-avatar-large {
+    width: 70px;
+    height: 70px;
+    font-size: 1.75rem;
+  }
+
+  .user-name-title {
+    font-size: 1.25rem;
+  }
+
+  .user-card-body {
+    padding: 1.25rem;
+  }
 }
 
 @media (max-width: 480px) {
@@ -2418,6 +2451,24 @@
 
   .order-card-value {
     text-align: left;
+  }
+
+  .user-card-header {
+    padding: 1.25rem 1rem 1rem;
+  }
+
+  .user-avatar-large {
+    width: 60px;
+    height: 60px;
+    font-size: 1.5rem;
+  }
+
+  .user-name-title {
+    font-size: 1.125rem;
+  }
+
+  .detail-value {
+    font-size: 0.875rem;
   }
 }
 
@@ -2470,6 +2521,14 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     padding: 1.25rem 1rem;
   }
+
+  .user-card-modern:hover .user-avatar-large {
+    transform: scale(1.1) rotate(5deg);
+  }
+
+  .user-card-modern:hover .role-badge {
+    transform: scale(1.05);
+  }
 }
 
 @media (hover: none) {
@@ -2484,6 +2543,14 @@
 
   .search-btn-modern:active {
     transform: scale(0.98);
+  }
+
+  .user-card-modern:active {
+    transform: scale(0.98);
+  }
+
+  .view-details-btn:active {
+    transform: scale(0.95);
   }
 }
 
@@ -2585,6 +2652,24 @@
     page-break-inside: avoid;
     padding: 1.25rem 1rem;
   }
+
+  .admin-page-header,
+  .search-section,
+  .pagination-modern,
+  .view-details-btn {
+    display: none;
+  }
+
+  .users-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .user-card-modern {
+    box-shadow: none;
+    border: 1px solid #e5e7eb;
+    page-break-inside: avoid;
+  }
 }
 
 .orders-icon {
@@ -2619,6 +2704,7 @@
   font-size: 0.875rem;
   color: #6b7280;
   font-weight: 500;
+  font-family: "Georgia", serif;
 }
 
 .stat-value {
@@ -3179,6 +3265,266 @@
   gap: 1.5rem;
 }
 
+/* ========== TARJETA DE USUARIO MODERNA ========== */
+.user-card-modern {
+  background: white;
+  border-radius: 1.5rem;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 2px solid transparent;
+  opacity: 0;
+  animation: fadeInUp 0.6s ease forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.user-card-modern:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+  border-color: #e5e7eb;
+}
+
+.user-card-header {
+  background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+    url("../src/assets/backgroundInferior.jpg") center/cover no-repeat;
+  padding: 2rem 1.5rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  position: relative;
+}
+
+.user-card-modern::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  transition: left 0.6s;
+}
+
+.user-card-modern:hover::before {
+  left: 100%;
+}
+
+.user-card-modern:focus-within {
+  box-shadow: 0 0 0 3px rgba(74, 44, 42, 0.2);
+}
+
+.user-avatar-large {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(74, 44, 42, 0.3);
+  border: 4px solid white;
+  overflow: hidden;
+  position: relative;
+}
+
+.user-avatar-large img.avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+}
+
+.user-avatar-large .avatar-letter {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: 700;
+  color: white;
+  background: linear-gradient(135deg, #4a2c2a 0%, #6b4644 100%);
+}
+
+/* ========== BADGES DE ROL ========== */
+.role-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 2rem;
+  font-size: 1.3rem;
+  color: white;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.role-badge svg {
+  width: 20px;
+  height: 20px;
+  stroke-width: 2;
+}
+
+.role-admin {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  color: #92400e;
+}
+
+.role-customer {
+  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+  color: #1e40af;
+}
+
+.user-card-body {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.user-name-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #1f2937;
+  text-align: center;
+  font-family: "Georgia", serif;
+  margin: 0;
+}
+
+.user-detail-row {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.detail-icon {
+  width: 40px;
+  height: 40px;
+  background: #f9fafb;
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.detail-icon svg {
+  width: 20px;
+  height: 20px;
+  stroke: #6b7280;
+  stroke-width: 2;
+}
+
+.detail-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.detail-label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.detail-value {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #1f2937;
+  word-break: break-all;
+}
+
+.user-id {
+  font-family: "Courier New", monospace;
+  color: #4a2c2a;
+}
+
+.user-card-footer {
+  padding: 1rem 1.5rem 1.5rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.view-details-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.875rem;
+  background: linear-gradient(135deg, #4a2c2a 0%, #3a1f1d 100%);
+  border: none;
+  border-radius: 0.75rem;
+  color: white;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.view-details-btn:hover {
+  background: linear-gradient(135deg, #3a1f1d 0%, #2a1513 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(74, 44, 42, 0.3);
+}
+
+.view-details-btn svg {
+  width: 18px;
+  height: 18px;
+  stroke-width: 2;
+}
+
+.view-details-btn:focus-visible {
+  outline: 3px solid #4a2c2a;
+  outline-offset: 2px;
+}
+
+.users-icon {
+  background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
+}
+
+.users-icon svg {
+  stroke: #4338ca;
+}
+
+.admin-icon {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+}
+
+.admin-icon svg {
+  stroke: #d97706;
+}
+
+.customer-icon {
+  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+}
+
+.customer-icon svg {
+  stroke: #1e40af;
+}
+
 .user-card {
   background-color: #ffffff;
   border-radius: 12px;
@@ -3207,9 +3553,10 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  align-items: flex-start;
+  align-items: center;
   flex-shrink: 0;
   margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 /* Botón eliminar (tu estilo adaptado) */
@@ -3434,7 +3781,7 @@
   .user-actions {
     width: 100%;
     flex-direction: row;
-    justify-content: flex-start;
+    justify-content: center;
     flex-wrap: wrap;
     gap: 10px;
   }
@@ -4125,6 +4472,7 @@ td {
 .th-content {
   display: flex;
   align-items: center;
+  font-family: "Georgia", serif;
 }
 
 .th-content svg {
@@ -4324,6 +4672,7 @@ td {
   text-align: right;
   flex: 1;
   word-break: break-word;
+  font-family: "Georgia", serif;
 }
 
 /* ========== PAGINACIÓN MODERNA ========== */
