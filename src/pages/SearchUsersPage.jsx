@@ -79,7 +79,7 @@ const SearchUsersPageInner = () => {
 
   const getProfileImage = (user) => {
     if (!user?.image) return null;
-    if (user.image.startsWith("http")) {
+    if (user.image.startsWith("http") || imagePath.startsWith("https://")) {
       return user.image;
     }
 
