@@ -77,6 +77,15 @@ const SearchUsersPageInner = () => {
     return acc;
   }, {});
 
+  const formatImageUrl = (imagePath) => {
+    if (!imagePath) return null;
+    if (imagePath.startsWith("http://") || imagePath.startsWith("https://")) {
+      return imagePath;
+    }
+
+    return `${BASE_URL}${imagePath}`;
+  };
+
   return (
     <div className="admin-orders-page">
       {/* Header con botón de volver */}
@@ -247,7 +256,7 @@ const SearchUsersPageInner = () => {
                   <div className="user-avatar-large">
                     {user.image ? (
                       <img
-                        src={user.image}
+                        src={formatImageUrl(user.image)}
                         alt={user.name || "Usuario"}
                         className="avatar-image"
                         onError={(e) => {
