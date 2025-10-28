@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import LoadingScreen from "../components/LoadingScreen";
 import Swal from "sweetalert2";
 import { getProfile } from "../api";
 
@@ -35,12 +36,10 @@ const withSessionGuard = (WrappedComponent) => {
 
     if (checkingSession) {
       return (
-        <div className="loading-products">
-          <div className="loading-content">
-            <div className="spinner"></div>
-            <h3>Verificando sesión...</h3>
-          </div>
-        </div>
+        <LoadingScreen
+          title="Verificando sesión..."
+          subtitle="Preparando los datos de tu perfil"
+        />
       );
     }
 

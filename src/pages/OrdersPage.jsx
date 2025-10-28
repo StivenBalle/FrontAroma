@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Cafetera from "../components/Cafetera.jsx";
 import withAdminGuard from "../hocs/withAdminGuard.jsx";
+import LoadingScreen from "../components/LoadingScreen";
 import { getAdminOrders, getUsers } from "../api.js";
 import Swal from "sweetalert2";
 import "../App.css";
@@ -77,14 +78,7 @@ const OrdersPageInner = () => {
     currentPage < totalPages && setCurrentPage(currentPage + 1);
 
   if (loading) {
-    return (
-      <div className="loading-products">
-        <div className="loading-content">
-          <div className="spinner"></div>
-          <h3>Cargando datos...</h3>
-        </div>
-      </div>
-    );
+    return <LoadingScreen />;
   }
 
   return (

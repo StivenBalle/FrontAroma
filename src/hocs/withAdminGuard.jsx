@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import "../styles/AdminStats.css";
 import Swal from "sweetalert2";
 
 const withAdminGuard = (WrappedComponent) => {
@@ -31,9 +32,9 @@ const withAdminGuard = (WrappedComponent) => {
 
     if (loading || verifyingAccess) {
       return (
-        <div className="loading-products">
+        <div className="stats-loading-container">
           <div className="loading-content">
-            <div className="spinner"></div>
+            <div className="spinner-stats"></div>
             <h3 className={verifyingAccess ? "loading-denied" : ""}>
               {verifyingAccess
                 ? "Verificando acceso..."

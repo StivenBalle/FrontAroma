@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import withAdminGuard from "../hocs/withAdminGuard.jsx";
+import LoadingScreen from "../components/LoadingScreen";
 import Cafetera from "../components/Cafetera.jsx";
-import { getUsers, getUserProfile } from "../api.js";
+import { getUsers } from "../api.js";
 import Swal from "sweetalert2";
 import "../App.css";
 
@@ -85,6 +86,10 @@ const SearchUsersPageInner = () => {
 
     return `${BASE_URL}${imagePath}`;
   };
+
+  if (loading) {
+    return <LoadingScreen />;
+  }
 
   return (
     <div className="admin-orders-page">

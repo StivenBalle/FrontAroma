@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import withAdminGuard from "../hocs/withAdminGuard.jsx";
+import LoadingScreen from "../components/LoadingScreen";
 import { getUsers, deleteUser } from "../api.js";
 import Cafetera from "../components/Cafetera.jsx";
 import Swal from "sweetalert2";
@@ -95,6 +96,10 @@ const DeleteUsersPage = () => {
     acc[user.role] = (acc[user.role] || 0) + 1;
     return acc;
   }, {});
+
+  if (loading) {
+    return <LoadingScreen />;
+  }
 
   return (
     <div className="admin-orders-page">

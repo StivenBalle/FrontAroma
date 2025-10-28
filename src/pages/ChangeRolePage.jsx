@@ -4,6 +4,7 @@ import { getUsers, updateUserRole } from "../api.js";
 import withAdminGuard from "../hocs/withAdminGuard.jsx";
 import Cafetera from "../components/Cafetera.jsx";
 import Swal from "sweetalert2";
+import LoadingScreen from "../components/LoadingScreen.jsx";
 import "../App.css";
 
 const ChangeRolePageInner = () => {
@@ -97,6 +98,10 @@ const ChangeRolePageInner = () => {
     acc[user.role] = (acc[user.role] || 0) + 1;
     return acc;
   }, {});
+
+  if (loading) {
+    return <LoadingScreen />;
+  }
 
   return (
     <div className="admin-orders-page">

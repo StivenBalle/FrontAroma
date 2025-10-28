@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import bolsaCafe from "../assets/LogoCafe.png";
+import LoadingScreen from "../components/LoadingScreen";
 import { getPurchaseDetails } from "../api.js";
 import "../App.css";
 
@@ -41,12 +42,10 @@ const Success = () => {
 
   if (loading) {
     return (
-      <div className="loading-products">
-        <div className="loading-content">
-          <div className="spinner"></div>
-          <h3>Cargando detalles de tu compra...</h3>
-        </div>
-      </div>
+      <LoadingScreen
+        title="Cargando compra..."
+        subtitle="Estamos preparando los detalles de tu compra"
+      />
     );
   }
 

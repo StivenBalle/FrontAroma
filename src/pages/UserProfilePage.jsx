@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import Cafetera from "../components/Cafetera.jsx";
 import withSessionGuard from "../hocs/withSessionGuard";
+import LoadingScreen from "../components/LoadingScreen";
 import Swal from "sweetalert2";
 import {
   getHistorial,
@@ -260,14 +261,7 @@ const UserProfilePage = () => {
     currentPage < totalPages && setCurrentPage(currentPage + 1);
 
   if (loading) {
-    return (
-      <div className="loading-products">
-        <div className="loading-content">
-          <div className="spinner"></div>
-          <h3>Cargando perfil...</h3>
-        </div>
-      </div>
-    );
+    return <LoadingScreen />;
   }
 
   const addressDisplay = shippingAddress
