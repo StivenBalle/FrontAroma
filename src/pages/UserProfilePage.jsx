@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import Cafetera from "../components/Cafetera.jsx";
-import withSessionGuard from "../hocs/withSessionGuard";
+import withSessionGuard from "../hooks/withSessionGuard.jsx";
+import { useMinimumLoadingTime } from "../hooks/useMinimumLoading.jsx";
+import HeaderTitle from "../components/HeaderTitle.jsx";
 import LoadingScreen from "../components/LoadingScreen";
 import Swal from "sweetalert2";
 import {
@@ -38,6 +40,7 @@ const UserProfilePage = () => {
   });
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+  const showLoading = useMinimumLoadingTime(loading, 1000);
   const pageSize = 10;
 
   // Helper to get image URL
@@ -260,8 +263,8 @@ const UserProfilePage = () => {
   const handleNext = () =>
     currentPage < totalPages && setCurrentPage(currentPage + 1);
 
-  if (loading) {
-    return <LoadingScreen />;
+  if (showLoading) {
+    return <LoadingScreen title="Preparando tu perfil..." />;
   }
 
   const addressDisplay = shippingAddress
@@ -273,10 +276,13 @@ const UserProfilePage = () => {
     : "Sin dirección";
 
   return (
-    <div className="profile-page">
-      <header className="profile-header">
-        <h2>Mi Perfil</h2>
-      </header>
+    <div className="admin-orders-page">
+      <HeaderTitle
+        title="Mi perfil"
+        subtitle="Actualiza tus datos personales"
+        backPath="/"
+        backText="Volver al Inicio"
+      />
 
       <section className="profile-section">
         <div className="profile-avatar">

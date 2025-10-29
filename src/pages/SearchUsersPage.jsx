@@ -1,19 +1,23 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import withAdminGuard from "../hocs/withAdminGuard.jsx";
+import withAdminGuard from "../hooks/withAdminGuard.jsx";
 import LoadingScreen from "../components/LoadingScreen";
+import { useMinimumLoadingTime } from "../hooks/useMinimumLoading.jsx";
+import HeaderTitle from "../components/HeaderTitle.jsx";
+import UserDetailsModal from "../components/UserDetails.jsx";
 import Cafetera from "../components/Cafetera.jsx";
 import { getUsers } from "../api.js";
 import Swal from "sweetalert2";
 import "../App.css";
 
 const SearchUsersPageInner = () => {
-  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const showLoading = useMinimumLoadingTime(loading, 1000);
+  const [selectedUserId, setSelectedUserId] = useState(null);
+  const [showDetailsModal, setShowDetailsModal] = useState(false);
   const pageSize = 20;
 
   useEffect(() => {
@@ -33,7 +37,6 @@ const SearchUsersPageInner = () => {
 
   const handleSearch = async (e) => {
     e.preventDefault();
-    setLoading(true);
     setSearched(true);
     setCurrentPage(1);
     try {
@@ -42,13 +45,12 @@ const SearchUsersPageInner = () => {
     } catch (err) {
       Swal.fire("Error", "No se pudieron buscar usuarios", "error");
     } finally {
-      setLoading(false);
+      setTimeout(() => setSearched(false), 1000);
     }
   };
 
   const handleReset = async () => {
     setSearchTerm("");
-    setSearched(false);
     setCurrentPage(1);
     setLoading(true);
     try {
@@ -66,6 +68,16 @@ const SearchUsersPageInner = () => {
     (currentPage - 1) * pageSize,
     currentPage * pageSize
   );
+
+  const handleViewDetails = (userId) => {
+    setSelectedUserId(userId);
+    setShowDetailsModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowDetailsModal(false);
+    setSelectedUserId(null);
+  };
 
   const handlePrevious = () =>
     currentPage > 1 && setCurrentPage(currentPage - 1);
@@ -87,33 +99,18 @@ const SearchUsersPageInner = () => {
     return `${BASE_URL}${imagePath}`;
   };
 
-  if (loading) {
-    return <LoadingScreen />;
+  if (showLoading) {
+    return <LoadingScreen title="Cargando usuarios..." />;
   }
 
   return (
     <div className="admin-orders-page">
-      {/* Header con botón de volver */}
-
-      <div className="admin-page-header">
-        <div className="header-left">
-          <h2 className="admin-page-title">Gestión de Usuarios</h2>
-          <p className="admin-page-subtitle">
-            Busca y administra todos los usuarios registrados en la plataforma
-          </p>
-        </div>
-        <button onClick={() => navigate("/admin")} className="back-btn-modern">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M10 19l-7-7m0 0l7-7m-7 7h18"
-            />
-          </svg>
-          Volver al Dashboard
-        </button>
-      </div>
+      <HeaderTitle
+        title="Buscar usuarios"
+        subtitle="Filtra todos los usuarios registrados"
+        backPath="/admin"
+        backText="Volver al Dashboard"
+      />
 
       {/* Barra de búsqueda moderna */}
       <div className="search-section">
@@ -228,14 +225,14 @@ const SearchUsersPageInner = () => {
       </div>
 
       {/* Contenido principal */}
-      {loading ? (
+      {searched ? (
         <div className="loading-products">
           <div className="loading-content">
             <div className="spinner"></div>
             <h3>Cargando usuarios...</h3>
           </div>
         </div>
-      ) : users.length === 0 && searched ? (
+      ) : users.length === 0 ? (
         <div className="no-orders-modern">
           <div className="no-orders-content">
             <Cafetera />
@@ -361,7 +358,10 @@ const SearchUsersPageInner = () => {
                 </div>
 
                 <div className="user-card-footer">
-                  <button className="view-details-btn">
+                  <button
+                    className="view-details-btn"
+                    onClick={() => handleViewDetails(user.id)}
+                  >
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                       <path
                         strokeLinecap="round"
@@ -426,6 +426,9 @@ const SearchUsersPageInner = () => {
             </div>
           )}
         </>
+      )}
+      {showDetailsModal && (
+        <UserDetailsModal userId={selectedUserId} onClose={handleCloseModal} />
       )}
     </div>
   );

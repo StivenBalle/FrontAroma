@@ -145,3 +145,10 @@ export const uploadProfileImage = (formData) =>
   post("/api/user/profile-image", formData);
 
 export const deleteProfileImage = () => del("/api/user/delete-image");
+
+// Obtener perfil de un usuario específico por ID (para admin)
+export const getUserProfileById = (userId) => get(`/api/admin/users/${userId}`);
+
+// Obtener historial de compras de un usuario específico (para admin)
+export const getHistorialByUserId = (userId) =>
+  get(`/api/admin/users/${userId}/historial`);

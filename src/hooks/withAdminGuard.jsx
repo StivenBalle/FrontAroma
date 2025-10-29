@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { useMinimumLoadingTime } from "../hooks/useMinimumLoading.jsx";
 import "../styles/AdminStats.css";
 import Swal from "sweetalert2";
 
@@ -9,6 +10,7 @@ const withAdminGuard = (WrappedComponent) => {
     const { user, loading } = useAuth();
     const navigate = useNavigate();
     const [verifyingAccess, setVerifyingAccess] = useState(false);
+    const showLoading = useMinimumLoadingTime(verifyingAccess, 1000);
 
     useEffect(() => {
       if (loading) return;
@@ -30,7 +32,7 @@ const withAdminGuard = (WrappedComponent) => {
       }
     }, [user, loading, navigate]);
 
-    if (loading || verifyingAccess) {
+    if (loading || showLoading) {
       return (
         <div className="stats-loading-container">
           <div className="loading-content">

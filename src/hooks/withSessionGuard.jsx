@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import LoadingScreen from "../components/LoadingScreen";
+import { useMinimumLoadingTime } from "../hooks/useMinimumLoading.jsx";
 import Swal from "sweetalert2";
 import { getProfile } from "../api";
 
@@ -10,6 +11,7 @@ const withSessionGuard = (WrappedComponent) => {
     const { user, setUser } = useAuth();
     const navigate = useNavigate();
     const [checkingSession, setCheckingSession] = useState(true);
+    const showLoading = useMinimumLoadingTime(checkingSession, 1000);
 
     useEffect(() => {
       const verifySession = async () => {
@@ -34,13 +36,8 @@ const withSessionGuard = (WrappedComponent) => {
       verifySession();
     }, [navigate, setUser]);
 
-    if (checkingSession) {
-      return (
-        <LoadingScreen
-          title="Verificando sesión..."
-          subtitle="Preparando los datos de tu perfil"
-        />
-      );
+    if (showLoading) {
+      return <LoadingScreen title="Verificando sesión..." />;
     }
 
     return <WrappedComponent {...props} />;

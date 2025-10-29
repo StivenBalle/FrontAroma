@@ -20,6 +20,7 @@ function App() {
   // 🔹 Cargar Stripe y productos
   useEffect(() => {
     async function initApp() {
+      setLoading(true);
       try {
         const config = await getConfig();
         const stripeInstance = window.Stripe(config.publishableKey);

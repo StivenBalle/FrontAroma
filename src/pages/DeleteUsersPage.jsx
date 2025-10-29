@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import withAdminGuard from "../hocs/withAdminGuard.jsx";
+import withAdminGuard from "../hooks/withAdminGuard.jsx";
+import { useMinimumLoadingTime } from "../hooks/useMinimumLoading.jsx";
+import HeaderTitle from "../components/HeaderTitle.jsx";
 import LoadingScreen from "../components/LoadingScreen";
 import { getUsers, deleteUser } from "../api.js";
 import Cafetera from "../components/Cafetera.jsx";
@@ -8,12 +9,12 @@ import Swal from "sweetalert2";
 import "../App.css";
 
 const DeleteUsersPage = () => {
-  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const showLoading = useMinimumLoadingTime(loading, 1000);
   const pageSize = 20;
 
   useEffect(() => {
@@ -33,7 +34,6 @@ const DeleteUsersPage = () => {
 
   const handleSearch = async (e) => {
     e.preventDefault();
-    setLoading(true);
     setSearched(true);
     try {
       const data = await getUsers(searchTerm);
@@ -41,7 +41,7 @@ const DeleteUsersPage = () => {
     } catch (err) {
       Swal.fire("Error", "No se pudieron buscar usuarios", "error");
     } finally {
-      setLoading(false);
+      setTimeout(() => setSearched(false), 1000);
     }
   };
 
@@ -68,7 +68,6 @@ const DeleteUsersPage = () => {
 
   const handleReset = async () => {
     setSearchTerm("");
-    setSearched(false);
     setLoading(true);
     try {
       const data = await getUsers("");
@@ -97,31 +96,19 @@ const DeleteUsersPage = () => {
     return acc;
   }, {});
 
-  if (loading) {
-    return <LoadingScreen />;
+  if (showLoading) {
+    return <LoadingScreen title="Cargando usuarios..." />;
   }
 
   return (
     <div className="admin-orders-page">
-      <div className="admin-page-header">
-        <div className="header-left">
-          <h2 className="admin-page-title">Borrar Usuario</h2>
-          <p className="admin-page-subtitle">
-            Borra y administra todos los usuarios
-          </p>
-        </div>
-        <button onClick={() => navigate("/admin")} className="back-btn-modern">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M10 19l-7-7m0 0l7-7m-7 7h18"
-            />
-          </svg>
-          Volver al Dashboard
-        </button>
-      </div>
+      <HeaderTitle
+        title="Borrar Usuarios"
+        subtitle="Filtra y borra los usuarios registrados"
+        backPath="/admin"
+        backText="Volver al Dashboard"
+      />
+
       {/* Barra de búsqueda moderna */}
       <div className="search-section">
         <form className="search-form-modern" onSubmit={handleSearch}>
@@ -234,20 +221,20 @@ const DeleteUsersPage = () => {
         )}
       </div>
       {/* Contenido principal */}
-      {loading ? (
+      {searched ? (
         <div className="loading-products">
           <div className="loading-content">
             <div className="spinner"></div>
             <h3>Cargando usuarios...</h3>
           </div>
         </div>
-      ) : users.length === 0 && searched ? (
+      ) : users.length === 0 ? (
         <div className="no-orders-modern">
           <div className="no-orders-content">
             <Cafetera />
             <h3>No se encontraron usuarios</h3>
             <p>
-              {searchTerm
+              {loading
                 ? "Intenta con otro correo o nombre"
                 : "No hay usuarios registrados"}
             </p>

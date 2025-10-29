@@ -13,7 +13,8 @@ import {
 } from "recharts";
 import { useNavigate } from "react-router-dom";
 import { getSalesByMonth, getTopProducts, getUsersByMonth } from "../api";
-import withAdminGuard from "../hocs/withAdminGuard.jsx";
+import withAdminGuard from "../hooks/withAdminGuard.jsx";
+import { useMinimumLoadingTime } from "../hooks/useMinimumLoading.jsx";
 import LoadingScreen from "../components/LoadingScreen";
 import "../styles/AdminStats.css";
 
@@ -23,6 +24,7 @@ const AdminStats = () => {
   const [topProducts, setTopProducts] = useState([]);
   const [newUsers, setNewUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const showLoading = useMinimumLoadingTime(loading, 1000);
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -84,7 +86,7 @@ const AdminStats = () => {
     return null;
   };
 
-  if (loading) {
+  if (showLoading) {
     return (
       <LoadingScreen
         title="Cargando estadísticas..."

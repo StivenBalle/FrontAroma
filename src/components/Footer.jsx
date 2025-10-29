@@ -23,8 +23,8 @@ export default function Footer() {
           <h3>Centro de distribución</h3>
           <p>Colombia</p>
           <p>Aguachica-Cesar</p>
-          <p>Celular: +57 3249759966</p>
-          <p>Celular: +57 3185818424</p>
+          <p>Celular: +57 324 - 9759966</p>
+          <p>Celular: +57 318 - 5818424</p>
           <p>Dirección: Carrera 39B 11 Norte 15</p>
           <p>Barrio 20 de enero</p>
         </div>
@@ -35,7 +35,7 @@ export default function Footer() {
           <p>Colombia</p>
           <p>Aguachica-Cesar</p>
           <p>Hacienda</p>
-          <p>Celular: +57 3145266305</p>
+          <p>Celular: +57 314 - 5266305</p>
           <p>Vereda Bombeadero</p>
         </div>
 

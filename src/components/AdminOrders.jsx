@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import withAdminGuard from "../hocs/withAdminGuard.jsx";
-import withSessionGuard from "../hocs/withSessionGuard";
+import withAdminGuard from "../hooks/withAdminGuard.jsx";
+import withSessionGuard from "../hooks/withSessionGuard";
 import "../App.css";
 
 const AdminOrdersInner = () => {

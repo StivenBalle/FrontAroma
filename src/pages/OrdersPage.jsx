@@ -1,22 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import Cafetera from "../components/Cafetera.jsx";
-import withAdminGuard from "../hocs/withAdminGuard.jsx";
+import withAdminGuard from "../hooks/withAdminGuard.jsx";
+import { useMinimumLoadingTime } from "../hooks/useMinimumLoading.jsx";
+import HeaderTitle from "../components/HeaderTitle.jsx";
 import LoadingScreen from "../components/LoadingScreen";
 import { getAdminOrders, getUsers } from "../api.js";
 import Swal from "sweetalert2";
 import "../App.css";
 
 const OrdersPageInner = () => {
-  const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
   const [users, setUsers] = useState([]);
   const [filteredOrders, setFilteredOrders] = useState([]);
-  const [pageLoading, setPageLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchLoading, setSearchLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
+  const showLoading = useMinimumLoadingTime(loading, 1000);
   const pageSize = 10;
 
   useEffect(() => {
@@ -25,6 +25,7 @@ const OrdersPageInner = () => {
 
   const fetchOrders = async () => {
     try {
+      setLoading(true);
       const [ordersData, usersData] = await Promise.all([
         getAdminOrders(),
         getUsers(""),
@@ -43,7 +44,6 @@ const OrdersPageInner = () => {
         Swal.fire("Error", "No se pudieron cargar las órdenes", "error");
       }
     } finally {
-      setPageLoading(false);
       setLoading(false);
     }
   };
@@ -57,7 +57,7 @@ const OrdersPageInner = () => {
     console.log("Órdenes filtradas:", filtered);
     setFilteredOrders(filtered);
     setCurrentPage(1);
-    setTimeout(() => setSearchLoading(false), 500);
+    setTimeout(() => setSearchLoading(false), 1000);
   };
 
   const handleReset = () => {
@@ -77,32 +77,18 @@ const OrdersPageInner = () => {
   const handleNext = () =>
     currentPage < totalPages && setCurrentPage(currentPage + 1);
 
-  if (loading) {
-    return <LoadingScreen />;
+  if (showLoading) {
+    return <LoadingScreen title="Cargando compras..." />;
   }
 
   return (
     <div className="admin-orders-page">
-      {/* Header con botón de volver */}
-      <div className="admin-page-header">
-        <div className="header-left">
-          <h2 className="admin-page-title">Gestión de Compras</h2>
-          <p className="admin-page-subtitle">
-            Busca y administra todas las órdenes de tus clientes
-          </p>
-        </div>
-        <button onClick={() => navigate("/admin")} className="back-btn-modern">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M10 19l-7-7m0 0l7-7m-7 7h18"
-            />
-          </svg>
-          Volver al Dashboard
-        </button>
-      </div>
+      <HeaderTitle
+        title="Gestión de compras"
+        subtitle="Busca y administra todas las órdenes de tus clientes"
+        backPath="/admin"
+        backText="Volver al Dashboard"
+      />
 
       {/* Barra de búsqueda moderna */}
       <div className="search-section">
