@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react";
 import Cafetera from "../components/Cafetera.jsx";
 import withAdminGuard from "../hooks/withAdminGuard.jsx";
 import { useMinimumLoadingTime } from "../hooks/useMinimumLoading.jsx";
+import UserTrackingModal from "../components/UserTrackingModal.jsx";
 import HeaderTitle from "../components/HeaderTitle.jsx";
 import LoadingScreen from "../components/LoadingScreen";
-import { getAdminOrders, getUsers } from "../api.js";
+import { getAdminOrders, getUsers, updateOrderStatus } from "../api.js";
 import Swal from "sweetalert2";
 import "../App.css";
 
@@ -17,6 +18,8 @@ const OrdersPageInner = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const showLoading = useMinimumLoadingTime(loading, 1000);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [showTrackingModal, setShowTrackingModal] = useState(false);
   const pageSize = 10;
 
   useEffect(() => {
@@ -58,6 +61,20 @@ const OrdersPageInner = () => {
     setFilteredOrders(filtered);
     setCurrentPage(1);
     setTimeout(() => setSearchLoading(false), 1000);
+  };
+
+  const handleViewTracking = (order) => {
+    setSelectedOrder(order);
+    setShowTrackingModal(true);
+  };
+
+  const handleUpdateStatus = async (orderId, newStatus) => {
+    try {
+      await updateOrderStatus(orderId, newStatus);
+      setSelectedOrder({ ...selectedOrder, status: newStatus });
+    } catch (error) {
+      console.error("Error al actualizar estado:", error);
+    }
   };
 
   const handleReset = () => {
@@ -464,9 +481,12 @@ const OrdersPageInner = () => {
                         </div>
                       </td>
                       <td>
-                        <span className={`status-badge status-${order.status}`}>
-                          {order.status}
-                        </span>
+                        <button
+                          onClick={() => handleViewTracking(order)}
+                          className="track-order-btn admin-track-btn"
+                        >
+                          Gestionar estado
+                        </button>
                       </td>
                       <td>
                         <span className="date-cell">
@@ -497,9 +517,12 @@ const OrdersPageInner = () => {
                 >
                   <div className="order-card-header">
                     <span className="order-id-badge">#{order.id}</span>
-                    <span className={`status-badge status-${order.status}`}>
-                      {order.status}
-                    </span>
+                    <button
+                      onClick={() => handleViewTracking(order)}
+                      className="track-order-btn-mobile admin-track-btn"
+                    >
+                      Ver Pedido
+                    </button>
                   </div>
                   <div className="order-card-body">
                     <div className="order-card-section">
@@ -692,6 +715,17 @@ const OrdersPageInner = () => {
             </div>
           )}
         </>
+      )}
+      {showTrackingModal && selectedOrder && (
+        <UserTrackingModal
+          order={selectedOrder}
+          onClose={() => {
+            setShowTrackingModal(false);
+            setSelectedOrder(null);
+          }}
+          isAdmin={true}
+          onUpdateStatus={handleUpdateStatus}
+        />
       )}
     </div>
   );

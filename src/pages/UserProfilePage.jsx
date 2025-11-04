@@ -3,6 +3,7 @@ import { useAuth } from "../context/AuthContext";
 import Cafetera from "../components/Cafetera.jsx";
 import withSessionGuard from "../hooks/withSessionGuard.jsx";
 import { useMinimumLoadingTime } from "../hooks/useMinimumLoading.jsx";
+import UserTrackingModal from "../components/UserTrackingModal.jsx";
 import HeaderTitle from "../components/HeaderTitle.jsx";
 import LoadingScreen from "../components/LoadingScreen";
 import Swal from "sweetalert2";
@@ -41,7 +42,14 @@ const UserProfilePage = () => {
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const showLoading = useMinimumLoadingTime(loading, 1000);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+  const [showTrackingModal, setShowTrackingModal] = useState(false);
   const pageSize = 10;
+
+  const handleViewTracking = (order) => {
+    setSelectedOrder(order);
+    setShowTrackingModal(true);
+  };
 
   // Helper to get image URL
   const getImageUrl = (image) => {
@@ -668,11 +676,12 @@ const UserProfilePage = () => {
                           </div>
                         </td>
                         <td>
-                          <span
-                            className={`status-badge status-${order.status}`}
+                          <button
+                            onClick={() => handleViewTracking(order)}
+                            className="track-order-btn"
                           >
-                            {order.status}
-                          </span>
+                            Ver seguimiento
+                          </button>
                         </td>
                       </tr>
                     ))}
@@ -690,9 +699,12 @@ const UserProfilePage = () => {
                   >
                     <div className="order-card-header">
                       <span className="order-id-badge">#{order.id}</span>
-                      <span className={`status-badge status-${order.status}`}>
-                        {order.status}
-                      </span>
+                      <button
+                        onClick={() => handleViewTracking(order)}
+                        className="track-order-btn-mobile"
+                      >
+                        Ver estado
+                      </button>
                     </div>
                     <div className="order-card-body">
                       <div className="order-card-row">
@@ -834,6 +846,16 @@ const UserProfilePage = () => {
           Cerrar Sesión
         </button>
       </section>
+      {showTrackingModal && selectedOrder && (
+        <UserTrackingModal
+          order={selectedOrder}
+          onClose={() => {
+            setShowTrackingModal(false);
+            setSelectedOrder(null);
+          }}
+          isAdmin={false}
+        />
+      )}
     </div>
   );
 };

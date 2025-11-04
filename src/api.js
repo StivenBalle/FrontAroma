@@ -152,3 +152,9 @@ export const getUserProfileById = (userId) => get(`/api/admin/users/${userId}`);
 // Obtener historial de compras de un usuario específico (para admin)
 export const getHistorialByUserId = (userId) =>
   get(`/api/admin/users/${userId}/historial`);
+
+export const updateOrderStatus = (orderId, status) =>
+  request(`/api/admin/change-order/${orderId}/status`, {
+    method: "PATCH",
+    body: { status },
+  });

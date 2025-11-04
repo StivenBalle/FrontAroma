@@ -6,7 +6,8 @@ const CookieConsent = ({ onAccept, onDecline }) => {
   const navigate = useNavigate();
 
   const handleAccept = () => {
-    document.cookie = "cookie_consent=true; path=/; max-age=2592000";
+    document.cookie =
+      "cookie_consent=true; path=/; max-age=" + 60 * 60 * 24 * 30;
     onAccept();
   };
 

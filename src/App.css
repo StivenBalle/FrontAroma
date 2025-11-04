@@ -144,8 +144,6 @@
   gap: 3rem;
   margin-bottom: 3rem;
   justify-items: center;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .product-card-modern {
@@ -484,7 +482,6 @@
 .testimonials-carousel {
   position: relative;
   width: 100%;
-  overflow-x: auto;
   scroll-behavior: smooth;
   scrollbar-width: none;
 }
@@ -494,18 +491,17 @@
 }
 
 .testimonials-track {
-  display: flex;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 20rem;
   gap: 1.5rem;
-  width: max-content;
-  animation: scrollTestimonials 25s linear infinite;
+  justify-content: stretch;
+  animation: scrollTestimonials 15s linear infinite;
 }
 
 @keyframes scrollTestimonials {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-50%);
+  to {
+    translate: calc(-5 * 16rem);
   }
 }
 
@@ -2863,12 +2859,24 @@
   font-size: 0.8em;
 }
 
-.compra-card .status.pending {
-  background: #f0ad4e;
+.compra-card .status.pendiente {
+  background: #4ebaf0;
 }
 
-.compra-card .status.paid {
-  background: #5cb85c;
+.compra-card .status.procesando {
+  background: #5c5fb8;
+}
+
+.compra-card .status.enviado {
+  background: #b88f5c;
+}
+
+.compra-card .status.completado {
+  background: #5ed05e;
+}
+
+.compra-card .status.cancelado {
+  background: #bb1c1c;
 }
 
 .close-history-btn {
@@ -4792,9 +4800,147 @@ td {
     width: 100%;
     justify-content: center;
   }
+
+  .modal-container {
+    width: 95%;
+    max-height: 95vh;
+  }
+
+  .modal-header {
+    padding: 20px 20px;
+  }
+
+  .modal-title {
+    font-size: 20px;
+  }
+
+  .order-summary {
+    padding: 20px;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .stepper-container {
+    padding: 24px 20px;
+  }
+
+  .step-indicator {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+  }
+
+  .step-title {
+    font-size: 16px;
+  }
+
+  .admin-actions {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .modal-footer,
+  .admin-panel {
+    padding: 20px;
+  }
 }
 
 @media (max-width: 480px) {
+  .modal-container {
+    width: 100%;
+    max-width: 100%;
+    height: 100%;
+    max-height: 100%;
+    border-radius: 0;
+    top: 0;
+    left: 0;
+    transform: none;
+  }
+
+  .modal-header {
+    border-radius: 0;
+    padding: 16px;
+  }
+
+  .modal-title {
+    font-size: 18px;
+  }
+
+  .modal-order-number {
+    font-size: 13px;
+  }
+
+  .order-summary {
+    padding: 16px;
+  }
+
+  .summary-value {
+    font-size: 15px;
+  }
+
+  .summary-price {
+    font-size: 18px;
+  }
+
+  .progress-bar-container {
+    margin: 0 16px;
+  }
+
+  .stepper-container {
+    padding: 20px 16px;
+  }
+
+  .stepper-step {
+    gap: 12px;
+  }
+
+  .step-indicator {
+    width: 36px;
+    height: 36px;
+    font-size: 14px;
+  }
+
+  .step-title {
+    font-size: 15px;
+  }
+
+  .step-description {
+    font-size: 13px;
+  }
+
+  .completed-icon svg,
+  .canceled-icon svg {
+    width: 48px;
+    height: 48px;
+  }
+
+  .completed-title,
+  .canceled-title {
+    font-size: 20px;
+  }
+
+  .admin-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .status-btn {
+    padding: 14px 16px;
+  }
+
+  .modal-footer,
+  .admin-panel {
+    padding: 16px;
+  }
+
+  .btn-close {
+    width: 100%;
+    padding: 14px;
+  }
+
+  .track-order-btn-mobile {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+
   .orders-title {
     font-size: 1.75rem;
   }
@@ -4839,4 +4985,531 @@ td {
   background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%);
   background-size: 1000px 100%;
   animation: shimmer 2s infinite;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 9998;
+  animation: fadeIn 0.2s ease-out;
+}
+
+/* Contenedor del modal */
+.modal-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  width: 90%;
+  max-width: 700px;
+  max-height: 90vh;
+  overflow-y: auto;
+  z-index: 9999;
+}
+
+/* Header del modal */
+.modal-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 24px 28px;
+  border-radius: 16px 16px 0 0;
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header-content {
+  flex: 1;
+}
+
+.modal-title {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0 4px 0;
+  letter-spacing: -0.5px;
+  font-family: "Georgia", serif;
+}
+
+.modal-order-number {
+  font-size: 14px;
+  margin: 0;
+  opacity: 0.9;
+  font-weight: 500;
+  font-family: "Georgia", serif;
+}
+
+.modal-close-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  border-radius: 8px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: white;
+}
+
+.modal-close-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.05);
+}
+
+/* Resumen del pedido */
+.order-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  padding: 24px 28px;
+  background: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.order-summary-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.summary-label {
+  font-size: 13px;
+  color: #6c757d;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-family: "Georgia", serif;
+}
+
+.summary-value {
+  font-size: 16px;
+  color: #212529;
+  font-weight: 600;
+}
+
+.summary-price {
+  color: #667eea;
+  font-size: 20px;
+}
+
+/* Barra de progreso */
+.progress-bar-container {
+  height: 6px;
+  background: #e9ecef;
+  margin: 0 28px;
+  border-radius: 3px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+  transition: width 0.5s ease;
+  border-radius: 3px;
+}
+
+/* Contenedor del stepper */
+.stepper-container {
+  padding: 32px 28px;
+  min-height: 300px;
+}
+
+.stepper-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.stepper-step {
+  display: flex;
+  gap: 20px;
+  position: relative;
+}
+
+.step-indicator-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.step-indicator {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 18px;
+  transition: all 0.3s ease;
+  z-index: 1;
+  background: white;
+}
+
+.step-connector {
+  width: 3px;
+  flex: 1;
+  margin: 8px 0;
+  background: #dee2e6;
+  border-radius: 2px;
+  transition: background 0.3s ease;
+}
+
+/* Estados del stepper */
+.step-pending .step-indicator {
+  background: #f8f9fa;
+  border: 3px solid #dee2e6;
+  color: #adb5bd;
+}
+
+.step-active .step-indicator {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  color: white;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  animation: pulse 2s infinite;
+}
+
+.step-completed .step-indicator {
+  background: #28a745;
+  border: none;
+  color: white;
+}
+
+.step-completed .step-connector {
+  background: #28a745;
+}
+
+.step-canceled .step-indicator {
+  background: #dc3545;
+  border: none;
+  color: white;
+}
+
+/* Contenido del step */
+.step-content {
+  flex: 1;
+  padding-top: 4px;
+}
+
+.step-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #212529;
+  margin: 0 0 6px 0;
+}
+
+.step-description {
+  font-size: 14px;
+  color: #6c757d;
+  margin: 0 0 8px 0;
+  line-height: 1.5;
+}
+
+.step-status {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.step-pending .step-status {
+  background: #f8f9fa;
+  color: #6c757d;
+}
+
+.step-active .step-status {
+  background: #e7f3ff;
+  color: #667eea;
+}
+
+.step-completed .step-status {
+  background: #d4edda;
+  color: #155724;
+}
+
+/* Notificación de cancelado */
+.canceled-notice {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.canceled-icon {
+  color: #dc3545;
+  margin-bottom: 16px;
+  animation: shake 0.5s ease;
+}
+
+.canceled-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #dc3545;
+  margin: 0 0 12px 0;
+}
+
+.canceled-description {
+  font-size: 15px;
+  color: #6c757d;
+  margin: 0;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+/* Notificación de completado */
+.completed-notice {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.completed-icon {
+  color: #28a745;
+  margin-bottom: 20px;
+  animation: scaleIn 0.5s ease;
+}
+
+.completed-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #28a745;
+  margin: 0 0 12px 0;
+}
+
+.completed-description {
+  font-size: 15px;
+  color: #6c757d;
+  margin: 0;
+  max-width: 450px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* Panel de administración */
+.admin-panel {
+  background: #f8f9fa;
+  padding: 24px 28px;
+  border-top: 1px solid #e9ecef;
+}
+
+.admin-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.admin-panel-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #212529;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-family: "Georgia", serif;
+}
+
+.locked-badge {
+  background: #ffc107;
+  color: #000;
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-family: "Georgia", serif;
+}
+
+.admin-actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+}
+
+.status-btn {
+  padding: 12px 16px;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: white;
+  color: #495057;
+}
+
+.status-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.status-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.status-btn.active {
+  border-color: currentColor;
+  font-weight: 700;
+}
+
+.btn-pendiente:not(:disabled) {
+  color: #6c757d;
+}
+
+.btn-pendiente.active {
+  background: #e9ecef;
+}
+
+.btn-procesando:not(:disabled) {
+  color: #0dcaf0;
+}
+
+.btn-procesando.active {
+  background: #cff4fc;
+}
+
+.btn-enviado:not(:disabled) {
+  color: #667eea;
+}
+
+.btn-enviado.active {
+  background: #e7f3ff;
+}
+
+.btn-completado:not(:disabled) {
+  color: #28a745;
+}
+
+.btn-completado.active {
+  background: #d4edda;
+}
+
+.btn-cancelado:not(:disabled) {
+  color: #dc3545;
+}
+
+.btn-cancelado.active {
+  background: #f8d7da;
+}
+
+.admin-notice {
+  margin-top: 16px;
+  padding: 12px;
+  background: #fff3cd;
+  border-left: 4px solid #ffc107;
+  border-radius: 4px;
+  font-size: 13px;
+  color: #856404;
+  font-weight: 500;
+}
+
+/* Footer del modal */
+.modal-footer {
+  padding: 20px 28px;
+  border-top: 1px solid #e9ecef;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn-close {
+  padding: 12px 32px;
+  background: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-close:hover {
+  background: #5a6268;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Botones de seguimiento en tablas */
+.track-order-btn,
+.track-order-btn-mobile {
+  padding: 8px 16px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.track-order-btn:hover,
+.track-order-btn-mobile:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.admin-track-btn {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.admin-track-btn:hover {
+  box-shadow: 0 4px 12px rgba(245, 87, 108, 0.4);
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  }
+  50% {
+    box-shadow: 0 4px 20px rgba(102, 126, 234, 0.6);
+  }
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
+    transform: translateX(-5px);
+  }
+  20%,
+  40%,
+  60%,
+  80% {
+    transform: translateX(5px);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
