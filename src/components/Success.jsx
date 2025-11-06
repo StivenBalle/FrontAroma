@@ -3,7 +3,7 @@ import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import bolsaCafe from "../assets/LogoCafe.png";
 import LoadingScreen from "../components/LoadingScreen";
-import { getPurchaseDetails } from "../api.js";
+import { getPurchaseDetails } from "../utils/api.js";
 import "../App.css";
 
 const Success = () => {

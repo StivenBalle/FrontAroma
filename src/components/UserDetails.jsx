@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getUserProfileById, getHistorialByUserId } from "../api";
+import { getUserProfileById, getHistorialByUserId } from "../utils/api.js";
 import "../styles/AdminStats.css";
 
 const UserDetailsModal = ({ userId, onClose }) => {

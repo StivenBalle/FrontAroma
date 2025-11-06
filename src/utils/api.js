@@ -1,4 +1,6 @@
 import Swal from "sweetalert2";
+import logger from "../utils/logger";
+
 const API_URL = import.meta.env.VITE_API_URL;
 
 let navigateRef = null;
@@ -19,7 +21,7 @@ export const setUserHandler = (fn) => {
 
 async function request(path, { method = "GET", body } = {}) {
   const url = `${API_URL}${path}`;
-  console.log(`🌐 Fetch: ${method} ${url}`);
+  logger.log(`🌐 Fetch: ${method} ${url}`);
 
   const options = {
     method,
@@ -59,7 +61,7 @@ async function request(path, { method = "GET", body } = {}) {
         }
         window.location.reload();
       } else {
-        console.warn(
+        logger.warn(
           "Sesion expirada detectada pero `navigate` no está seteado"
         );
       }
@@ -158,3 +160,13 @@ export const updateOrderStatus = (orderId, status) =>
     method: "PATCH",
     body: { status },
   });
+
+export const createReview = (reviewData) =>
+  post("/api/user/reviews", reviewData);
+
+export const getReviews = () => get("/api/user/reviews");
+
+export const checkOrderReview = (orderId) =>
+  get(`/api/user/reviews/order/${orderId}`);
+
+export const updatePassword = (body) => put("/api/user/password", body);

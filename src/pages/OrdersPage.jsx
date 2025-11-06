@@ -5,7 +5,8 @@ import { useMinimumLoadingTime } from "../hooks/useMinimumLoading.jsx";
 import UserTrackingModal from "../components/UserTrackingModal.jsx";
 import HeaderTitle from "../components/HeaderTitle.jsx";
 import LoadingScreen from "../components/LoadingScreen";
-import { getAdminOrders, getUsers, updateOrderStatus } from "../api.js";
+import { getAdminOrders, getUsers, updateOrderStatus } from "../utils/api.js";
+import logger from "../utils/logger";
 import Swal from "sweetalert2";
 import "../App.css";
 
@@ -39,10 +40,10 @@ const OrdersPageInner = () => {
       setUsers(usersData.users || []);
       setCurrentPage(1);
     } catch (err) {
-      console.error("❌ Error en fetchOrders:", err);
+      logger.error("❌ Error en fetchOrders:", err);
       // Manejo específico de errores de autenticación/acceso
       if (err.status === 401 || err.status === 403) {
-        console.log("Error de acceso detectado; manejado por HOC");
+        logger.log("Error de acceso detectado; manejado por HOC");
       } else {
         Swal.fire("Error", "No se pudieron cargar las órdenes", "error");
       }
@@ -57,7 +58,7 @@ const OrdersPageInner = () => {
     const filtered = orders.filter((order) =>
       order.user_email?.toLowerCase().includes(searchTerm.toLowerCase())
     );
-    console.log("Órdenes filtradas:", filtered);
+    logger.log("Órdenes filtradas:", filtered);
     setFilteredOrders(filtered);
     setCurrentPage(1);
     setTimeout(() => setSearchLoading(false), 1000);
@@ -73,7 +74,7 @@ const OrdersPageInner = () => {
       await updateOrderStatus(orderId, newStatus);
       setSelectedOrder({ ...selectedOrder, status: newStatus });
     } catch (error) {
-      console.error("Error al actualizar estado:", error);
+      logger.error("Error al actualizar estado:", error);
     }
   };
 

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import Swal from "sweetalert2";
-import { getHistorial } from "../api.js";
+import { getHistorial } from "../utils/api.js";
+import logger from "../utils/logger";
 import "../App.css";
 
 const ShoppingHistory = ({ isOpen, toggleHistory }) => {
@@ -16,10 +17,10 @@ const ShoppingHistory = ({ isOpen, toggleHistory }) => {
       setLoading(true);
       try {
         const data = await getHistorial();
-        console.log("Historial cargado:", JSON.stringify(data, null, 2));
+        logger.log("Historial cargado:", JSON.stringify(data, null, 2));
         setCompras(data.compras);
       } catch (err) {
-        console.error("❌ Error fetching history:", err.message);
+        logger.error("❌ Error fetching history:", err.message);
         Swal.fire(
           "Error",
           "No se pudo cargar el historial de compras",

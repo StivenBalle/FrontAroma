@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import logoCafe from "../assets/LogoCafe.png";
 import { useAuth } from "../context/AuthContext";
+import logger from "../utils/logger";
 
 export default function Forms() {
   const { authModalOpen, closeAuthModal, login } = useAuth();
@@ -30,7 +31,7 @@ export default function Forms() {
     const phone = e.target.phone_user.value;
     const password = e.target.password_user.value;
 
-    console.log("📩 Registrando:", { name, email, phone, password });
+    logger.log("📩 Registrando:", { name, email, phone, password });
     // Aquí deberías llamar a /api/auth/signup
     closeAuthModal();
   };

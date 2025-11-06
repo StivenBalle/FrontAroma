@@ -6,8 +6,16 @@ import semillero from "../assets/Semillero.jpeg";
 import bolsaCafe from "../assets/Bolsa_café.png";
 import cafeRojo from "../assets/CaféRojo.jpeg";
 import bolsaPresentacion from "../assets/BolsaPresentación.jpeg";
+import TestimonialSection from "../components/TestimonialSection.jsx";
 import tostado from "../assets/Tostado.jpeg";
-import { getConfig, getProducts, getProfile, createCheckout } from "../api.js";
+import logger from "../utils/logger";
+import {
+  getConfig,
+  getProducts,
+  getProfile,
+  createCheckout,
+  getShippingAddress,
+} from "../utils/api.js";
 import "../App.css";
 
 function App() {
@@ -27,7 +35,7 @@ function App() {
         setStripe(stripeInstance);
 
         const data = await getProducts();
-        console.log(
+        logger.log(
           "✅ Productos obtenidos:",
           data.products.length,
           "productos"
@@ -35,7 +43,7 @@ function App() {
         setProducts(data.products);
         setPrices(data.prices);
       } catch (err) {
-        console.error("❌ Error inicializando:", err.message);
+        logger.error("❌ Error inicializando:", err.message);
         Swal.fire("Error", "No se pudieron cargar los productos", "error");
       } finally {
         setLoading(false);
@@ -55,7 +63,33 @@ function App() {
   // 🔹 Iniciar checkout
   const handleCheckout = async (priceId) => {
     try {
-      await getProfile();
+      const profile = await getProfile();
+      const addressData = await getShippingAddress();
+
+      const missingFields = [];
+      if (!profile.name) missingFields.push("nombre");
+      if (!profile.phone_number) missingFields.push("teléfono");
+      if (!addressData.address) missingFields.push("dirección de envío");
+
+      if (missingFields.length > 0) {
+        Swal.fire({
+          icon: "warning",
+          title: "Completa tu perfil",
+          html: `
+          <p>Antes de realizar una compra, debes completar tu perfil:</p>
+          <ul style="text-align:left; margin:10px 0 0 20px;">
+            ${missingFields.map((f) => `<li>${f}</li>`).join("")}
+          </ul>
+        `,
+          confirmButtonText: "Ir al perfil",
+          confirmButtonColor: "#4a2c2a",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            window.location.href = "/profile";
+          }
+        });
+        return;
+      }
       const session = await createCheckout(priceId);
       window.location.href = session.url;
     } catch (err) {
@@ -69,7 +103,7 @@ function App() {
         return;
       }
 
-      console.error("❌ Error Stripe:", err.message);
+      logger.error("❌ Error Stripe:", err.message);
       Swal.fire("Error", "No se pudo iniciar el pago", "error");
     }
   };
@@ -110,7 +144,7 @@ function App() {
           }
           lastProductCount = currentActiveCount;
         } catch (err) {
-          console.warn("❌ Error al verificar productos nuevos:", err.message);
+          logger.warn("❌ Error al verificar productos nuevos:", err.message);
         }
       }, 60000);
 
@@ -433,61 +467,7 @@ function App() {
         </div>
       </section>
 
-      {/* TESTIMONIOS */}
-      <section className="testimonials-section">
-        <div className="testimonials-header">
-          <h2>Lo que dicen nuestros clientes</h2>
-          <p>Testimonios reales de amantes del café como tú ☕</p>
-        </div>
-        <div className="testimonials-carousel">
-          <div className="testimonials-track">
-            {[
-              {
-                name: "Laura Gómez",
-                rating: 5,
-                text: "El mejor café que he probado. Su aroma y sabor son inigualables.",
-              },
-              {
-                name: "Carlos Pérez",
-                rating: 4,
-                text: "Excelente calidad y presentación. Recomendadísimo para los amantes del café.",
-              },
-              {
-                name: "Mariana Torres",
-                rating: 5,
-                text: "Me encanta su sabor suave y tostado. Se nota que es artesanal.",
-              },
-              {
-                name: "Andrés Rojas",
-                rating: 4,
-                text: "Muy buen servicio y café delicioso. Volveré a comprar sin dudarlo.",
-              },
-              {
-                name: "Sofía Hernández",
-                rating: 5,
-                text: "Perfecto para mis mañanas, el empaque es precioso y el sabor aún mejor.",
-              },
-            ].map((testimonial, index) => (
-              <div key={index} className="testimonial-card">
-                <div className="stars">
-                  {[...Array(testimonial.rating)].map((_, i) => (
-                    <svg
-                      key={i}
-                      className="star"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                    >
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
-                  ))}
-                </div>
-                <p className="testimonial-text">"{testimonial.text}"</p>
-                <p className="testimonial-name">- {testimonial.name}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <TestimonialSection />
     </>
   );
 }

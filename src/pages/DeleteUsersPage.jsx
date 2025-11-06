@@ -3,7 +3,7 @@ import withAdminGuard from "../hooks/withAdminGuard.jsx";
 import { useMinimumLoadingTime } from "../hooks/useMinimumLoading.jsx";
 import HeaderTitle from "../components/HeaderTitle.jsx";
 import LoadingScreen from "../components/LoadingScreen";
-import { getUsers, deleteUser } from "../api.js";
+import { getUsers, deleteUser } from "../utils/api.js";
 import Cafetera from "../components/Cafetera.jsx";
 import Swal from "sweetalert2";
 import "../App.css";

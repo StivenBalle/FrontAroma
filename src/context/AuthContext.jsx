@@ -7,7 +7,8 @@ import {
   logout as apiLogout,
   setLogoutHandler,
   setUserHandler,
-} from "../api.js";
+} from "../utils/api.js";
+import logger from "../utils/logger";
 import Swal from "sweetalert2";
 
 export const AuthContext = createContext();
@@ -16,7 +17,6 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [authModalOpen, setAuthModalOpen] = useState(false);
-  const [showPhoneModal, setShowPhoneModal] = useState(false);
 
   const openAuthModal = () => setAuthModalOpen(true);
   const closeAuthModal = () => setAuthModalOpen(false);
@@ -37,19 +37,16 @@ export const AuthProvider = ({ children }) => {
     const checkAuth = async () => {
       try {
         if (!hasCookieConsent()) {
-          console.log("Cookies no aceptadas; no se intenta cargar perfil.");
+          logger.log("Cookies no aceptadas; no se intenta cargar perfil.");
           setUser(null);
           setLoading(false);
           return;
         }
         const data = await getUserProfile();
-        console.log("Perfil cargado:", data);
+        logger.log("Perfil cargado:", data);
         setUser(data);
-        if (!data.phone_number) {
-          setShowPhoneModal(true);
-        }
       } catch (err) {
-        console.error("Error fetching profile:", err.message);
+        logger.error("Error fetching profile:", err.message);
         setUser(null);
       } finally {
         setLoading(false);
@@ -86,14 +83,11 @@ export const AuthProvider = ({ children }) => {
         }).then(() => {
           window.location.reload();
         });
-        if (!data.user.phone_number) {
-          setShowPhoneModal(true);
-        }
         return { success: true, user: data.user };
       }
       return { success: false, error: data.error };
     } catch (err) {
-      console.error("❌ Error en login:", err.message);
+      logger.error("❌ Error en login:", err.message);
       return { success: false, error: err.message };
     }
   };
@@ -102,7 +96,7 @@ export const AuthProvider = ({ children }) => {
     try {
       await apiLogout();
     } catch (err) {
-      console.warn("Error cerrando sesión:", err.message);
+      logger.warn("Error cerrando sesión:", err.message);
     } finally {
       setUser(null);
     }
@@ -130,14 +124,11 @@ export const AuthProvider = ({ children }) => {
         ).then(() => {
           window.location.reload();
         });
-        if (!data.user.phone_number) {
-          setShowPhoneModal(true);
-        }
         return { success: true };
       }
       return { success: false, error: data.error };
     } catch (err) {
-      console.error("❌ Error en Google login:", err.message);
+      logger.error("❌ Error en Google login:", err.message);
       return { success: false, error: err.message };
     }
   };
@@ -147,14 +138,13 @@ export const AuthProvider = ({ children }) => {
     try {
       const data = await updatePhone(phone_number);
       setUser(data.user);
-      setShowPhoneModal(false);
       Swal.fire(
         "✅ Teléfono actualizado",
         "Tu teléfono ha sido guardado",
         "success"
       );
     } catch (err) {
-      console.error("❌ Error updating phone:", err.message);
+      logger.error("❌ Error updating phone:", err.message);
       Swal.fire("Error", "No se pudo actualizar el teléfono", "error");
     }
   };
@@ -169,8 +159,6 @@ export const AuthProvider = ({ children }) => {
         authModalOpen,
         openAuthModal,
         closeAuthModal,
-        showPhoneModal,
-        setShowPhoneModal,
         googleLogin: googleLoginUser,
         updatePhoneNumber,
       }}

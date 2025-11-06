@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { AuthContext } from "../context/AuthContext.jsx";
 import LoginGoogle from "../components/LoginWithGoogle.jsx";
 import logoCafe from "../assets/LogoCafe.png";
+import logger from "../utils/logger";
 import Swal from "sweetalert2";
 import "../styles/header.css";
 
@@ -15,10 +16,10 @@ const LoginForm = ({ switchToSignup }) => {
     const password = e.target.password_login.value;
 
     const res = await login(email, password);
-    console.log("Respuesta del login:", res);
+    logger.log("Respuesta del login:", res);
 
     if (res.success) {
-      console.log(`El usuario, ${res.user?.name} inicio sesión exitosamente`);
+      logger.log(`El usuario, ${res.user?.name} inicio sesión exitosamente`);
     } else {
       Swal.fire("Error", res.error, "error");
     }

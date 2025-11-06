@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
+import logger from "../utils/logger";
 import LoginForm from "./LoginForm";
 import SignupForm from "./SingupForm";
 
 const AuthModal = () => {
   const { authModalOpen, closeAuthModal } = useAuth();
   const [showLogin, setShowLogin] = useState(true);
-  console.log("🔵 AuthModal renderizado, authModalOpen:", authModalOpen);
 
   const hasCookieConsent = () => {
     const cookies = document.cookie.split(";").reduce((acc, cookie) => {
@@ -19,7 +19,7 @@ const AuthModal = () => {
 
   useEffect(() => {
     if (!hasCookieConsent()) {
-      console.log("Cookies no aceptadas; no se intenta cargar perfil.");
+      logger.log("Cookies no aceptadas; no se intenta cargar perfil.");
     }
   }, [authModalOpen]);
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getUsers, updateUserRole } from "../api.js";
+import { getUsers, updateUserRole } from "../utils/api.js";
 import withAdminGuard from "../hooks/withAdminGuard.jsx";
 import { useMinimumLoadingTime } from "../hooks/useMinimumLoading.jsx";
 import HeaderTitle from "../components/HeaderTitle.jsx";

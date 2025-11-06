@@ -5,7 +5,7 @@ import { useMinimumLoadingTime } from "../hooks/useMinimumLoading.jsx";
 import HeaderTitle from "../components/HeaderTitle.jsx";
 import UserDetailsModal from "../components/UserDetails.jsx";
 import Cafetera from "../components/Cafetera.jsx";
-import { getUsers } from "../api.js";
+import { getUsers } from "../utils/api.js";
 import Swal from "sweetalert2";
 import "../App.css";
 

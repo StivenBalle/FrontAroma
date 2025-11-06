@@ -12,7 +12,11 @@ import {
   Legend,
 } from "recharts";
 import { useNavigate } from "react-router-dom";
-import { getSalesByMonth, getTopProducts, getUsersByMonth } from "../api";
+import {
+  getSalesByMonth,
+  getTopProducts,
+  getUsersByMonth,
+} from "../utils/api.js";
 import withAdminGuard from "../hooks/withAdminGuard.jsx";
 import { useMinimumLoadingTime } from "../hooks/useMinimumLoading.jsx";
 import LoadingScreen from "../components/LoadingScreen";

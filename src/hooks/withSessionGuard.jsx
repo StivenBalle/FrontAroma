@@ -3,8 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import LoadingScreen from "../components/LoadingScreen";
 import { useMinimumLoadingTime } from "../hooks/useMinimumLoading.jsx";
+import logger from "../utils/logger";
 import Swal from "sweetalert2";
-import { getProfile } from "../api";
+import { getProfile } from "../utils/api.js";
 
 const withSessionGuard = (WrappedComponent) => {
   return (props) => {
@@ -19,7 +20,7 @@ const withSessionGuard = (WrappedComponent) => {
           await getProfile();
           setCheckingSession(false);
         } catch (error) {
-          console.warn("🔒 Sesión inválida o expirada:", error.message);
+          logger.warn("🔒 Sesión inválida o expirada:", error.message);
 
           await Swal.fire({
             icon: "warning",

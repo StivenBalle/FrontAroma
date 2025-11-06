@@ -22,11 +22,11 @@ import SearchUsersPage from "./pages/SearchUsersPage.jsx";
 import DeleteUsersPage from "./pages/DeleteUsersPage.jsx";
 import ChangeRolePage from "./pages/ChangeRolePage.jsx";
 import CookieConsent from "./components/CookieConsent.jsx";
-import PhoneInput from "./components/PhoneInput.jsx";
 import ScrollToTop from "./components/ScrollToTop.jsx";
 import AdminStats from "./pages/AdminStats.jsx";
-import { setNavigate } from "./api.js";
+import { setNavigate } from "../src/utils/api.js";
 import UserProfilePage from "./pages/UserProfilePage.jsx";
+import AdminReviewsPage from "./pages/AdminReviewsPage.jsx";
 
 function App() {
   const [showCookieConsent, setShowCookieConsent] = useState(false);
@@ -66,7 +66,6 @@ function App() {
         </div>
       )}
 
-      <PhoneInput />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/profile" element={<UserProfilePage />} />
@@ -82,6 +81,7 @@ function App() {
         <Route path="/admin/users/delete" element={<DeleteUsersPage />} />
         <Route path="/admin/users/role" element={<ChangeRolePage />} />
         <Route path="/admin/stats" element={<AdminStats />} />
+        <Route path="/admin/reviews" element={<AdminReviewsPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
 
