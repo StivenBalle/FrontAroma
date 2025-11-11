@@ -27,6 +27,7 @@ import AdminStats from "./pages/AdminStats.jsx";
 import { setNavigate } from "../src/utils/api.js";
 import UserProfilePage from "./pages/UserProfilePage.jsx";
 import AdminReviewsPage from "./pages/AdminReviewsPage.jsx";
+import LocationsPage from "./pages/LocationsPage.jsx";
 
 function App() {
   const [showCookieConsent, setShowCookieConsent] = useState(false);
@@ -70,6 +71,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/profile" element={<UserProfilePage />} />
         <Route path="/aromaHistoria" element={<Historia />} />
+        <Route path="/ubicaciones" element={<LocationsPage />} />
         <Route path="/preparacion" element={<Preparacion />} />
         <Route path="/terminos&condiciones" element={<Terminos />} />
         <Route path="/successfullPayment" element={<Success />} />

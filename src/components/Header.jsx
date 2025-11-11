@@ -66,9 +66,9 @@ export default function Header() {
             <Link to="/aromaHistoria" className="btn-superiores">
               Nuestra historia
             </Link>
-            <a href="#" className="btn-superiores">
+            <Link to="/ubicaciones" className="btn-superiores">
               Ubicaciones
-            </a>
+            </Link>
           </div>
 
           {/* Tarjetas de navegación */}

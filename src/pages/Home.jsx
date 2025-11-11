@@ -2,11 +2,9 @@ import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import { useAuth } from "../context/AuthContext";
 import logoCafe from "../assets/LogoCafe.png";
-import semillero from "../assets/Semillero.jpeg";
 import bolsaCafe from "../assets/Bolsa_café.png";
-import cafeRojo from "../assets/CaféRojo.jpeg";
-import bolsaPresentacion from "../assets/BolsaPresentación.jpeg";
 import TestimonialSection from "../components/TestimonialSection.jsx";
+import HeroSection from "../components/HeroSection.jsx";
 import tostado from "../assets/Tostado.jpeg";
 import logger from "../utils/logger";
 import {
@@ -17,6 +15,7 @@ import {
   getShippingAddress,
 } from "../utils/api.js";
 import "../App.css";
+import { Link } from "react-router-dom";
 
 function App() {
   const { openAuthModal } = useAuth();
@@ -108,10 +107,6 @@ function App() {
     }
   };
 
-  const handleComprarClick = () => {
-    document.getElementById("products").scrollIntoView({ behavior: "smooth" });
-  };
-
   // 🔹 Polling para nuevos productos
   useEffect(() => {
     let lastProductCount = 0;
@@ -185,6 +180,44 @@ function App() {
       description:
         "Seleccionamos cada grano para asegurar la mejor experiencia de sabor.",
       icon: "award",
+    },
+  ];
+
+  const roastTypes = [
+    {
+      id: 1,
+      title: "Tostado Claro",
+      description:
+        "Suave y ligero, ideal para quienes disfrutan notas más delicadas y cítricas.",
+      color: "#D4A574",
+      intensity: 1,
+      notes: ["Cítricos", "Floral", "Té"],
+    },
+    {
+      id: 2,
+      title: "Tostado Medio",
+      description:
+        "Perfecto equilibrio entre acidez y dulzura, con un sabor redondo y aromático.",
+      color: "#B8895F",
+      intensity: 2,
+      notes: ["Caramelo", "Nueces", "Frutal"],
+    },
+    {
+      id: 3,
+      title: "Tostado Medio-Oscuro",
+      description: "Intensidad moderada con un toque de chocolate y caramelo.",
+      color: "#8B6F47",
+      intensity: 3,
+      notes: ["Chocolate", "Caramelo", "Especias"],
+    },
+    {
+      id: 4,
+      title: "Tostado Oscuro",
+      description:
+        "Robusto y con carácter, para quienes aman el sabor fuerte y ahumado.",
+      color: "#6B4423",
+      intensity: 4,
+      notes: ["Ahumado", "Cacao", "Robusto"],
     },
   ];
 
@@ -263,28 +296,7 @@ function App() {
   return (
     <>
       {/* HERO */}
-      <section className="hero">
-        <div className="hero-content">
-          <div className="hero-text">
-            <h1>
-              Café <br /> Aroma de la Serrania
-            </h1>
-            <p>Café 100% Aguachiquense.</p>
-            <p>Tostado y molido artesanalmente.</p>
-            <p>¡Disponible en nuestra página web!</p>
-            <button className="btn-comprar" onClick={handleComprarClick}>
-              Comprar
-            </button>
-          </div>
-
-          <section className="carrusel">
-            <img src={semillero} alt="Semillero" />
-            <img src={cafeRojo} alt="Café Rojo" />
-            <img src={bolsaPresentacion} alt="Bolsa Café" />
-          </section>
-        </div>
-      </section>
-
+      <HeroSection />
       {/* PRODUCTOS DESTACADOS */}
       <section className="products-section" id="products">
         <div className="products-container">
@@ -398,45 +410,140 @@ function App() {
       </section>
 
       {/* TIPOS DE TOSTADO */}
-      <section className="preparacion">
-        <div className="tittle-tostado">
-          <h2>Tipos de tostado</h2>
-          <p>
-            En café Aroma de la serrania tenemos varios tipos de tostados según
-            tu tipo de preferencia.
-          </p>
-          <img src={tostado} alt="Tostado" />
+      <section className="roasting-section">
+        <div className="roasting-header">
+          <div className="roasting-title-container">
+            <h2 className="roasting-title">Tipos de Tostado</h2>
+            <p className="roasting-description">
+              En café Aroma de la Serrania tenemos varios tipos de tostados
+              según tu tipo de preferencia. Cada nivel revela diferentes
+              características y matices de nuestros granos selectos.
+            </p>
+          </div>
+
+          <div className="roasting-image-container">
+            <div className="image-wrapper">
+              <img
+                src={tostado}
+                alt="Proceso de Tostado"
+                className="roasting-image"
+              />
+              <div className="image-overlay">
+                <div className="overlay-content">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    className="coffee-icon"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+                    />
+                  </svg>
+                  <span>Granos de alta calidad</span>
+                </div>
+              </div>
+            </div>
+            <div className="floating-bean bean-1"></div>
+            <div className="floating-bean bean-2"></div>
+            <div className="floating-bean bean-3"></div>
+          </div>
         </div>
 
-        <div className="footer-text-tostado-container">
-          <div className="footer-text-tostado">
-            <h3>Tostado Claro</h3>
-            <p>
-              Suave y ligero, ideal para quienes disfrutan notas más delicadas y
-              cítricas.
-            </p>
-          </div>
+        <div className="roasting-grid">
+          {roastTypes.map((roast, index) => (
+            <div
+              key={roast.id}
+              className="roast-card"
+              style={{
+                "--card-color": roast.color,
+                "--animation-delay": `${index * 0.1}s`,
+              }}
+            >
+              <div className="intensity-indicator">
+                <div className="intensity-bars">
+                  {[1, 2, 3, 4].map((bar) => (
+                    <div
+                      key={bar}
+                      className={`intensity-bar ${
+                        bar <= roast.intensity ? "active" : ""
+                      }`}
+                      style={{
+                        backgroundColor:
+                          bar <= roast.intensity ? roast.color : "#e5e7eb",
+                      }}
+                    ></div>
+                  ))}
+                </div>
+                <span className="intensity-label">
+                  Intensidad {roast.intensity}/4
+                </span>
+              </div>
+              <div className="roast-content">
+                <div
+                  className="roast-icon"
+                  style={{ backgroundColor: roast.color }}
+                >
+                  <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M2,21H20V19H2M20,8H18V5H20M20,3H4V13A4,4 0 0,0 8,17H14A4,4 0 0,0 18,13V10H20A2,2 0 0,0 22,8V5C22,3.89 21.1,3 20,3Z" />
+                  </svg>
+                </div>
 
-          <div className="footer-text-tostado">
-            <h3>Tostado Medio</h3>
-            <p>
-              Perfecto equilibrio entre acidez y dulzura, con un sabor redondo y
-              aromático.
-            </p>
-          </div>
+                <h3 className="roast-title-card">{roast.title}</h3>
+                <p className="roast-description-card">{roast.description}</p>
+                <div className="flavor-notes">
+                  <span className="notes-label">Notas características:</span>
+                  <div className="notes-tags">
+                    {roast.notes.map((note, i) => (
+                      <span
+                        key={i}
+                        className="note-tag"
+                        style={{ borderColor: roast.color }}
+                      >
+                        {note}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                <div className="coffee-beans-display">
+                  {[1, 2, 3].map((bean) => (
+                    <div
+                      key={bean}
+                      className="visual-bean"
+                      style={{ backgroundColor: roast.color }}
+                    ></div>
+                  ))}
+                </div>
+              </div>
+              <div
+                className="card-glow"
+                style={{ backgroundColor: roast.color }}
+              ></div>
+            </div>
+          ))}
+        </div>
 
-          <div className="footer-text-tostado">
-            <h3>Tostado Medio-Oscuro</h3>
-            <p>Intensidad moderada con un toque de chocolate y caramelo.</p>
-          </div>
-
-          <div className="footer-text-tostado">
-            <h3>Tostado Oscuro</h3>
-            <p>
-              Robusto y con carácter, para quienes aman el sabor fuerte y
-              ahumado.
-            </p>
-          </div>
+        <div className="roasting-footer">
+          <p className="footer-text-roasting">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              className="info-icon"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            Cada tostado es cuidadosamente supervisado para garantizar la máxima
+            calidad
+          </p>
         </div>
       </section>
 
@@ -449,9 +556,9 @@ function App() {
             <div className="location-card-content">
               <h3>Tienda donde Melo</h3>
               <p>Cra. 39 # 10N - 10</p>
-              <a href="#" className="btn">
+              <Link to="/ubicaciones" className="btn">
                 MÁS INFORMACIÓN
-              </a>
+              </Link>
             </div>
           </div>
           <div className="location-card">
@@ -459,9 +566,9 @@ function App() {
             <div className="location-card-content">
               <h3>Lugar de procesamiento</h3>
               <p>Cra. 39B # 11N - 15</p>
-              <a href="#" className="btn">
+              <Link to="/ubicaciones" className="btn">
                 MÁS INFORMACIÓN
-              </a>
+              </Link>
             </div>
           </div>
         </div>
