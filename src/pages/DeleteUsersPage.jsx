@@ -7,6 +7,16 @@ import { getUsers, deleteUser } from "../utils/api.js";
 import Cafetera from "../components/Cafetera.jsx";
 import Swal from "sweetalert2";
 import "../App.css";
+import {
+  ArrowBigLeft,
+  ArrowBigRight,
+  Mail,
+  Search,
+  ShieldUser,
+  Trash2,
+  User,
+  Users,
+} from "lucide-react";
 
 const DeleteUsersPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -152,14 +162,7 @@ const DeleteUsersPage = () => {
             )}
           </div>
           <button type="submit" className="search-btn-modern">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
+            <Search strokeWidth="2.5px" />
             Buscar
           </button>
         </form>
@@ -169,14 +172,7 @@ const DeleteUsersPage = () => {
           <div className="quick-stats">
             <div className="stat-card">
               <div className="stat-icon users-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
-                  />
-                </svg>
+                <Users strokeWidth="2.5px" />
               </div>
               <div className="stat-content">
                 <span className="stat-label">Total Usuarios</span>
@@ -193,19 +189,9 @@ const DeleteUsersPage = () => {
                 >
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                     {role === "admin" ? (
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-                      />
+                      <ShieldUser strokeWidth="2.5px" />
                     ) : (
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                      />
+                      <User strokeWidth="2.5px" />
                     )}
                   </svg>
                 </div>
@@ -275,31 +261,9 @@ const DeleteUsersPage = () => {
 
                   <span className={`role-badge role-${user.role}`}>
                     {user.role === "admin" ? (
-                      <svg
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-                        />
-                      </svg>
+                      <ShieldUser strokeWidth="2.5px" />
                     ) : (
-                      <svg
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                        />
-                      </svg>
+                      <User strokeWidth="2.5px" />
                     )}
                     {user.role === "admin" ? "Administrador" : "Cliente"}
                   </span>
@@ -312,18 +276,7 @@ const DeleteUsersPage = () => {
 
                   <div className="user-detail-row">
                     <div className="detail-icon">
-                      <svg
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                        />
-                      </svg>
+                      <Mail strokeWidth="2.5px" />
                     </div>
                     <div className="detail-content">
                       <span className="detail-label">Correo electrónico</span>
@@ -362,46 +315,7 @@ const DeleteUsersPage = () => {
                   >
                     <span className="button__text">Eliminar</span>
                     <span className="button__icon">
-                      <svg
-                        className="svg"
-                        height="512"
-                        viewBox="0 0 512 512"
-                        width="512"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M112,112l20,320c.95,18.49,14.4,32,32,32H348c17.67,0,30.87-13.51,32-32l20-320"
-                          style={{
-                            fill: "none",
-                            stroke: "#fff",
-                            strokeLinecap: "round",
-                            strokeLinejoin: "round",
-                            strokeWidth: "32px",
-                          }}
-                        ></path>
-                        <line
-                          style={{
-                            stroke: "#fff",
-                            strokeLinecap: "round",
-                            strokeMiterlimit: 10,
-                            strokeWidth: "32px",
-                          }}
-                          x1="80"
-                          x2="432"
-                          y1="112"
-                          y2="112"
-                        ></line>
-                        <path
-                          d="M192,112V72h0a23.93,23.93,0,0,1,24-24h80a23.93,23.93,0,0,1,24,24h0v40"
-                          style={{
-                            fill: "none",
-                            stroke: "#fff",
-                            strokeLinecap: "round",
-                            strokeLinejoin: "round",
-                            strokeWidth: "32px",
-                          }}
-                        ></path>
-                      </svg>
+                      <Trash2 strokeWidth="2px" color="white" size={20} />
                     </span>
                   </button>
                 </div>
@@ -418,14 +332,7 @@ const DeleteUsersPage = () => {
                 className="pagination-btn-modern"
                 aria-label="Página anterior"
               >
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M15 19l-7-7 7-7"
-                  />
-                </svg>
+                <ArrowBigLeft strokeWidth="2.5px" />
                 Anterior
               </button>
               <div className="pagination-info">
@@ -440,14 +347,7 @@ const DeleteUsersPage = () => {
                 aria-label="Página siguiente"
               >
                 Siguiente
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 5l7 7-7 7"
-                  />
-                </svg>
+                <ArrowBigRight strokeWidth="2.5px" />
               </button>
             </div>
           )}

@@ -21,6 +21,18 @@ import withAdminGuard from "../hooks/withAdminGuard.jsx";
 import { useMinimumLoadingTime } from "../hooks/useMinimumLoading.jsx";
 import LoadingScreen from "../components/LoadingScreen";
 import "../styles/AdminStats.css";
+import logger from "../utils/logger.js";
+import {
+  Box,
+  ChartColumnBig,
+  CircleDollarSign,
+  MoveLeft,
+  Receipt,
+  TrendingUp,
+  TrendingUpDown,
+  User,
+  Users,
+} from "lucide-react";
 
 const AdminStats = () => {
   const navigate = useNavigate();
@@ -42,7 +54,7 @@ const AdminStats = () => {
         setTopProducts(productsRes || []);
         setNewUsers(usersRes || []);
       } catch (err) {
-        console.error("Error al obtener estadísticas:", err);
+        logger.error("Error al obtener estadísticas:", err);
       } finally {
         setLoading(false);
       }
@@ -105,14 +117,7 @@ const AdminStats = () => {
       <div className="stats-page-header">
         <div className="header-content">
           <div className="header-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-              />
-            </svg>
+            <ChartColumnBig strokeWidth="2.5px" />
           </div>
           <div className="header-text">
             <h1 className="stats-page-title">Estadísticas y Análisis</h1>
@@ -122,14 +127,7 @@ const AdminStats = () => {
           </div>
         </div>
         <button onClick={() => navigate("/admin")} className="back-btn-stats">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M10 19l-7-7m0 0l7-7m-7 7h18"
-            />
-          </svg>
+          <MoveLeft strokeWidth="2.5px" />
           Volver al Dashboard
         </button>
       </div>
@@ -138,14 +136,7 @@ const AdminStats = () => {
       <div className="metrics-grid">
         <div className="metric-card sales-metric">
           <div className="metric-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
+            <CircleDollarSign strokeWidth="2.5px" />
           </div>
           <div className="metric-content">
             <span className="metric-label">Ventas Totales</span>
@@ -158,14 +149,7 @@ const AdminStats = () => {
 
         <div className="metric-card products-metric">
           <div className="metric-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
-              />
-            </svg>
+            <Box strokeWidth="2.5px" />
           </div>
           <div className="metric-content">
             <span className="metric-label">Productos Vendidos</span>
@@ -176,14 +160,7 @@ const AdminStats = () => {
 
         <div className="metric-card users-metric">
           <div className="metric-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
-              />
-            </svg>
+            <Users strokeWidth="2.5px" />
           </div>
           <div className="metric-content">
             <span className="metric-label">Usuarios Nuevos</span>
@@ -194,14 +171,7 @@ const AdminStats = () => {
 
         <div className="metric-card average-metric">
           <div className="metric-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
-              />
-            </svg>
+            <TrendingUp strokeWidth="2.5px" />
           </div>
           <div className="metric-content">
             <span className="metric-label">Promedio Mensual</span>
@@ -218,14 +188,7 @@ const AdminStats = () => {
           <div className="chart-header">
             <div className="chart-title-wrapper">
               <div className="chart-icon sales-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"
-                  />
-                </svg>
+                <Receipt strokeWidth="2.5px" />
               </div>
               <div>
                 <h3 className="chart-title">Ventas Mensuales</h3>
@@ -274,14 +237,7 @@ const AdminStats = () => {
           <div className="chart-header">
             <div className="chart-title-wrapper">
               <div className="chart-icon products-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
-                  />
-                </svg>
+                <Box strokeWidth="2.5px" />
               </div>
               <div>
                 <h3 className="chart-title">Top Productos</h3>
@@ -331,14 +287,7 @@ const AdminStats = () => {
           <div className="chart-header">
             <div className="chart-title-wrapper">
               <div className="chart-icon users-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
-                  />
-                </svg>
+                <Users strokeWidth="2.5px" />
               </div>
               <div>
                 <h3 className="chart-title">Crecimiento de Usuarios</h3>

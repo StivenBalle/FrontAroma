@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import { createReview, checkOrderReview } from "../utils/api.js";
 import "../App.css";
+import logger from "../utils/logger.js";
+import { CircleCheck, CircleCheckBig, CircleX, Star, X } from "lucide-react";
 
 const OrderTrackingModal = ({
   order,
@@ -49,7 +51,7 @@ const OrderTrackingModal = ({
           }
         }
       } catch (error) {
-        console.error("Error al verificar reseña:", error);
+        logger.error("Error al verificar reseña:", error);
       }
     };
 
@@ -157,7 +159,7 @@ const OrderTrackingModal = ({
         throw new Error(response.error || "Error al enviar reseña");
       }
     } catch (error) {
-      console.error("Error:", error);
+      logger.error("Error:", error);
       Swal.fire({
         icon: "error",
         title: "Error al enviar reseña",
@@ -193,20 +195,7 @@ const OrderTrackingModal = ({
             className="modal-close-btn"
             aria-label="Cerrar modal"
           >
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
+            <X strokeWidth="2.5px" color="black" />
           </button>
         </div>
 
@@ -243,17 +232,7 @@ const OrderTrackingModal = ({
           {isCanceled ? (
             <div className="canceled-notice">
               <div className="canceled-icon">
-                <svg
-                  width="48"
-                  height="48"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                >
-                  <circle cx="12" cy="12" r="10" strokeWidth="2" />
-                  <line x1="15" y1="9" x2="9" y2="15" strokeWidth="2" />
-                  <line x1="9" y1="9" x2="15" y2="15" strokeWidth="2" />
-                </svg>
+                <CircleX strokeWidth="2.5px" color="red" size={40} />
               </div>
               <h3 className="canceled-title">Pedido Cancelado</h3>
               <p className="canceled-description">
@@ -263,21 +242,7 @@ const OrderTrackingModal = ({
           ) : isCompleted && reviewSubmitted ? (
             <div className="review-success-notice">
               <div className="success-icon">
-                <svg
-                  width="64"
-                  height="64"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                >
-                  <circle cx="12" cy="12" r="10" strokeWidth="2" />
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M9 12l2 2 4-4"
-                  />
-                </svg>
+                <CircleCheck strokeWidth="2.5px" color="green" size={45} />
               </div>
               <h3 className="success-title">¡Gracias por tu reseña!</h3>
               <p className="success-description">
@@ -306,21 +271,7 @@ const OrderTrackingModal = ({
           ) : isCompleted && !showReviewForm ? (
             <div className="completed-notice">
               <div className="completed-icon">
-                <svg
-                  width="64"
-                  height="64"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                >
-                  <circle cx="12" cy="12" r="10" strokeWidth="2" />
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M9 12l2 2 4-4"
-                  />
-                </svg>
+                <CircleCheck strokeWidth="2.5px" color="green" size={45} />
               </div>
               <h3 className="completed-title">¡Pedido Entregado!</h3>
               <p className="completed-description">
@@ -340,14 +291,7 @@ const OrderTrackingModal = ({
                     <div className="step-indicator-wrapper">
                       <div className="step-indicator">
                         {isStepCompleted ? (
-                          <svg
-                            width="20"
-                            height="20"
-                            viewBox="0 0 20 20"
-                            fill="currentColor"
-                          >
-                            <path d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" />
-                          </svg>
+                          <CircleCheckBig strokeWidth="2.5px" />
                         ) : (
                           <span className="step-number">{step.id}</span>
                         )}

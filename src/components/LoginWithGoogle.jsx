@@ -2,6 +2,7 @@ import React, { useContext, useEffect } from "react";
 import { AuthContext } from "../context/AuthContext.jsx";
 import Swal from "sweetalert2";
 import "../styles/header.css";
+import logger from "../utils/logger.js";
 
 function generateNonce() {
   const array = new Uint32Array(8);
@@ -41,7 +42,7 @@ const LoginWithGoogle = () => {
                 );
               }
             } catch (error) {
-              console.error("Error en el callback de Google:", error);
+              logger.error("Error en el callback de Google:", error);
               Swal.fire("Error", "Fallo la autenticación con Google.", "error");
             }
           },
@@ -57,13 +58,13 @@ const LoginWithGoogle = () => {
           { theme: "outline", size: "large" }
         );
       } catch (err) {
-        console.error("❌ Error inicializando Google Sign-In:", err.message);
+        logger.error("❌ Error inicializando Google Sign-In:", err.message);
         Swal.fire("Error", "No se pudo inicializar Google Sign-In", "error");
       }
     };
 
     script.onerror = () => {
-      console.error("❌ Error al cargar el script de Google");
+      logger.error("❌ Error al cargar el script de Google");
       Swal.fire("Error", "No se pudo cargar el script de Google", "error");
     };
 

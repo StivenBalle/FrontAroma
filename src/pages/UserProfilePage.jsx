@@ -19,6 +19,27 @@ import {
   deleteProfileImage,
   updatePassword,
 } from "../utils/api.js";
+import {
+  Phone,
+  MapPin,
+  SquarePen,
+  MapPinHouse,
+  LockKeyhole,
+  X,
+  Eye,
+  EyeOff,
+  Handbag,
+  Box,
+  CircleDollarSign,
+  Calendar1,
+  CircleCheckBig,
+  ArrowBigLeft,
+  ArrowBigRight,
+  User,
+  ImagePlus,
+  Trash2,
+  LogOut,
+} from "lucide-react";
 import "../styles/UserProfile.css";
 
 const UserProfilePage = () => {
@@ -402,16 +423,12 @@ const UserProfilePage = () => {
                   />
                 ) : (
                   <div className="avatar-placeholder-modern">
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-                    </svg>
+                    <User strokeWidth="2px" />
                   </div>
                 )}
                 <div className="avatar-upload-overlay">
                   <label className="avatar-upload-label">
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M3 4V1h2v3h3v2H5v3H3V6H0V4h3zm3 6V7h3V4h7l1.83 2H21c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H5c-1.1 0-2-.9-2-2V10h3zm7 9c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-3.2-5c0 1.77 1.43 3.2 3.2 3.2s3.2-1.43 3.2-3.2-1.43-3.2-3.2-3.2-3.2 1.43-3.2 3.2z" />
-                    </svg>
+                    <ImagePlus strokeWidth="2.5px" />
                     <input
                       type="file"
                       accept="image/jpeg,image/png"
@@ -426,14 +443,7 @@ const UserProfilePage = () => {
                   onClick={handleImageDelete}
                   className="delete-avatar-btn"
                 >
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                    />
-                  </svg>
+                  <Trash2 strokeWidth="2.5px" />
                   Eliminar foto
                 </button>
               )}
@@ -448,14 +458,7 @@ const UserProfilePage = () => {
           <div className="profile-details-grid">
             <div className="detail-card-user">
               <div className="detail-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                  />
-                </svg>
+                <Phone strokeWidth="2.5px" />
               </div>
               <div className="detail-content">
                 <span className="detail-label">Teléfono</span>
@@ -467,20 +470,7 @@ const UserProfilePage = () => {
 
             <div className="detail-card-user">
               <div className="detail-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                  />
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                </svg>
+                <MapPin strokeWidth="2.5px" />
               </div>
               <div className="detail-content">
                 <span className="detail-label">Dirección</span>
@@ -494,42 +484,21 @@ const UserProfilePage = () => {
               onClick={() => setIsEditingProfile(true)}
               className="action-btn primary"
             >
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                />
-              </svg>
+              <SquarePen strokeWidth="2.5px" />
               Editar perfil
             </button>
             <button
               onClick={() => setIsEditingAddress(true)}
               className="action-btn secondary"
             >
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                />
-              </svg>
+              <MapPinHouse strokeWidth="2.5px" />
               Editar dirección
             </button>
             <button
               onClick={() => setIsChangingPassword(true)}
               className="action-btn secondary"
             >
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                />
-              </svg>
+              <LockKeyhole strokeWidth="2.5px" />
               Cambiar contraseña
             </button>
           </div>
@@ -545,14 +514,7 @@ const UserProfilePage = () => {
                   onClick={() => setIsEditingProfile(false)}
                   className="modal-close"
                 >
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  </svg>
+                  <X strokeWidth="2.5px" />
                 </button>
               </div>
               <form onSubmit={handleProfileSubmit} className="modal-form">
@@ -615,14 +577,7 @@ const UserProfilePage = () => {
                   onClick={() => setIsEditingAddress(false)}
                   className="modal-close"
                 >
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  </svg>
+                  <X strokeWidth="2.5px" />
                 </button>
               </div>
               <form onSubmit={handleAddressSubmit} className="modal-form">
@@ -713,14 +668,7 @@ const UserProfilePage = () => {
                   }}
                   className="modal-close"
                 >
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  </svg>
+                  <X strokeWidth="2.5px" />
                 </button>
               </div>
               <form onSubmit={handlePasswordSubmit} className="modal-form">
@@ -753,37 +701,9 @@ const UserProfilePage = () => {
                       className="password-toggle"
                     >
                       {showPasswords.current ? (
-                        <svg
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"
-                          />
-                        </svg>
+                        <Eye strokeWidth="2.5px" />
                       ) : (
-                        <svg
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                          />
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                          />
-                        </svg>
+                        <EyeOff strokeWidth="2.5px" />
                       )}
                     </button>
                   </div>
@@ -806,37 +726,9 @@ const UserProfilePage = () => {
                       className="password-toggle"
                     >
                       {showPasswords.new ? (
-                        <svg
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"
-                          />
-                        </svg>
+                        <Eye strokeWidth="2.5px" />
                       ) : (
-                        <svg
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                          />
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                          />
-                        </svg>
+                        <EyeOff strokeWidth="2.5px" />
                       )}
                     </button>
                   </div>
@@ -861,37 +753,9 @@ const UserProfilePage = () => {
                       className="password-toggle"
                     >
                       {showPasswords.confirm ? (
-                        <svg
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"
-                          />
-                        </svg>
+                        <Eye strokeWidth="2.5px" />
                       ) : (
-                        <svg
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                          />
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                          />
-                        </svg>
+                        <EyeOff strokeWidth="2.5px" />
                       )}
                     </button>
                   </div>
@@ -934,14 +798,7 @@ const UserProfilePage = () => {
               {orders.length > 0 && (
                 <div className="orders-stats">
                   <div className="stat-badge">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
-                      />
-                    </svg>
+                    <Handbag strokeWidth="2.5px" />
                     <span>
                       {orders.length}{" "}
                       {orders.length === 1 ? "Compra" : "Compras"}
@@ -984,92 +841,31 @@ const UserProfilePage = () => {
                         </th>
                         <th>
                           <div className="th-content">
-                            <svg
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
-                              />
-                            </svg>
+                            <Box strokeWidth="2.5px" />
                             Producto
                           </div>
                         </th>
                         <th>
                           <div className="th-content">
-                            <svg
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                              />
-                            </svg>
+                            <CircleDollarSign strokeWidth="2.5px" />
                             Precio
                           </div>
                         </th>
                         <th>
                           <div className="th-content">
-                            <svg
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                              />
-                            </svg>
+                            <Calendar1 strokeWidth="2.5px" />
                             Fecha
                           </div>
                         </th>
                         <th>
                           <div className="th-content">
-                            <svg
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                              />
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                              />
-                            </svg>
+                            <MapPin strokeWidth="2.5px" />
                             Dirección
                           </div>
                         </th>
                         <th>
                           <div className="th-content">
-                            <svg
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                              />
-                            </svg>
+                            <CircleCheckBig strokeWidth="2.5px" />
                             Estado
                           </div>
                         </th>
@@ -1167,18 +963,7 @@ const UserProfilePage = () => {
                       <div className="order-card-body">
                         <div className="order-card-row">
                           <div className="order-card-label">
-                            <svg
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
-                              />
-                            </svg>
+                            <Box strokeWidth="2.5px" />
                             Producto
                           </div>
                           <div className="order-card-value">
@@ -1187,18 +972,7 @@ const UserProfilePage = () => {
                         </div>
                         <div className="order-card-row">
                           <div className="order-card-label">
-                            <svg
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                              />
-                            </svg>
+                            <CircleDollarSign strokeWidth="2.5px" />
                             Precio
                           </div>
                           <div className="order-card-value price-cell">
@@ -1207,18 +981,7 @@ const UserProfilePage = () => {
                         </div>
                         <div className="order-card-row">
                           <div className="order-card-label">
-                            <svg
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                              />
-                            </svg>
+                            <Calendar1 strokeWidth="2.5px" />
                             Fecha
                           </div>
                           <div className="order-card-value">
@@ -1232,18 +995,7 @@ const UserProfilePage = () => {
                         {order.shipping_address && (
                           <div className="order-card-row">
                             <div className="order-card-label">
-                              <svg
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth={2}
-                                  d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                                />
-                              </svg>
+                              <MapPin strokeWidth="2.5px" />
                               Dirección
                             </div>
                             <div className="order-card-value">
@@ -1265,18 +1017,7 @@ const UserProfilePage = () => {
                       className="pagination-btn-modern"
                       aria-label="Página anterior"
                     >
-                      <svg
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M15 19l-7-7 7-7"
-                        />
-                      </svg>
+                      <ArrowBigLeft strokeWidth="2.5px" />
                       Anterior
                     </button>
                     <div className="pagination-info">
@@ -1291,18 +1032,7 @@ const UserProfilePage = () => {
                       aria-label="Página siguiente"
                     >
                       Siguiente
-                      <svg
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M9 5l7 7-7 7"
-                        />
-                      </svg>
+                      <ArrowBigRight strokeWidth="2.5px" />
                     </button>
                   </div>
                 )}
@@ -1310,14 +1040,7 @@ const UserProfilePage = () => {
             )}
           </div>
           <button onClick={handleLogout} className="logout-button-modern">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-              />
-            </svg>
+            <LogOut strokeWidth="3px" size={20} />
             Cerrar sesión
           </button>
         </section>

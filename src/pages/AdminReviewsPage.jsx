@@ -8,6 +8,21 @@ import { useMinimumLoadingTime } from "../hooks/useMinimumLoading.jsx";
 import Swal from "sweetalert2";
 import { getReviews, getAdminOrders } from "../utils/api.js";
 import "../App.css";
+import logger from "../utils/logger.js";
+import {
+  ArrowBigLeft,
+  ArrowBigRight,
+  ArrowBigRightDash,
+  Calendar,
+  Calendar1,
+  ChartColumnBig,
+  CircleX,
+  Clock4,
+  Handbag,
+  Search,
+  Star,
+  X,
+} from "lucide-react";
 
 const AdminReviewsPage = () => {
   const navigate = useNavigate();
@@ -78,7 +93,7 @@ const AdminReviewsPage = () => {
         averageRating: avgRating,
       });
     } catch (err) {
-      console.error("Error al cargar reseñas:", err);
+      logger.error("Error al cargar reseñas:", err);
       Swal.fire({
         icon: "error",
         title: "Error",
@@ -246,14 +261,7 @@ const AdminReviewsPage = () => {
           </select>
 
           <button type="submit" className="search-btn-modern">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
+            <Search strokeWidth="2.5px" />
             Buscar
           </button>
         </form>
@@ -262,14 +270,7 @@ const AdminReviewsPage = () => {
         <div className="quick-stats-reviews">
           <div className="stat-card-review">
             <div className="stat-icon orders-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
-                />
-              </svg>
+              <Handbag strokeWidth="2.5px" />
             </div>
             <div className="stat-content">
               <span className="stat-label">Total Compras</span>
@@ -279,14 +280,7 @@ const AdminReviewsPage = () => {
 
           <div className="stat-card-review">
             <div className="stat-icon reviews-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
-                />
-              </svg>
+              <Star strokeWidth="2.5px" />
             </div>
             <div className="stat-content">
               <span className="stat-label">Reseñas Recibidas</span>
@@ -296,14 +290,7 @@ const AdminReviewsPage = () => {
 
           <div className="stat-card-review">
             <div className="stat-icon pending-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
+              <Clock4 strokeWidth="2.5px" />
             </div>
             <div className="stat-content">
               <span className="stat-label">Reseñas Pendientes</span>
@@ -313,14 +300,7 @@ const AdminReviewsPage = () => {
 
           <div className="stat-card-review">
             <div className="stat-icon cancelled-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 22a10 10 0 100-20 10 10 0 000 20zm5-13l-6 6m0-6l6 6"
-                />
-              </svg>
+              <CircleX strokeWidth="2.5px" />
             </div>
             <div className="stat-content">
               <span className="stat-label">Pedidos Cancelados</span>
@@ -330,18 +310,14 @@ const AdminReviewsPage = () => {
 
           <div className="stat-card-review">
             <div className="stat-icon average-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-                />
-              </svg>
+              <ChartColumnBig strokeWidth="2.5px" />
             </div>
             <div className="stat-content">
               <span className="stat-label">Calificación Promedio</span>
-              <span className="stat-value">{stats.averageRating} ⭐</span>
+              <span className="stat-value">
+                {stats.averageRating}{" "}
+                <Star strokeWidth="2.5px" color="orange" fill="orange" />
+              </span>
             </div>
           </div>
         </div>
@@ -397,9 +373,7 @@ const AdminReviewsPage = () => {
                       style={{ backgroundColor: getRatingColor(review.rating) }}
                     >
                       <span className="rating-number">{review.rating}</span>
-                      <svg viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-                      </svg>
+                      <Star strokeWidth="2.5px" color="white" />
                     </div>
                   </div>
 
@@ -412,20 +386,12 @@ const AdminReviewsPage = () => {
                     </span>
                     <div className="stars-display">
                       {[1, 2, 3, 4, 5].map((star) => (
-                        <svg
+                        <Star
+                          strokeWidth="currentColor"
                           key={star}
-                          viewBox="0 0 24 24"
                           fill={star <= review.rating ? "currentColor" : "none"}
-                          stroke="currentColor"
                           style={{ color: getRatingColor(review.rating) }}
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
-                          />
-                        </svg>
+                        />
                       ))}
                     </div>
                   </div>
@@ -438,18 +404,7 @@ const AdminReviewsPage = () => {
 
                   <div className="review-footer">
                     <div className="review-date">
-                      <svg
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                        />
-                      </svg>
+                      <Calendar1 strokeWidth="2.5px" />
                       {new Date(review.created_at).toLocaleDateString("es-CO", {
                         year: "numeric",
                         month: "short",
@@ -461,18 +416,7 @@ const AdminReviewsPage = () => {
                       onClick={() => handleViewDetail(review)}
                     >
                       Ver detalles
-                      <svg
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M9 5l7 7-7 7"
-                        />
-                      </svg>
+                      <ArrowBigRightDash strokeWidth="2.5px" />
                     </button>
                   </div>
                 </div>
@@ -488,14 +432,7 @@ const AdminReviewsPage = () => {
                   className="pagination-btn-modern"
                   aria-label="Página anterior"
                 >
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M15 19l-7-7 7-7"
-                    />
-                  </svg>
+                  <ArrowBigLeft strokeWidth="2.5px" />
                   Anterior
                 </button>
                 <div className="pagination-info">
@@ -510,14 +447,7 @@ const AdminReviewsPage = () => {
                   aria-label="Página siguiente"
                 >
                   Siguiente
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 5l7 7-7 7"
-                    />
-                  </svg>
+                  <ArrowBigRight strokeWidth="2.5px" />
                 </button>
               </div>
             )}
@@ -558,14 +488,7 @@ const AdminReviewsPage = () => {
                   color: getRatingColor(selectedReview.rating),
                 }}
               >
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
+                <X strokeWidth="2.5px" />
               </button>
             </div>
 
@@ -612,18 +535,14 @@ const AdminReviewsPage = () => {
                     </span>
                     <div className="stars-large">
                       {[1, 2, 3, 4, 5].map((star) => (
-                        <svg
+                        <Star
+                          strokeWidth="currentColor"
                           key={star}
-                          viewBox="0 0 24 24"
                           fill={
-                            star <= selectedReview.rating
-                              ? "currentColor"
-                              : "none"
+                            star <= selectedReview.rating ? "white" : "none"
                           }
-                          stroke="currentColor"
-                        >
-                          <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-                        </svg>
+                          color="white"
+                        />
                       ))}
                     </div>
                     <span className="rating-label-large">
@@ -645,14 +564,7 @@ const AdminReviewsPage = () => {
               <div className="detail-section">
                 <h3 className="section-title">Fecha de Publicación</h3>
                 <div className="date-detail">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                    />
-                  </svg>
+                  <Calendar strokeWidth="2.5px" />
                   {new Date(selectedReview.created_at).toLocaleDateString(
                     "es-CO",
                     {

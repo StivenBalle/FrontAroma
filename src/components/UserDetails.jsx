@@ -1,6 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { getUserProfileById, getHistorialByUserId } from "../utils/api.js";
 import "../styles/AdminStats.css";
+import logger from "../utils/logger.js";
+import {
+  Calendar1,
+  Chromium,
+  CircleDollarSign,
+  Frown,
+  Handbag,
+  Laugh,
+  Mail,
+  MapPin,
+  ShieldUser,
+  TrendingUp,
+  User,
+  X,
+} from "lucide-react";
 
 const UserDetailsModal = ({ userId, onClose }) => {
   const [userDetails, setUserDetails] = useState(null);
@@ -19,7 +34,7 @@ const UserDetailsModal = ({ userId, onClose }) => {
         setUserDetails(userData);
         setPurchaseHistory(historyData.compras || []);
       } catch (error) {
-        console.error("Error al cargar detalles del usuario:", error);
+        logger.error("Error al cargar detalles del usuario:", error);
       } finally {
         setLoading(false);
       }
@@ -83,14 +98,7 @@ const UserDetailsModal = ({ userId, onClose }) => {
             onClick={onClose}
             aria-label="Cerrar"
           >
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
+            <X strokeWidth="2.5px" />
           </button>
         </div>
 
@@ -115,37 +123,21 @@ const UserDetailsModal = ({ userId, onClose }) => {
               <div className="user-badges">
                 <span className={`role-badge-large role-${userDetails.role}`}>
                   {userDetails.role === "admin" ? (
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-                      />
-                    </svg>
+                    <ShieldUser strokeWidth="2.5px" />
                   ) : (
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                      />
-                    </svg>
+                    <User strokeWidth="2.5px" />
                   )}
                   {userDetails.role === "admin" ? "Administrador" : "Cliente"}
                 </span>
 
-                {isFrequentBuyer && (
+                {!isFrequentBuyer ? (
+                  <span className="nofrequent-buyer-badge">
+                    <Frown strokeWidth="2.5px" />
+                    Cliente poco frecuente
+                  </span>
+                ) : (
                   <span className="frequent-buyer-badge">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
-                      />
-                    </svg>
+                    <Laugh strokeWidth="2.5px" />
                     Cliente Frecuente
                   </span>
                 )}
@@ -154,18 +146,9 @@ const UserDetailsModal = ({ userId, onClose }) => {
                   className={`auth-badge auth-${userDetails.auth_provider}`}
                 >
                   {userDetails.auth_provider === "google" ? (
-                    <svg viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M12.545,10.239v3.821h5.445c-0.712,2.315-2.647,3.972-5.445,3.972c-3.332,0-6.033-2.701-6.033-6.032s2.701-6.032,6.033-6.032c1.498,0,2.866,0.549,3.921,1.453l2.814-2.814C17.503,2.988,15.139,2,12.545,2C7.021,2,2.543,6.477,2.543,12s4.478,10,10.002,10c8.396,0,10.249-7.85,9.426-11.748L12.545,10.239z" />
-                    </svg>
+                    <Chromium strokeWidth="2.5px" />
                   ) : (
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                      />
-                    </svg>
+                    <Mail strokeWidth="2.5px" />
                   )}
                   {userDetails.auth_provider === "google" ? "Google" : "Local"}
                 </span>
@@ -185,14 +168,7 @@ const UserDetailsModal = ({ userId, onClose }) => {
           <div className="purchase-stats">
             <div className="stat-box">
               <div className="stat-icon-box purchases-stat">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
-                  />
-                </svg>
+                <Handbag strokeWidth="2.5px" />
               </div>
               <div className="stat-info">
                 <span className="stat-number">{totalPurchases}</span>
@@ -202,14 +178,7 @@ const UserDetailsModal = ({ userId, onClose }) => {
 
             <div className="stat-box">
               <div className="stat-icon-box revenue-stat">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
+                <CircleDollarSign strokeWidth="2.5px" />
               </div>
               <div className="stat-info">
                 <span className="stat-number">${totalSpent.toFixed(2)}</span>
@@ -219,14 +188,7 @@ const UserDetailsModal = ({ userId, onClose }) => {
 
             <div className="stat-box">
               <div className="stat-icon-box average-stat">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
-                  />
-                </svg>
+                <TrendingUp strokeWidth="2.5px" />
               </div>
               <div className="stat-info">
                 <span className="stat-number">
@@ -244,14 +206,7 @@ const UserDetailsModal = ({ userId, onClose }) => {
           <div className="details-grid">
             <div className="detail-card">
               <div className="detail-card-header">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                  />
-                </svg>
+                <User strokeWidth="2.5px" />
                 <h4>Información Personal</h4>
               </div>
               <div className="detail-card-body">
@@ -276,20 +231,7 @@ const UserDetailsModal = ({ userId, onClose }) => {
 
             <div className="detail-card">
               <div className="detail-card-header">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                  />
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                </svg>
+                <MapPin strokeWidth="2.5px" />
                 <h4>Dirección de Envío</h4>
               </div>
               <div className="detail-card-body">
@@ -343,14 +285,7 @@ const UserDetailsModal = ({ userId, onClose }) => {
 
             <div className="detail-card">
               <div className="detail-card-header">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                  />
-                </svg>
+                <Calendar1 strokeWidth="2.5px" />
                 <h4>Cuenta</h4>
               </div>
               <div className="detail-card-body">
@@ -391,14 +326,7 @@ const UserDetailsModal = ({ userId, onClose }) => {
         {/* Footer del Modal */}
         <div className="modal-details-footer">
           <button className="close-details-btn" onClick={onClose}>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
+            <X strokeWidth="2.5px" />
             Cerrar
           </button>
         </div>

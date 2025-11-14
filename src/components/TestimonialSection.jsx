@@ -5,6 +5,7 @@ import "swiper/css";
 import "swiper/css/autoplay";
 import LogoCafe from "../assets/LogoCafe.png";
 import { getReviews } from "../utils/api.js";
+import logger from "../utils/logger.js";
 
 const TestimonialSection = () => {
   const [reviews, setReviews] = useState([]);
@@ -25,7 +26,7 @@ const TestimonialSection = () => {
       const data = await getReviews();
       setReviews(data.reviews || []);
     } catch (error) {
-      console.error("Error al cargar reseñas:", error);
+      logger.error("Error al cargar reseñas:", error);
     } finally {
       setLoading(false);
     }

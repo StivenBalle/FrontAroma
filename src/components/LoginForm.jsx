@@ -5,6 +5,7 @@ import logoCafe from "../assets/LogoCafe.png";
 import logger from "../utils/logger";
 import Swal from "sweetalert2";
 import "../styles/header.css";
+import { LockKeyhole, Mail } from "lucide-react";
 
 const LoginForm = ({ switchToSignup }) => {
   const { login, closeAuthModal } = useContext(AuthContext);
@@ -42,6 +43,7 @@ const LoginForm = ({ switchToSignup }) => {
           <label>Correo</label>
         </div>
         <div className="inputForm">
+          <Mail strokeWidth="2.5px" />
           <input
             type="text"
             className="input-name"
@@ -55,6 +57,7 @@ const LoginForm = ({ switchToSignup }) => {
           <label>Contraseña</label>
         </div>
         <div className="inputForm">
+          <LockKeyhole strokeWidth="2px" />
           <input
             type="password"
             className="input-name"

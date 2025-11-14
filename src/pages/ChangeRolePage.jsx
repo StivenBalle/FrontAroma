@@ -7,6 +7,7 @@ import Cafetera from "../components/Cafetera.jsx";
 import Swal from "sweetalert2";
 import LoadingScreen from "../components/LoadingScreen.jsx";
 import "../App.css";
+import { Mail, Search, ShieldUser, User, Users } from "lucide-react";
 
 const ChangeRolePageInner = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -154,14 +155,7 @@ const ChangeRolePageInner = () => {
             )}
           </div>
           <button type="submit" className="search-btn-modern">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
+            <Search strokeWidth="2.5px" />
             Buscar
           </button>
         </form>
@@ -171,14 +165,7 @@ const ChangeRolePageInner = () => {
           <div className="quick-stats">
             <div className="stat-card">
               <div className="stat-icon users-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
-                  />
-                </svg>
+                <Users strokeWidth="2.5px" />
               </div>
               <div className="stat-content">
                 <span className="stat-label">Total Usuarios</span>
@@ -195,19 +182,9 @@ const ChangeRolePageInner = () => {
                 >
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                     {role === "admin" ? (
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-                      />
+                      <ShieldUser strokeWidth="2.5px" />
                     ) : (
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                      />
+                      <User strokeWidth="2.5px" />
                     )}
                   </svg>
                 </div>
@@ -278,31 +255,9 @@ const ChangeRolePageInner = () => {
 
                   <span className={`role-badge role-${user.role}`}>
                     {user.role === "admin" ? (
-                      <svg
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-                        />
-                      </svg>
+                      <ShieldUser strokeWidth="2.5px" />
                     ) : (
-                      <svg
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                        />
-                      </svg>
+                      <User strokeWidth="2.5px" />
                     )}
                     {user.role === "admin" ? "Administrador" : "Cliente"}
                   </span>
@@ -315,18 +270,7 @@ const ChangeRolePageInner = () => {
 
                   <div className="user-detail-row">
                     <div className="detail-icon">
-                      <svg
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                        />
-                      </svg>
+                      <Mail strokeWidth="2.5px" />
                     </div>
                     <div className="detail-content">
                       <span className="detail-label">Correo electrónico</span>

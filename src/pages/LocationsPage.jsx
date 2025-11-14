@@ -172,13 +172,16 @@ const LocationsPage = () => {
 
             <div className="contact-box">
               <p className="contact-title">¿Tienes preguntas? Contáctanos:</p>
-              <a href="tel:+573001234567" className="contact-link">
+              <a href="tel:+573185818424" className="contact-link">
                 <Phone size={18} />
                 <span>+57 318 581 8424</span>
               </a>
-              <a href="mailto:info@aromaserrania.com" className="contact-link">
+              <a
+                href="mailto:cafearomadelaserrania2013@gmail.com"
+                className="contact-link"
+              >
                 <Mail size={18} />
-                <span>info@aromaserrania.com</span>
+                <span>cafearomadelaserrania2013@gmail.com</span>
               </a>
             </div>
           </div>
@@ -282,6 +285,7 @@ const LocationsPage = () => {
                   ))}
                 </div>
 
+                <div class="loader-location"></div>
                 <button
                   className="map-btn"
                   style={{ background: location.color }}

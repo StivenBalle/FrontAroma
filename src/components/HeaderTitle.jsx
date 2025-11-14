@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import "../App.css";
+import { MoveLeft } from "lucide-react";
 
 const HeaderTitle = ({
   title = "Título de página",
@@ -18,14 +19,7 @@ const HeaderTitle = ({
       </div>
 
       <button onClick={() => navigate(backPath)} className="back-btn-modern">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M10 19l-7-7m0 0l7-7m-7 7h18"
-          />
-        </svg>
+        <MoveLeft strokeWidth="2.5px" />
         {backText}
       </button>
     </div>

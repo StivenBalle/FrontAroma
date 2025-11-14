@@ -16,6 +16,17 @@ import {
 } from "../utils/api.js";
 import "../App.css";
 import { Link } from "react-router-dom";
+import {
+  Bean,
+  Coffee,
+  Egg,
+  FileText,
+  Flame,
+  Info,
+  ShieldCheck,
+  ShoppingCart,
+  Truck,
+} from "lucide-react";
 
 function App() {
   const { openAuthModal } = useAuth();
@@ -223,72 +234,10 @@ function App() {
 
   const renderIcon = (iconName) => {
     const icons = {
-      coffee: (
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          className="feature-icon"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-          />
-        </svg>
-      ),
-      fire: (
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          className="feature-icon"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"
-          />
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M9.879 16.121A3 3 0 1012.015 11L11 14H9c0 .768.293 1.536.879 2.121z"
-          />
-        </svg>
-      ),
-      truck: (
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          className="feature-icon"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0"
-          />
-        </svg>
-      ),
-      award: (
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          className="feature-icon"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
-          />
-        </svg>
-      ),
+      coffee: <FileText strokeWidth="2.8px" color="orange" size={30} />,
+      fire: <Flame strokeWidth="2.8px" color="orange" size={30} />,
+      truck: <Truck strokeWidth="2.8px" color="orange" size={30} />,
+      award: <ShieldCheck strokeWidth="3px" color="orange" size={30} />,
     };
     return icons[iconName] || null;
   };
@@ -430,19 +379,7 @@ function App() {
               />
               <div className="image-overlay">
                 <div className="overlay-content">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    className="coffee-icon"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-                    />
-                  </svg>
+                  <ShoppingCart strokeWidth="3px" />
                   <span>Granos de alta calidad</span>
                 </div>
               </div>
@@ -487,9 +424,7 @@ function App() {
                   className="roast-icon"
                   style={{ backgroundColor: roast.color }}
                 >
-                  <svg viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M2,21H20V19H2M20,8H18V5H20M20,3H4V13A4,4 0 0,0 8,17H14A4,4 0 0,0 18,13V10H20A2,2 0 0,0 22,8V5C22,3.89 21.1,3 20,3Z" />
-                  </svg>
+                  <Coffee strokeWidth="3px" color="white" />
                 </div>
 
                 <h3 className="roast-title-card">{roast.title}</h3>
@@ -510,11 +445,12 @@ function App() {
                 </div>
                 <div className="coffee-beans-display">
                   {[1, 2, 3].map((bean) => (
-                    <div
+                    <Egg
+                      strokeWidth="4px"
                       key={bean}
-                      className="visual-bean"
-                      style={{ backgroundColor: roast.color }}
-                    ></div>
+                      color={roast.color}
+                      fill={roast.color}
+                    />
                   ))}
                 </div>
               </div>
@@ -528,19 +464,7 @@ function App() {
 
         <div className="roasting-footer">
           <p className="footer-text-roasting">
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              className="info-icon"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
+            <Info strokeWidth="2.8px" color="orange" size={20} />
             Cada tostado es cuidadosamente supervisado para garantizar la máxima
             calidad
           </p>
@@ -552,7 +476,7 @@ function App() {
         <h2>Centros de Experiencia</h2>
         <div className="location-grid">
           <div className="location-card">
-            <img src="/api/placeholder/300/200" alt="Punto de venta oficial" />
+            <img src={logoCafe} alt="Punto de venta oficial" />
             <div className="location-card-content">
               <h3>Tienda donde Melo</h3>
               <p>Cra. 39 # 10N - 10</p>
@@ -562,9 +486,9 @@ function App() {
             </div>
           </div>
           <div className="location-card">
-            <img src="/api/placeholder/300/200" alt="Lugar de procesamiento" />
+            <img src={logoCafe} alt="Lugar de Procesamiento" />
             <div className="location-card-content">
-              <h3>Lugar de procesamiento</h3>
+              <h3>Lugar de Procesamiento</h3>
               <p>Cra. 39B # 11N - 15</p>
               <Link to="/ubicaciones" className="btn">
                 MÁS INFORMACIÓN
