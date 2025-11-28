@@ -14,20 +14,23 @@ import Success from "./components/Success";
 import Cancel from "./components/Cancel";
 import Terminos from "./pages/Terminos";
 import NotFound from "./components/NotFound";
-import AdminOrders from "./components/AdminOrders";
+import AdminOrders from "./pages/admin/AdminDashboard.jsx";
 import { AuthProvider } from "./context/AuthContext";
-import AuthModal from "./components/AuthModal";
-import OrdersPage from "./pages/OrdersPage.jsx";
-import SearchUsersPage from "./pages/SearchUsersPage.jsx";
-import DeleteUsersPage from "./pages/DeleteUsersPage.jsx";
-import ChangeRolePage from "./pages/ChangeRolePage.jsx";
+import AuthModal from "./components/auth/AuthModal.jsx";
+import OrdersPage from "./pages/admin/SearchOrdersPage.jsx";
+import SearchUsersPage from "./pages/admin/SearchUsersPage.jsx";
+import DeleteUsersPage from "./pages/admin/DeleteUsersPage.jsx";
+import ChangeRolePage from "./pages/admin/ChangeRolePage.jsx";
 import CookieConsent from "./components/CookieConsent.jsx";
 import ScrollToTop from "./components/ScrollToTop.jsx";
-import AdminStats from "./pages/AdminStats.jsx";
+import AdminStats from "./pages/admin/AdminStats.jsx";
 import { setNavigate } from "../src/utils/api.js";
 import UserProfilePage from "./pages/UserProfilePage.jsx";
-import AdminReviewsPage from "./pages/AdminReviewsPage.jsx";
+import AdminReviewsPage from "./pages/admin/AdminReviewsPage.jsx";
 import LocationsPage from "./pages/LocationsPage.jsx";
+import AdminSecurity from "./pages/admin/AdminSecurityAccounts.jsx";
+import AdminLogs from "./pages/admin/AdminLogsViewer.jsx";
+import AccountLocked from "./pages/AccountLocketPage.jsx";
 
 function App() {
   const [showCookieConsent, setShowCookieConsent] = useState(false);
@@ -76,6 +79,7 @@ function App() {
         <Route path="/terminos&condiciones" element={<Terminos />} />
         <Route path="/successfullPayment" element={<Success />} />
         <Route path="/paymentCanceled" element={<Cancel />} />
+        <Route path="/account-locked" element={<AccountLocked />} />
         {/*Pages Admin*/}
         <Route path="/admin" element={<AdminOrders />} />
         <Route path="/admin/orders" element={<OrdersPage />} />
@@ -84,6 +88,8 @@ function App() {
         <Route path="/admin/users/role" element={<ChangeRolePage />} />
         <Route path="/admin/stats" element={<AdminStats />} />
         <Route path="/admin/reviews" element={<AdminReviewsPage />} />
+        <Route path="/admin/security-accounts" element={<AdminSecurity />} />
+        <Route path="/admin/logs-viewer" element={<AdminLogs />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
 

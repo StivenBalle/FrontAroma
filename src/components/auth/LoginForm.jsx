@@ -1,10 +1,9 @@
 import React, { useContext } from "react";
-import { AuthContext } from "../context/AuthContext.jsx";
-import LoginGoogle from "../components/LoginWithGoogle.jsx";
-import logoCafe from "../assets/LogoCafe.png";
-import logger from "../utils/logger";
-import Swal from "sweetalert2";
-import "../styles/header.css";
+import { AuthContext } from "../../context/AuthContext.jsx";
+import LoginGoogle from "../../components/auth/LoginWithGoogle.jsx";
+import logoCafe from "../../assets/logoCafe.png";
+import logger from "../../utils/logger";
+import "../../styles/header.css";
 import { LockKeyhole, Mail } from "lucide-react";
 
 const LoginForm = ({ switchToSignup }) => {
@@ -19,11 +18,10 @@ const LoginForm = ({ switchToSignup }) => {
     const res = await login(email, password);
     logger.log("Respuesta del login:", res);
 
-    if (res.success) {
-      logger.log(`El usuario, ${res.user?.name} inicio sesión exitosamente`);
-    } else {
-      Swal.fire("Error", res.error, "error");
+    if (!res.success) {
+      return;
     }
+    logger.log(`El usuario inició sesión exitosamente.`);
   };
 
   return (

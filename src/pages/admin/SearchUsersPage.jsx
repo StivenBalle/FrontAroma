@@ -1,27 +1,30 @@
 import React, { useEffect, useState } from "react";
-import withAdminGuard from "../hooks/withAdminGuard.jsx";
-import LoadingScreen from "../components/LoadingScreen";
-import { useMinimumLoadingTime } from "../hooks/useMinimumLoading.jsx";
-import HeaderTitle from "../components/HeaderTitle.jsx";
-import UserDetailsModal from "../components/UserDetails.jsx";
-import Cafetera from "../components/Cafetera.jsx";
-import { getUsers } from "../utils/api.js";
+import withAdminGuard from "../../hooks/withAdminGuard.jsx";
+import LoadingScreen from "../../components/LoadingScreen.jsx";
+import { useMinimumLoadingTime } from "../../hooks/useMinimumLoading.jsx";
+import withSessionGuard from "../../hooks/withSessionGuard.jsx";
+import HeaderTitle from "../../components/HeaderTitle.jsx";
+import UserDetailsModal from "../../components/UserDetails.jsx";
+import Cafetera from "../../components/Cafetera.jsx";
+import { getUsers } from "../../utils/api.js";
+import usePermissions from "../../hooks/usePermissions.jsx";
 import Swal from "sweetalert2";
-import "../App.css";
+import "../../App.css";
 import {
   ArrowBigLeft,
   ArrowBigRight,
   Eye,
   Mail,
-  MapPin,
   Search,
   ShieldUser,
   User,
   Users,
+  Lock,
 } from "lucide-react";
 
 const SearchUsersPageInner = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const permissions = usePermissions();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
@@ -116,6 +119,12 @@ const SearchUsersPageInner = () => {
 
   return (
     <div className="admin-orders-page">
+      {permissions.isViewer && (
+        <div className="viewer-banner">
+          <Lock size={18} />
+          <span>Modo de solo lectura - No puedes realizar modificaciones</span>
+        </div>
+      )}
       <HeaderTitle
         title="Buscar usuarios"
         subtitle="Filtra todos los usuarios registrados"
@@ -165,9 +174,14 @@ const SearchUsersPageInner = () => {
               </button>
             )}
           </div>
-          <button type="submit" className="search-btn-modern">
-            <Search strokeWidth="2.5px" />
-            Buscar
+          <button
+            type="submit"
+            className="search-btn-modern"
+            onClick={handleSearch}
+            disabled={searched}
+          >
+            <Search className={searched ? "spinning" : ""} size={20} />
+            <span>Buscar</span>
           </button>
         </form>
 
@@ -194,6 +208,8 @@ const SearchUsersPageInner = () => {
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                     {role === "admin" ? (
                       <ShieldUser strokeWidth="2.5px" />
+                    ) : role === "viewer" ? (
+                      <Eye strokeWidth="2.5px" />
                     ) : (
                       <User strokeWidth="2.5px" />
                     )}
@@ -201,7 +217,11 @@ const SearchUsersPageInner = () => {
                 </div>
                 <div className="stat-content">
                   <span className="stat-label">
-                    {role === "admin" ? "Administradores" : "Clientes"}
+                    {role === "admin"
+                      ? "Administradores"
+                      : role === "viewer"
+                      ? "Visualizadores"
+                      : "Clientes"}
                   </span>
                   <span className="stat-value">{count}</span>
                 </div>
@@ -267,10 +287,16 @@ const SearchUsersPageInner = () => {
                   <span className={`role-badge role-${user.role}`}>
                     {user.role === "admin" ? (
                       <ShieldUser strokeWidth="2.5px" />
+                    ) : user.role === "viewer" ? (
+                      <Eye strokeWidth="2.5px" />
                     ) : (
-                      <User strokeWidth="3px" />
+                      <User strokeWidth="2.5px" />
                     )}
-                    {user.role === "admin" ? "Administrador" : "Cliente"}
+                    {user.role === "admin"
+                      ? "Administradores"
+                      : user.role === "viewer"
+                      ? "Visualizadores"
+                      : "Clientes"}
                   </span>
                 </div>
 
@@ -361,4 +387,4 @@ const SearchUsersPageInner = () => {
   );
 };
 
-export default withAdminGuard(SearchUsersPageInner);
+export default withSessionGuard(withAdminGuard(SearchUsersPageInner));

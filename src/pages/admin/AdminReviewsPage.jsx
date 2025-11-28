@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import withAdminGuard from "../hooks/withAdminGuard.jsx";
-import withSessionGuard from "../hooks/withSessionGuard.jsx";
-import HeaderTitle from "../components/HeaderTitle.jsx";
-import LoadingScreen from "../components/LoadingScreen";
-import { useMinimumLoadingTime } from "../hooks/useMinimumLoading.jsx";
+import withAdminGuard from "../../hooks/withAdminGuard.jsx";
+import withSessionGuard from "../../hooks/withSessionGuard.jsx";
+import HeaderTitle from "../../components/HeaderTitle.jsx";
+import LoadingScreen from "../../components/LoadingScreen.jsx";
+import { useMinimumLoadingTime } from "../../hooks/useMinimumLoading.jsx";
+import usePermissions from "../../hooks/usePermissions.jsx";
 import Swal from "sweetalert2";
-import { getReviews, getAdminOrders } from "../utils/api.js";
-import "../App.css";
-import logger from "../utils/logger.js";
+import { getReviews, getAdminOrders } from "../../utils/api.js";
+import "../../App.css";
+import logger from "../../utils/logger.js";
 import {
   ArrowBigLeft,
   ArrowBigRight,
@@ -22,6 +23,7 @@ import {
   Search,
   Star,
   X,
+  Lock,
 } from "lucide-react";
 
 const AdminReviewsPage = () => {
@@ -36,6 +38,7 @@ const AdminReviewsPage = () => {
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const showLoading = useMinimumLoadingTime(loading, 1000);
+  const permissions = usePermissions();
   const pageSize = 12;
 
   // Estadísticas
@@ -196,6 +199,12 @@ const AdminReviewsPage = () => {
 
   return (
     <div className="admin-reviews-container">
+      {permissions.isViewer && (
+        <div className="viewer-banner">
+          <Lock size={18} />
+          <span>Modo de solo lectura - No puedes realizar modificaciones</span>
+        </div>
+      )}
       <HeaderTitle
         title="Gestión de Reseñas"
         subtitle="Visualiza y administra las opiniones de tus clientes"
@@ -356,7 +365,7 @@ const AdminReviewsPage = () => {
                 >
                   <div className="review-header">
                     <div className="review-user-info">
-                      <div className="user-avatar">
+                      <div className="user-avatar-security">
                         {review.name?.charAt(0).toUpperCase() || "?"}
                       </div>
                       <div className="user-details">

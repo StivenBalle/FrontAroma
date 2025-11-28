@@ -71,7 +71,7 @@ export const AuthProvider = ({ children }) => {
         };
       }
       const data = await login(email, password);
-      if (data.message === "✅ Login exitoso") {
+      if (data?.message === "Login exitoso") {
         setUser(data.user);
         setAuthModalOpen(false);
         Swal.fire({
@@ -83,12 +83,65 @@ export const AuthProvider = ({ children }) => {
         }).then(() => {
           window.location.reload();
         });
-        return { success: true, user: data.user };
+        return { success: true };
       }
-      return { success: false, error: data.error };
+      return { success: false };
     } catch (err) {
-      logger.error("❌ Error en login:", err.message);
-      return { success: false, error: err.message };
+      logger.log("ERROR LOGIN =>", err);
+      const status = err.status;
+      const errorData = err.data;
+      logger.log("STATUS =>", status);
+      logger.log("ERROR DATA =>", errorData);
+
+      if (errorData?.code === "ACCOUNT_LOCKED") {
+        const mins = Math.max(1, errorData.remainingMin || 15);
+        Swal.fire({
+          icon: "error",
+          title: "Cuenta bloqueada",
+          html: `
+          <p>Demasiados intentos fallidos</p>
+          <h3 style="color:#dc2626; margin:15px 0; font-weight:bold;">
+            Espera ${mins} minuto${mins > 1 ? "s" : ""}
+          </h3>
+          <small>Tu cuenta se desbloqueará automáticamente</small>
+        `,
+          allowOutsideClick: false,
+          confirmButtonText: "Entendido",
+          confirmButtonColor: "#dc2626",
+        });
+        return { success: false };
+      }
+
+      if (errorData?.code === "INVALID_PASSWORD") {
+        const remaining = errorData.remaining || 1;
+        Swal.fire({
+          icon: "warning",
+          title: "Contraseña incorrecta",
+          html: `
+          <div style="text-align:center;">
+            <p style="font-size:1.2em; margin:10px 0;">
+              Te quedan <strong style="color:#f59e0b;">${remaining} intento${
+            remaining > 1 ? "s" : ""
+          }</strong>
+            </p>
+            <small style="color:#dc2626;">
+              Tras 5 intentos fallidos, tu cuenta se bloqueará por 15 minutos
+            </small>
+          </div>
+        `,
+          confirmButtonText: "OK",
+          confirmButtonColor: "#f59e0b",
+        });
+        return { success: false };
+      }
+
+      const msg = errorData?.error || err.message || "Error desconocido";
+      Swal.fire({
+        icon: "error",
+        title: "Error de inicio de sesión",
+        text: msg,
+      });
+      return { success: false };
     }
   };
 
@@ -153,6 +206,7 @@ export const AuthProvider = ({ children }) => {
     <AuthContext.Provider
       value={{
         user,
+        setUser,
         loading,
         login: loginUser,
         logout,

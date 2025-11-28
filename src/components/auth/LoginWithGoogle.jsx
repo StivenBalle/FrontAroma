@@ -1,8 +1,8 @@
 import React, { useContext, useEffect } from "react";
-import { AuthContext } from "../context/AuthContext.jsx";
+import { AuthContext } from "../../context/AuthContext.jsx";
 import Swal from "sweetalert2";
-import "../styles/header.css";
-import logger from "../utils/logger.js";
+import "../../styles/header.css";
+import logger from "../../utils/logger.js";
 
 function generateNonce() {
   const array = new Uint32Array(8);

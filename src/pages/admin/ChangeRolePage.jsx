@@ -1,30 +1,25 @@
 import React, { useEffect, useState } from "react";
-import withAdminGuard from "../hooks/withAdminGuard.jsx";
-import { useMinimumLoadingTime } from "../hooks/useMinimumLoading.jsx";
-import HeaderTitle from "../components/HeaderTitle.jsx";
-import LoadingScreen from "../components/LoadingScreen";
-import { getUsers, deleteUser } from "../utils/api.js";
-import Cafetera from "../components/Cafetera.jsx";
+import { getUsers, updateUserRole } from "../../utils/api.js";
+import withAdminGuard from "../../hooks/withAdminGuard.jsx";
+import { useMinimumLoadingTime } from "../../hooks/useMinimumLoading.jsx";
+import withSessionGuard from "../../hooks/withSessionGuard.jsx";
+import HeaderTitle from "../../components/HeaderTitle.jsx";
+import Cafetera from "../../components/Cafetera.jsx";
 import Swal from "sweetalert2";
-import "../App.css";
-import {
-  ArrowBigLeft,
-  ArrowBigRight,
-  Mail,
-  Search,
-  ShieldUser,
-  Trash2,
-  User,
-  Users,
-} from "lucide-react";
+import LoadingScreen from "../../components/LoadingScreen.jsx";
+import "../../App.css";
+import { Mail, Search, ShieldUser, User, Users, Lock, Eye } from "lucide-react";
+import usePermissions from "../../hooks/usePermissions.jsx";
+import RestrictedButton from "../../components/RestrictedButton.jsx";
 
-const DeleteUsersPage = () => {
+const ChangeRolePageInner = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const showLoading = useMinimumLoadingTime(loading, 1000);
+  const permissions = usePermissions();
   const pageSize = 20;
 
   useEffect(() => {
@@ -55,29 +50,55 @@ const DeleteUsersPage = () => {
     }
   };
 
-  const handleDelete = async (userId) => {
-    Swal.fire({
-      icon: "warning",
-      title: "¿Eliminar usuario?",
-      text: "Esta acción no se puede deshacer.",
+  const handleChangeRole = async (userId, currentRole) => {
+    const { value: selectedRole } = await Swal.fire({
+      title: "Cambiar Rol",
+      html: `
+      <label for="role-select" style="font-weight: 600">Selecciona un nuevo rol:</label>
+      <select id="role-select" class="swal2-select">
+        <option value="admin" ${
+          currentRole === "admin" ? "selected" : ""
+        }>Admin</option>
+        <option value="viewer" ${
+          currentRole === "viewer" ? "selected" : ""
+        }>Viewer</option>
+        <option value="user" ${
+          currentRole === "user" ? "selected" : ""
+        }>User</option>
+      </select>
+    `,
+      focusConfirm: false,
       showCancelButton: true,
-      confirmButtonText: "Sí, eliminar",
+      confirmButtonText: "Cambiar rol",
       cancelButtonText: "Cancelar",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          await deleteUser(userId);
-          Swal.fire("Éxito", "Usuario eliminado", "success");
-          setUsers(users.filter((u) => u.id !== userId));
-        } catch (err) {
-          Swal.fire("Error", "No se pudo eliminar el usuario", "error");
+      preConfirm: () => {
+        const selected = document.getElementById("role-select").value;
+        if (!selected) {
+          Swal.showValidationMessage("Debes seleccionar un rol");
         }
-      }
+        return selected;
+      },
     });
+
+    // ❌ Si canceló, no hacemos nada
+    if (!selectedRole || selectedRole === currentRole) return;
+
+    // ✔️ Aplicar cambio
+    try {
+      await updateUserRole(userId, selectedRole);
+      Swal.fire("Éxito", `Rol cambiado a ${selectedRole}`, "success");
+
+      setUsers((prev) =>
+        prev.map((u) => (u.id === userId ? { ...u, role: selectedRole } : u))
+      );
+    } catch (err) {
+      Swal.fire("Error", "No se pudo cambiar el rol", "error");
+    }
   };
 
   const handleReset = async () => {
     setSearchTerm("");
+    setSearched(false);
     setLoading(true);
     try {
       const data = await getUsers("");
@@ -107,18 +128,24 @@ const DeleteUsersPage = () => {
   }, {});
 
   if (showLoading) {
-    return <LoadingScreen title="Cargando usuarios..." />;
+    return <LoadingScreen />;
   }
 
   return (
     <div className="admin-orders-page">
+      {permissions.isViewer && (
+        <div className="viewer-banner">
+          <Lock size={18} />
+          <span>Modo de solo lectura - No puedes realizar modificaciones</span>
+        </div>
+      )}
+
       <HeaderTitle
-        title="Borrar Usuarios"
-        subtitle="Filtra y borra los usuarios registrados"
+        title="Cambiar Rol"
+        subtitle="Cambia de rol a todos los usuarios"
         backPath="/admin"
         backText="Volver al Dashboard"
       />
-
       {/* Barra de búsqueda moderna */}
       <div className="search-section">
         <form className="search-form-modern" onSubmit={handleSearch}>
@@ -161,9 +188,14 @@ const DeleteUsersPage = () => {
               </button>
             )}
           </div>
-          <button type="submit" className="search-btn-modern">
-            <Search strokeWidth="2.5px" />
-            Buscar
+          <button
+            type="submit"
+            className="search-btn-modern"
+            onClick={handleSearch}
+            disabled={searched}
+          >
+            <Search className={searched ? "spinning" : ""} size={20} />
+            <span>Buscar</span>
           </button>
         </form>
 
@@ -190,14 +222,26 @@ const DeleteUsersPage = () => {
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                     {role === "admin" ? (
                       <ShieldUser strokeWidth="2.5px" />
+                    ) : role === "viewer" ? (
+                      <Eye strokeWidth="2.5px" />
                     ) : (
                       <User strokeWidth="2.5px" />
                     )}
+
+                    {role === "admin"
+                      ? "Administrador"
+                      : role === "viewer"
+                      ? "Visualizador"
+                      : "Cliente"}
                   </svg>
                 </div>
                 <div className="stat-content">
                   <span className="stat-label">
-                    {role === "admin" ? "Administradores" : "Clientes"}
+                    {role === "admin"
+                      ? "Administradores"
+                      : role === "viewer"
+                      ? "Visualizadores"
+                      : "Clientes"}
                   </span>
                   <span className="stat-value">{count}</span>
                 </div>
@@ -206,6 +250,7 @@ const DeleteUsersPage = () => {
           </div>
         )}
       </div>
+
       {/* Contenido principal */}
       {searched ? (
         <div className="loading-products">
@@ -262,10 +307,17 @@ const DeleteUsersPage = () => {
                   <span className={`role-badge role-${user.role}`}>
                     {user.role === "admin" ? (
                       <ShieldUser strokeWidth="2.5px" />
+                    ) : user.role === "viewer" ? (
+                      <Eye strokeWidth="2.5px" />
                     ) : (
                       <User strokeWidth="2.5px" />
                     )}
-                    {user.role === "admin" ? "Administrador" : "Cliente"}
+
+                    {user.role === "admin"
+                      ? "Administrador"
+                      : user.role === "viewer"
+                      ? "Visualizador"
+                      : "Cliente"}
                   </span>
                 </div>
 
@@ -307,17 +359,14 @@ const DeleteUsersPage = () => {
                 </div>
 
                 <div className="user-actions">
-                  {/* Botón de eliminar (con tu estilo) */}
-                  <button
-                    className="btn-delete-user"
-                    type="button"
-                    onClick={() => handleDelete(user.id)}
+                  <RestrictedButton
+                    className="btn-role btn-user"
+                    requiredPermission="canManageUsers"
+                    tooltipMessage="Solo administradores pueden cambiar roles"
+                    onClick={() => handleChangeRole(user.id, user.role)}
                   >
-                    <span className="button__text">Eliminar</span>
-                    <span className="button__icon">
-                      <Trash2 strokeWidth="2px" color="white" size={20} />
-                    </span>
-                  </button>
+                    Cambiar Rol
+                  </RestrictedButton>
                 </div>
               </div>
             ))}
@@ -332,7 +381,14 @@ const DeleteUsersPage = () => {
                 className="pagination-btn-modern"
                 aria-label="Página anterior"
               >
-                <ArrowBigLeft strokeWidth="2.5px" />
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 19l-7-7 7-7"
+                  />
+                </svg>
                 Anterior
               </button>
               <div className="pagination-info">
@@ -347,7 +403,14 @@ const DeleteUsersPage = () => {
                 aria-label="Página siguiente"
               >
                 Siguiente
-                <ArrowBigRight strokeWidth="2.5px" />
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
               </button>
             </div>
           )}
@@ -357,4 +420,4 @@ const DeleteUsersPage = () => {
   );
 };
 
-export default withAdminGuard(DeleteUsersPage);
+export default withSessionGuard(withAdminGuard(ChangeRolePageInner));

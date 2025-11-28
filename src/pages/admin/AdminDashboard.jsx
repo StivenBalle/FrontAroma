@@ -1,19 +1,25 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import withAdminGuard from "../hooks/withAdminGuard.jsx";
-import withSessionGuard from "../hooks/withSessionGuard";
-import "../App.css";
+import withAdminGuard from "../../hooks/withAdminGuard.jsx";
+import withSessionGuard from "../../hooks/withSessionGuard.jsx";
+import "../../App.css";
 import {
   ChartColumnBig,
   CircleUser,
+  Logs,
   Search,
   Trash2,
+  UserLock,
   UserSearch,
   UserStar,
+  Lock,
 } from "lucide-react";
+import usePermissions from "../../hooks/usePermissions.jsx";
+import HeaderTitle from "../../components/HeaderTitle.jsx";
 
 const AdminOrdersInner = () => {
   const navigate = useNavigate();
+  const permissions = usePermissions();
 
   const handleNavigate = (path) => {
     navigate(path);
@@ -21,7 +27,18 @@ const AdminOrdersInner = () => {
 
   return (
     <div className="admin-dashboard">
-      <h2>Panel de Administración</h2>
+      {permissions.isViewer && (
+        <div className="viewer-banner">
+          <Lock size={18} />
+          <span>Modo de solo lectura - No puedes realizar modificaciones</span>
+        </div>
+      )}
+      <HeaderTitle
+        title="Panel de Administración"
+        subtitle="Administra la página y controla los usuarios"
+        backPath="/"
+        backText="Volvel al inicio"
+      />
       <div className="admin-cards-container">
         {/* Card 1: Buscar Compras */}
         <button
@@ -71,7 +88,7 @@ const AdminOrdersInner = () => {
           <p>Promover o degradar a admin/user</p>
         </button>
 
-        {/* 🆕 Card 5: Estadísticas */}
+        {/* Card 5: Estadísticas */}
         <button
           className="admin-card-button stats-card"
           onClick={() => handleNavigate("/admin/stats")}
@@ -83,6 +100,7 @@ const AdminOrdersInner = () => {
           <p>Ventas, productos y usuarios nuevos</p>
         </button>
 
+        {/* Card 6: Reseñas */}
         <button
           className="admin-card-button stats-card"
           onClick={() => handleNavigate("/admin/reviews")}
@@ -92,6 +110,30 @@ const AdminOrdersInner = () => {
           </div>
           <h2>Reseñas</h2>
           <p>Revisa las reseñas que han dejado tus clientes</p>
+        </button>
+
+        {/* Card 7: Administrar Cuentas */}
+        <button
+          className="admin-card-button stats-card"
+          onClick={() => handleNavigate("/admin/security-accounts")}
+        >
+          <div className="card-icon">
+            <UserLock strokeWidth="2.5px" size={40} />
+          </div>
+          <h2>Administrar Cuentas</h2>
+          <p>Bloquea, desbloquea y monitorea las cuentas tus clientes.</p>
+        </button>
+
+        {/* Card 8: Administrar Logs */}
+        <button
+          className="admin-card-button stats-card"
+          onClick={() => handleNavigate("/admin/logs-viewer")}
+        >
+          <div className="card-icon">
+            <Logs strokeWidth="2.5px" size={40} />
+          </div>
+          <h2>Revisión Logs</h2>
+          <p>Monitorea los logs y los eventos de tus clientes</p>
         </button>
       </div>
     </div>

@@ -171,7 +171,9 @@ const LocationsPage = () => {
             </div>
 
             <div className="contact-box">
-              <p className="contact-title">¿Tienes preguntas? Contáctanos:</p>
+              <p className="contact-title-location">
+                ¿Tienes preguntas? Contáctanos:
+              </p>
               <a href="tel:+573185818424" className="contact-link">
                 <Phone size={18} />
                 <span>+57 318 581 8424</span>

@@ -48,34 +48,102 @@ async function request(path, { method = "GET", body } = {}) {
   if (!res.ok) {
     // ⚡ Detectar sesión expirada
     if (res.status === 401 && data?.error === "Sesión expirada") {
-      if (navigateRef) {
-        await Swal.fire({
-          icon: "warning",
-          title: "Sesión expirada",
-          text: "Tu sesión ha terminado. Si deseas continuar disfrutando de nuestros servicios inicia sesión nuevamente",
-          confirmButtonText: "Aceptar",
-        });
-        if (logoutCallback && setUserRef) {
-          setUserRef(null);
-          await logoutCallback();
-        }
-        window.location.reload();
-      } else {
-        logger.warn(
-          "Sesion expirada detectada pero `navigate` no está seteado"
-        );
-      }
+      await handleSessionExpired();
       throw new Error("Sesión expirada");
+    }
+
+    // 🚫 Detectar cuenta bloqueada (status 423 = Locked)
+    if (res.status === 423) {
+      await handleAccountLocked(data);
+      throw new Error("Cuenta bloqueada");
     }
 
     const error = new Error(
       data?.error || `Error ${res.status}: ${res.statusText}`
     );
     error.status = res.status;
+    error.data = data;
     throw error;
   }
 
   return data;
+}
+
+// Manejo de sesión expirada
+async function handleSessionExpired() {
+  if (navigateRef) {
+    await Swal.fire({
+      icon: "warning",
+      title: "Sesión expirada",
+      text: "Tu sesión ha terminado. Si deseas continuar disfrutando de nuestros servicios inicia sesión nuevamente",
+      confirmButtonText: "Aceptar",
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+    });
+
+    if (logoutCallback && setUserRef) {
+      setUserRef(null);
+      await logoutCallback();
+    }
+    window.location.reload();
+  } else {
+    logger.warn("Sesión expirada detectada pero `navigate` no está seteado");
+  }
+}
+
+// 🚫 Manejo de cuenta bloqueada
+async function handleAccountLocked(data) {
+  if (navigateRef) {
+    const isPermanent =
+      data.code === "ACCOUNT_PERMANENTLY_LOCKED" || data.isPermanent;
+
+    let message;
+    if (isPermanent) {
+      message =
+        "Tu cuenta ha sido bloqueada permanentemente por un administrador. Contacta con soporte para más información.";
+    } else if (data.remainingMin) {
+      message = `Tu cuenta ha sido bloqueada temporalmente. Podrás acceder nuevamente en ${
+        data.remainingMin
+      } minuto${data.remainingMin > 1 ? "s" : ""}.`;
+    } else {
+      message =
+        data.message ||
+        "Tu cuenta ha sido bloqueada. Contacta al administrador.";
+    }
+
+    await Swal.fire({
+      icon: "error",
+      title: isPermanent
+        ? "Cuenta bloqueada permanentemente"
+        : "Cuenta bloqueada",
+      html: `
+        <p>${message}</p>
+        ${
+          data.lock_reason
+            ? `<p style="margin-top: 10px; color: #666;"><strong>Razón:</strong> ${data.lock_reason}</p>`
+            : ""
+        }
+        ${
+          isPermanent
+            ? '<p style="margin-top: 15px; color: #dc2626; font-weight: bold;">Este bloqueo es permanente y requiere intervención del administrador.</p>'
+            : ""
+        }
+      `,
+      confirmButtonText: "Entendido",
+      allowOutsideClick: false,
+      allowEscapeKey: false,
+      confirmButtonColor: "#dc2626",
+    });
+
+    // Cerrar sesión automáticamente
+    if (logoutCallback && setUserRef) {
+      setUserRef(null);
+      await logoutCallback();
+    }
+    window.location.reload();
+  } else {
+    logger.warn("Cuenta bloqueada detectada pero `navigate` no está seteado");
+  }
 }
 
 // 🔹 Helpers
@@ -170,3 +238,55 @@ export const checkOrderReview = (orderId) =>
   get(`/api/user/reviews/order/${orderId}`);
 
 export const updatePassword = (body) => put("/api/user/password", body);
+
+export const getSecurityUsers = async (
+  search = "",
+  filter = "all",
+  page = 1
+) => {
+  const params = new URLSearchParams();
+  if (search) params.append("search", search);
+  if (filter && filter !== "all") params.append("filter", filter);
+  if (page > 1) params.append("page", page);
+
+  return await get(`/api/admin/security/users?${params.toString()}`);
+};
+
+export const unlockUserAccount = (userId) =>
+  post(`/api/admin/security/users/${userId}/unlock`);
+
+export const lockUserAccount = (
+  userId,
+  { duration = 15, reason = "Manual por admin", permanent = false }
+) =>
+  post(`/api/admin/security/users/${userId}/lock`, {
+    duration,
+    reason,
+    permanent,
+  });
+
+export const resetUserAttempts = (userId) =>
+  post(`/api/admin/security/users/${userId}/reset-attempts`);
+
+export const getUserSecurityDetails = (userId) =>
+  get(`/api/admin/security/users/${userId}/details`);
+
+export const getSecurityStats = () => get("/api/admin/security/stats");
+
+export const exportSecurityLogs = () => get("/api/admin/security/logs/export");
+
+export const getLogs = (params = {}) => {
+  const filteredParams = Object.entries(params).reduce((acc, [key, value]) => {
+    if (value !== null && value !== undefined && value !== "ALL") {
+      acc[key] = value;
+    }
+    return acc;
+  }, {});
+
+  const query = new URLSearchParams(filteredParams).toString();
+  return get(`/api/logs?${query}`);
+};
+
+export const deleteLogs = (days) => {
+  return del(`/api/logs?days=${days}`);
+};

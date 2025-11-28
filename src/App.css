@@ -29,7 +29,6 @@
   background: linear-gradient(135deg, #fcfbf9 0%, #fcfaf5 50%, #fdf8f0 100%);
   padding: 1rem;
   overflow: hidden;
-  min-height: 90vh;
   display: flex;
   align-items: center;
 }
@@ -128,11 +127,11 @@
 }
 
 .hero-container {
-  max-width: 1400px;
-  margin: 0 auto;
+  max-width: 100%;
+  margin: auto;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 4rem;
+  gap: 10rem;
   align-items: center;
   position: relative;
   z-index: 1;
@@ -628,16 +627,14 @@
 }
 
 .header {
-  padding: 1rem;
   background-color: #f5f0e1;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 20px;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .nav {
-  max-width: 1300px;
+  max-width: 100%;
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
@@ -2542,6 +2539,7 @@
   padding: 2rem 1rem;
   position: relative;
   overflow-x: hidden;
+  background: linear-gradient(135deg, #f7f8fa 0%, #ebeff6 100%);
 }
 
 .success-page::before {
@@ -2670,7 +2668,7 @@
 
 .success-subtitle {
   font-size: 1.125rem;
-  color: rgba(255, 255, 255, 0.9);
+  color: black;
   margin: 0;
   line-height: 1.6;
 }
@@ -2792,6 +2790,7 @@
 .price-label {
   font-size: 1rem;
   opacity: 0.9;
+  color: black;
 }
 
 .price-amount {
@@ -2917,9 +2916,9 @@
   margin: 0 0 0.5rem 0;
 }
 
-.contact-description {
+.contact-description a {
   font-size: 1rem;
-  color: white;
+  color: black;
   margin: 0;
 }
 
@@ -4241,10 +4240,6 @@
     page-break-inside: avoid;
   }
 
-  .success-page {
-    background: white;
-  }
-
   .action-buttons,
   .confetti-container {
     display: none;
@@ -4335,6 +4330,7 @@
   font-weight: 600;
   color: white;
   text-transform: uppercase;
+  font-family: "Georgia", serif;
   font-size: 0.75rem;
   letter-spacing: 0.05em;
 }
@@ -4346,7 +4342,7 @@
   gap: 0.75rem;
 }
 
-.user-avatar {
+.user-avatar-security {
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -4986,6 +4982,11 @@
 }
 
 .role-customer {
+  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+  color: #1e40af;
+}
+
+.role-viewer {
   background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
   color: #1e40af;
 }
@@ -9020,7 +9021,7 @@ option {
   padding: 1.5rem;
 }
 
-.contact-title {
+.contact-title-location {
   margin: 0 0 1rem 0;
   font-weight: 600;
   font-size: 1rem;

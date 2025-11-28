@@ -1,44 +1,57 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { useMinimumLoadingTime } from "../hooks/useMinimumLoading.jsx";
-import "../styles/AdminStats.css";
+import { getUserProfile } from "../utils/api";
 import Swal from "sweetalert2";
+import { useMinimumLoadingTime } from "../hooks/useMinimumLoading.jsx";
+import logger from "../utils/logger.js";
 
 const withAdminGuard = (WrappedComponent) => {
   return (props) => {
-    const { user, loading } = useAuth();
+    const { user, loading, logout } = useAuth();
+    const [checkingServerRole, setCheckingServerRole] = useState(true);
     const navigate = useNavigate();
-    const [verifyingAccess, setVerifyingAccess] = useState(false);
-    const showLoading = useMinimumLoadingTime(verifyingAccess, 1000);
+
+    const showLoading = useMinimumLoadingTime(checkingServerRole, 1000);
 
     useEffect(() => {
-      if (loading) return;
+      const verifyAccess = async () => {
+        if (loading) return;
 
-      if (!user || user.role !== "admin") {
-        setVerifyingAccess(true);
-        const timeoutId = setTimeout(() => {
-          setVerifyingAccess(false);
-          Swal.fire({
-            icon: "warning",
-            title: "Acceso denegado",
-            text: "Solo administradores pueden ver esta página.",
-          }).then(() => {
+        try {
+          const freshUser = await getUserProfile();
+
+          if (!freshUser || !["admin", "viewer"].includes(freshUser.role)) {
+            Swal.fire({
+              icon: "error",
+              title: "Acceso restringido",
+              text: "Debes tener rol Admin para acceder.",
+            }).then(() => {
+              window.location.reload();
+            });
+
             navigate("/");
-          });
-        }, 800);
+            return;
+          }
+        } catch (err) {
+          logger.info("Sesión inválida, la sesión expiró o no tiene acceso.");
+          logout();
+          navigate("/");
+        } finally {
+          setCheckingServerRole(false);
+        }
+      };
 
-        return () => clearTimeout(timeoutId);
-      }
-    }, [user, loading, navigate]);
+      verifyAccess();
+    }, [loading, navigate, logout]);
 
-    if (loading || showLoading) {
+    if (loading || checkingServerRole || showLoading) {
       return (
         <div className="stats-loading-container">
           <div className="loading-content">
             <div className="spinner-stats"></div>
-            <h3 className={verifyingAccess ? "loading-denied" : ""}>
-              {verifyingAccess
+            <h3 className={checkingServerRole ? "loading-denied" : ""}>
+              {checkingServerRole
                 ? "Verificando acceso..."
                 : "Cargando información..."}
             </h3>

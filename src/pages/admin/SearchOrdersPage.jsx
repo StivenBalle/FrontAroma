@@ -1,14 +1,19 @@
 import React, { useEffect, useState } from "react";
-import Cafetera from "../components/Cafetera.jsx";
-import withAdminGuard from "../hooks/withAdminGuard.jsx";
-import { useMinimumLoadingTime } from "../hooks/useMinimumLoading.jsx";
-import UserTrackingModal from "../components/UserTrackingModal.jsx";
-import HeaderTitle from "../components/HeaderTitle.jsx";
-import LoadingScreen from "../components/LoadingScreen";
-import { getAdminOrders, getUsers, updateOrderStatus } from "../utils/api.js";
-import logger from "../utils/logger";
+import Cafetera from "../../components/Cafetera.jsx";
+import withAdminGuard from "../../hooks/withAdminGuard.jsx";
+import { useMinimumLoadingTime } from "../../hooks/useMinimumLoading.jsx";
+import UserTrackingModal from "../../components/UserTrackingModal.jsx";
+import HeaderTitle from "../../components/HeaderTitle.jsx";
+import LoadingScreen from "../../components/LoadingScreen.jsx";
+import usePermissions from "../../hooks/usePermissions.jsx";
+import {
+  getAdminOrders,
+  getUsers,
+  updateOrderStatus,
+} from "../../utils/api.js";
+import logger from "../../utils/logger.js";
 import Swal from "sweetalert2";
-import "../App.css";
+import "../../App.css";
 import {
   ArrowBigLeft,
   ArrowBigRight,
@@ -17,10 +22,12 @@ import {
   CircleCheckBig,
   CircleDollarSign,
   Handbag,
+  Hash,
   MapPin,
   Phone,
   Search,
   User,
+  Lock,
 } from "lucide-react";
 
 const OrdersPageInner = () => {
@@ -34,6 +41,7 @@ const OrdersPageInner = () => {
   const showLoading = useMinimumLoadingTime(loading, 1000);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [showTrackingModal, setShowTrackingModal] = useState(false);
+  const permissions = usePermissions();
   const pageSize = 10;
 
   useEffect(() => {
@@ -114,6 +122,13 @@ const OrdersPageInner = () => {
 
   return (
     <div className="admin-orders-page">
+      {permissions.isViewer && (
+        <div className="viewer-banner">
+          <Lock size={18} />
+          <span>Modo de solo lectura - No puedes realizar modificaciones</span>
+        </div>
+      )}
+
       <HeaderTitle
         title="Gestión de compras"
         subtitle="Busca y administra todas las órdenes de tus clientes"
@@ -163,9 +178,14 @@ const OrdersPageInner = () => {
               </button>
             )}
           </div>
-          <button type="submit" className="search-btn-modern">
-            <Search strokeWidth="2.5px" />
-            Buscar
+          <button
+            type="submit"
+            className="search-btn-modern"
+            onClick={handleSearch}
+            disabled={searchLoading}
+          >
+            <Search className={searchLoading ? "spinning" : ""} size={20} />
+            <span>Buscar</span>
           </button>
         </form>
 
@@ -228,18 +248,7 @@ const OrdersPageInner = () => {
                 <tr>
                   <th>
                     <div className="th-content">
-                      <svg
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14"
-                        />
-                      </svg>
+                      <Hash strokeWidth="2.5px" />
                       ID
                     </div>
                   </th>

@@ -22,7 +22,7 @@
   flex: 1;
 }
 
-.header-icon {
+.header-icon-stats {
   width: 64px;
   height: 64px;
   background: linear-gradient(135deg, #fce484 0%, #fef3c7 100%);
@@ -34,10 +34,10 @@
   flex-shrink: 0;
 }
 
-.header-icon svg {
+.header-icon-stats svg {
   width: 32px;
   height: 32px;
-  stroke: white;
+  stroke: whitesmoke;
   stroke-width: 2;
 }
 
@@ -571,12 +571,12 @@
 }
 
 @media (max-width: 480px) {
-  .header-icon {
+  .header-icon-stats {
     width: 56px;
     height: 56px;
   }
 
-  .header-icon svg {
+  .header-icon-stats svg {
     width: 28px;
     height: 28px;
   }

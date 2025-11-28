@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../App.css";
 import logoCafe from "../assets/LogoCafe.png";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { getUserProfile } from "../utils/api.js";
 import ShoppingHistory from "./ShoppingHistory";
 import {
   MapPin,
@@ -15,9 +16,22 @@ import {
 } from "lucide-react";
 
 export default function Header() {
-  const { user, openAuthModal } = useAuth();
+  const { user, setUser, openAuthModal } = useAuth();
   const [historyOpen, setHistoryOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const refreshUser = async () => {
+      try {
+        const fresh = await getUserProfile();
+        if (fresh && fresh.role !== user?.role) {
+          setUser(fresh);
+        }
+      } catch (_) {}
+    };
+
+    refreshUser();
+  }, []);
 
   const toggleHistory = () => {
     setHistoryOpen(!historyOpen);
@@ -129,7 +143,7 @@ export default function Header() {
             )}
 
             {/* Admin link */}
-            {user && user.role === "admin" && (
+            {user && (user.role === "admin" || user.role === "viewer") && (
               <Link to="/admin" className="tab">
                 <UserCog strokeWidth="2.6px" />
               </Link>
@@ -217,7 +231,7 @@ export default function Header() {
                 Perfil
               </Link>
             )}
-            {user && user.role === "admin" && (
+            {user && (user.role === "admin" || user.role === "viewer") && (
               <Link
                 to="/admin"
                 className="mobile-menu-item"

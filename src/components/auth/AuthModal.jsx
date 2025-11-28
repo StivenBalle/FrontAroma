@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { useAuth } from "../context/AuthContext";
-import logger from "../utils/logger";
+import { useAuth } from "../../context/AuthContext";
+import logger from "../../utils/logger";
 import LoginForm from "./LoginForm";
 import SignupForm from "./SingupForm";
 

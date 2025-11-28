@@ -46,6 +46,16 @@ const Success = () => {
         setTimeout(() => setShowConfetti(false), 5000);
       } catch (err) {
         logger.error("❌ Error cargando detalles:", err.message);
+        if (err.response?.status === 403) {
+          Swal.fire(
+            "Acceso denegado",
+            "Esta compra no pertenece a tu cuenta",
+            "error"
+          );
+          navigate("/");
+          return;
+        }
+
         Swal.fire(
           "Error",
           "No se pudo obtener la información de la compra",
@@ -150,6 +160,7 @@ const Success = () => {
                     <span className="price-amount">${purchase.precio}</span>
                   </div>
                   <div className="product-status">
+                    <span className="price-label">Estado del pedido:</span>
                     <span
                       className="status-badge-success"
                       style={{
@@ -305,14 +316,6 @@ const Success = () => {
               >
                 <Download size={20} />
                 <span>Descargar Recibo</span>
-              </button>
-
-              <button
-                className="action-btn secondary-btn"
-                onClick={handleShare}
-              >
-                <Share2 size={20} />
-                <span>Compartir</span>
               </button>
             </div>
           </>

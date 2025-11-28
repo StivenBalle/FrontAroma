@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { useAuth } from "../context/AuthContext.jsx";
-import logoCafe from "../assets/LogoCafe.png";
+import { useAuth } from "../../context/AuthContext.jsx";
+import logoCafe from "../../assets/LogoCafe.png";
 import Swal from "sweetalert2";
-import { register } from "../utils/api.js";
-import "../styles/header.css";
-import logger from "../utils/logger.js";
+import { register } from "../../utils/api.js";
+import "../../styles/header.css";
+import logger from "../../utils/logger.js";
 import { LockKeyhole, Mail, Phone, User } from "lucide-react";
 
 const SignupForm = ({ switchToLogin }) => {

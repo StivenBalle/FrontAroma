@@ -1,21 +1,36 @@
 import React, { useEffect, useState } from "react";
-import { getUsers, updateUserRole } from "../utils/api.js";
-import withAdminGuard from "../hooks/withAdminGuard.jsx";
-import { useMinimumLoadingTime } from "../hooks/useMinimumLoading.jsx";
-import HeaderTitle from "../components/HeaderTitle.jsx";
-import Cafetera from "../components/Cafetera.jsx";
+import withAdminGuard from "../../hooks/withAdminGuard.jsx";
+import { useMinimumLoadingTime } from "../../hooks/useMinimumLoading.jsx";
+import usePermissions from "../../hooks/usePermissions.jsx";
+import RestrictedButton from "../../components/RestrictedButton.jsx";
+import withSessionGuard from "../../hooks/withSessionGuard.jsx";
+import HeaderTitle from "../../components/HeaderTitle.jsx";
+import LoadingScreen from "../../components/LoadingScreen";
+import { getUsers, deleteUser } from "../../utils/api.js";
+import Cafetera from "../../components/Cafetera.jsx";
 import Swal from "sweetalert2";
-import LoadingScreen from "../components/LoadingScreen.jsx";
-import "../App.css";
-import { Mail, Search, ShieldUser, User, Users } from "lucide-react";
+import "../../App.css";
+import {
+  ArrowBigLeft,
+  ArrowBigRight,
+  Mail,
+  Search,
+  ShieldUser,
+  Trash2,
+  User,
+  Users,
+  Lock,
+  Eye,
+} from "lucide-react";
 
-const ChangeRolePageInner = () => {
+const DeleteUsersPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const showLoading = useMinimumLoadingTime(loading, 1000);
+  const permissions = usePermissions();
   const pageSize = 20;
 
   useEffect(() => {
@@ -46,24 +61,22 @@ const ChangeRolePageInner = () => {
     }
   };
 
-  const handleChangeRole = async (userId, currentRole) => {
-    const newRole = currentRole === "admin" ? "user" : "admin";
+  const handleDelete = async (userId) => {
     Swal.fire({
-      icon: "question",
-      title: `¿Cambiar rol a ${newRole}?`,
+      icon: "warning",
+      title: "¿Eliminar usuario?",
+      text: "Esta acción no se puede deshacer.",
       showCancelButton: true,
-      confirmButtonText: "Sí, cambiar",
+      confirmButtonText: "Sí, eliminar",
       cancelButtonText: "Cancelar",
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await updateUserRole(userId, newRole);
-          Swal.fire("Éxito", `Rol cambiado a ${newRole}`, "success");
-          setUsers(
-            users.map((u) => (u.id === userId ? { ...u, role: newRole } : u))
-          );
+          await deleteUser(userId);
+          Swal.fire("Éxito", "Usuario eliminado", "success");
+          setUsers(users.filter((u) => u.id !== userId));
         } catch (err) {
-          Swal.fire("Error", "No se pudo cambiar el rol", "error");
+          Swal.fire("Error", "No se pudo eliminar el usuario", "error");
         }
       }
     });
@@ -71,7 +84,6 @@ const ChangeRolePageInner = () => {
 
   const handleReset = async () => {
     setSearchTerm("");
-    setSearched(false);
     setLoading(true);
     try {
       const data = await getUsers("");
@@ -101,17 +113,24 @@ const ChangeRolePageInner = () => {
   }, {});
 
   if (showLoading) {
-    return <LoadingScreen />;
+    return <LoadingScreen title="Cargando usuarios..." />;
   }
 
   return (
     <div className="admin-orders-page">
+      {permissions.isViewer && (
+        <div className="viewer-banner">
+          <Lock size={18} />
+          <span>Modo de solo lectura - No puedes realizar modificaciones</span>
+        </div>
+      )}
       <HeaderTitle
-        title="Cambiar Rol"
-        subtitle="Cambia de rol a todos los usuarios"
+        title="Borrar Usuarios"
+        subtitle="Filtra y borra los usuarios registrados"
         backPath="/admin"
         backText="Volver al Dashboard"
       />
+
       {/* Barra de búsqueda moderna */}
       <div className="search-section">
         <form className="search-form-modern" onSubmit={handleSearch}>
@@ -154,9 +173,14 @@ const ChangeRolePageInner = () => {
               </button>
             )}
           </div>
-          <button type="submit" className="search-btn-modern">
-            <Search strokeWidth="2.5px" />
-            Buscar
+          <button
+            type="submit"
+            className="search-btn-modern"
+            onClick={handleSearch}
+            disabled={searched}
+          >
+            <Search className={searched ? "spinning" : ""} size={20} />
+            <span>Buscar</span>
           </button>
         </form>
 
@@ -183,6 +207,8 @@ const ChangeRolePageInner = () => {
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
                     {role === "admin" ? (
                       <ShieldUser strokeWidth="2.5px" />
+                    ) : role === "viewer" ? (
+                      <Eye strokeWidth="2.5px" />
                     ) : (
                       <User strokeWidth="2.5px" />
                     )}
@@ -190,7 +216,11 @@ const ChangeRolePageInner = () => {
                 </div>
                 <div className="stat-content">
                   <span className="stat-label">
-                    {role === "admin" ? "Administradores" : "Clientes"}
+                    {role === "admin"
+                      ? "Administradores"
+                      : role === "viewer"
+                      ? "Visualizadores"
+                      : "Clientes"}
                   </span>
                   <span className="stat-value">{count}</span>
                 </div>
@@ -199,7 +229,6 @@ const ChangeRolePageInner = () => {
           </div>
         )}
       </div>
-
       {/* Contenido principal */}
       {searched ? (
         <div className="loading-products">
@@ -256,10 +285,16 @@ const ChangeRolePageInner = () => {
                   <span className={`role-badge role-${user.role}`}>
                     {user.role === "admin" ? (
                       <ShieldUser strokeWidth="2.5px" />
+                    ) : user.role === "viewer" ? (
+                      <Eye strokeWidth="2.5px" />
                     ) : (
                       <User strokeWidth="2.5px" />
                     )}
-                    {user.role === "admin" ? "Administrador" : "Cliente"}
+                    {user.role === "admin"
+                      ? "Administrador"
+                      : user.role === "viewer"
+                      ? "Visualizador"
+                      : "Cliente"}
                   </span>
                 </div>
 
@@ -301,15 +336,17 @@ const ChangeRolePageInner = () => {
                 </div>
 
                 <div className="user-actions">
-                  {/* Botón de eliminar (con tu estilo) */}
-                  <button
-                    className={`btn-role ${
-                      user.role === "admin" ? "btn-admin" : "btn-user"
-                    }`}
-                    onClick={() => handleChangeRole(user.id, user.role)}
+                  <RestrictedButton
+                    className="btn-delete-user"
+                    requiredPermission="canManageUsers" // o el permiso que uses para borrar
+                    tooltipMessage="Solo administradores pueden eliminar usuarios"
+                    onClick={() => handleDelete(user.id)}
                   >
-                    Cambiar a {user.role === "admin" ? "User" : "Admin"}
-                  </button>
+                    <span className="button__text">Eliminar</span>
+                    <span className="button__icon">
+                      <Trash2 strokeWidth="2px" color="white" size={20} />
+                    </span>
+                  </RestrictedButton>
                 </div>
               </div>
             ))}
@@ -324,14 +361,7 @@ const ChangeRolePageInner = () => {
                 className="pagination-btn-modern"
                 aria-label="Página anterior"
               >
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M15 19l-7-7 7-7"
-                  />
-                </svg>
+                <ArrowBigLeft strokeWidth="2.5px" />
                 Anterior
               </button>
               <div className="pagination-info">
@@ -346,14 +376,7 @@ const ChangeRolePageInner = () => {
                 aria-label="Página siguiente"
               >
                 Siguiente
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 5l7 7-7 7"
-                  />
-                </svg>
+                <ArrowBigRight strokeWidth="2.5px" />
               </button>
             </div>
           )}
@@ -363,4 +386,4 @@ const ChangeRolePageInner = () => {
   );
 };
 
-export default withAdminGuard(ChangeRolePageInner);
+export default withSessionGuard(withAdminGuard(DeleteUsersPage));

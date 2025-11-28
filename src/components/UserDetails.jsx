@@ -6,6 +6,7 @@ import {
   Calendar1,
   Chromium,
   CircleDollarSign,
+  Eye,
   Frown,
   Handbag,
   Laugh,
@@ -124,10 +125,16 @@ const UserDetailsModal = ({ userId, onClose }) => {
                 <span className={`role-badge-large role-${userDetails.role}`}>
                   {userDetails.role === "admin" ? (
                     <ShieldUser strokeWidth="2.5px" />
+                  ) : userDetails.role === "viewer" ? (
+                    <Eye strokeWidth="2.5px" />
                   ) : (
                     <User strokeWidth="2.5px" />
                   )}
-                  {userDetails.role === "admin" ? "Administrador" : "Cliente"}
+                  {userDetails.role === "admin"
+                    ? "Administrador"
+                    : userDetails.role === "viewer"
+                    ? "Visualizador"
+                    : "Cliente"}
                 </span>
 
                 {!isFrequentBuyer ? (

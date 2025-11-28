@@ -9,19 +9,20 @@ import {
   Tooltip,
   CartesianGrid,
   ResponsiveContainer,
-  Legend,
 } from "recharts";
 import { useNavigate } from "react-router-dom";
 import {
   getSalesByMonth,
   getTopProducts,
   getUsersByMonth,
-} from "../utils/api.js";
-import withAdminGuard from "../hooks/withAdminGuard.jsx";
-import { useMinimumLoadingTime } from "../hooks/useMinimumLoading.jsx";
-import LoadingScreen from "../components/LoadingScreen";
-import "../styles/AdminStats.css";
-import logger from "../utils/logger.js";
+} from "../../utils/api.js";
+import withAdminGuard from "../../hooks/withAdminGuard.jsx";
+import { useMinimumLoadingTime } from "../../hooks/useMinimumLoading.jsx";
+import LoadingScreen from "../../components/LoadingScreen.jsx";
+import withSessionGuard from "../../hooks/withSessionGuard.jsx";
+import usePermissions from "../../hooks/usePermissions.jsx";
+import "../../styles/AdminStats.css";
+import logger from "../../utils/logger.js";
 import {
   Box,
   ChartColumnBig,
@@ -29,9 +30,8 @@ import {
   MoveLeft,
   Receipt,
   TrendingUp,
-  TrendingUpDown,
-  User,
   Users,
+  Lock,
 } from "lucide-react";
 
 const AdminStats = () => {
@@ -41,6 +41,7 @@ const AdminStats = () => {
   const [newUsers, setNewUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const showLoading = useMinimumLoadingTime(loading, 1000);
+  const permissions = usePermissions();
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -113,10 +114,16 @@ const AdminStats = () => {
 
   return (
     <div className="admin-stats-page">
+      {permissions.isViewer && (
+        <div className="viewer-banner">
+          <Lock size={18} />
+          <span>Modo de solo lectura - No puedes realizar modificaciones</span>
+        </div>
+      )}
       {/* Header */}
       <div className="stats-page-header">
         <div className="header-content">
-          <div className="header-icon">
+          <div className="header-icon-stats">
             <ChartColumnBig strokeWidth="2.5px" />
           </div>
           <div className="header-text">
@@ -333,4 +340,4 @@ const AdminStats = () => {
   );
 };
 
-export default withAdminGuard(AdminStats);
+export default withSessionGuard(withAdminGuard(AdminStats));
