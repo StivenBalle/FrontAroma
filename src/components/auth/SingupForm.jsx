@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useAuth } from "../../context/AuthContext.jsx";
-import logoCafe from "../../assets/LogoCafe.png";
 import Swal from "sweetalert2";
 import { register } from "../../utils/api.js";
 import "../../styles/header.css";
@@ -116,7 +115,7 @@ const SignupForm = ({ switchToLogin }) => {
         <div className="close">Cerrar</div>
       </button>
 
-      <img src={logoCafe} alt="Logo Café" />
+      <img src="/assets/logoCafe.png" />
 
       {/* Nombre */}
       <div className="flex-column">
