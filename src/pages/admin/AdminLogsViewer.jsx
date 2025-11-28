@@ -403,7 +403,6 @@ const AdminLogs = () => {
                         {getLevelIcon(log.level)}
                         <span
                           style={{
-                            fontWeight: "500",
                             color:
                               log.level === "ERROR"
                                 ? "#dc2626"
