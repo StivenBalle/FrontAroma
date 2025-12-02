@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext.jsx";
 import LoginGoogle from "../../components/auth/LoginWithGoogle.jsx";
+import LogoCafe from "../../assets/LogoCafe.png";
 import logger from "../../utils/logger";
 import "../../styles/header.css";
 import { LockKeyhole, Mail } from "lucide-react";
@@ -31,7 +32,7 @@ const LoginForm = ({ switchToSignup }) => {
         <div className="close">Cerrar</div>
       </button>
 
-      <img src="/assets/logoCafe.png" />
+      <img src={LogoCafe} />
       <h3 className="title-login">Iniciar Sesión</h3>
 
       <form className="form-login" onSubmit={handleSubmit}>

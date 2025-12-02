@@ -5,6 +5,7 @@ import { register } from "../../utils/api.js";
 import "../../styles/header.css";
 import logger from "../../utils/logger.js";
 import { LockKeyhole, Mail, Phone, User } from "lucide-react";
+import LogoCafe from "../../assets/LogoCafe.png";
 
 const SignupForm = ({ switchToLogin }) => {
   const { closeAuthModal } = useAuth();
@@ -115,7 +116,7 @@ const SignupForm = ({ switchToLogin }) => {
         <div className="close">Cerrar</div>
       </button>
 
-      <img src="/assets/logoCafe.png" />
+      <img src={LogoCafe} />
 
       {/* Nombre */}
       <div className="flex-column">

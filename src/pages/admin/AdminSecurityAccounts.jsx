@@ -9,7 +9,6 @@ import {
   Clock,
   User,
   Activity,
-  Download,
   RefreshCw,
   Ban,
   ArrowBigLeft,
@@ -93,7 +92,7 @@ const AdminSecurityPanel = () => {
     } else {
       loadData(false);
     }
-  }, [searchTerm]);
+  }, [searchTerm, filter, currentPage]);
 
   const handleAction = async (action, id, name) => {
     try {
@@ -425,153 +424,330 @@ const AdminSecurityPanel = () => {
           <p>Prueba con otro filtro</p>
         </div>
       ) : (
-        <div className="table-wrapper-modern">
-          <table className="admin-security-table">
-            <thead>
-              <tr>
-                <th>Usuario</th>
-                <th>Estado</th>
-                <th>Intentos</th>
-                <th>Riesgo</th>
-                <th>Último Fallido</th>
-                <th>Bloqueo Hasta</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              {users.map((user) => {
-                const risk = getRiskLevel(user.login_attempts || 0);
-                const isPermanentlyLocked = user.is_permanently_locked;
-                const isTemporarilyLocked =
-                  user.is_locked ||
-                  (user.locked_until &&
-                    new Date(user.locked_until) > new Date());
-                const isLocked = isPermanentlyLocked || isTemporarilyLocked;
+        <>
+          <div className="table-wrapper-modern desktop-only">
+            <table className="admin-security-table">
+              <thead>
+                <tr>
+                  <th>Usuario</th>
+                  <th>Estado</th>
+                  <th>Intentos</th>
+                  <th>Riesgo</th>
+                  <th>Último Fallido</th>
+                  <th>Bloqueo Hasta</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                {users.map((user) => {
+                  const risk = getRiskLevel(user.login_attempts || 0);
+                  const isPermanentlyLocked = user.is_permanently_locked;
+                  const isTemporarilyLocked =
+                    user.is_locked ||
+                    (user.locked_until &&
+                      new Date(user.locked_until) > new Date());
+                  const isLocked = isPermanentlyLocked || isTemporarilyLocked;
 
-                return (
-                  <tr
-                    key={user.id}
-                    className={`
-                    ${isPermanentlyLocked ? "permanent-locked-row" : ""}
-                    ${
-                      isTemporarilyLocked && !isPermanentlyLocked
-                        ? "locked-row"
-                        : ""
-                    }
-                  `}
-                  >
-                    <td>
-                      <div className="user-cell">
-                        <div className="user-avatar">
-                          <span className="avatar-letter">
-                            {user.name?.[0]?.toUpperCase() || "U"}
-                          </span>
+                  return (
+                    <tr
+                      key={user.id}
+                      className={`
+                        ${isPermanentlyLocked ? "permanent-locked-row" : ""}
+                        ${
+                          isTemporarilyLocked && !isPermanentlyLocked
+                            ? "locked-row"
+                            : ""
+                        }
+                      `}
+                    >
+                      <td>
+                        <div className="user-cell">
+                          <div className="user-avatar">
+                            <span className="avatar-letter">
+                              {user.name?.[0]?.toUpperCase() || "U"}
+                            </span>
+                          </div>
+                          <div className="user-info">
+                            <span className="user-name">
+                              {user.name || "Sin nombre"}
+                            </span>
+                            <span className="user-email">{user.email}</span>
+                          </div>
                         </div>
-                        <div className="user-info">
-                          <span className="user-name">
-                            {user.name || "Sin nombre"}
-                          </span>
-                          <span className="user-email">{user.email}</span>
+                      </td>
+                      <td>{getStatusBadge(user)}</td>
+                      <td>
+                        <span className="attempts-badge">
+                          {user.login_attempts || 0}
+                        </span>
+                      </td>
+                      <td>
+                        <span
+                          className="risk-badge"
+                          style={{
+                            backgroundColor: `${
+                              isPermanentlyLocked
+                                ? "#dc262620"
+                                : isTemporarilyLocked
+                                ? "#f59e0b20"
+                                : `${risk.color}20`
+                            }`,
+                            color: isPermanentlyLocked
+                              ? "#dc2626"
+                              : isTemporarilyLocked
+                              ? "#f59e0b"
+                              : risk.color,
+                          }}
+                        >
+                          {isPermanentlyLocked
+                            ? "Crítico (Bloqueado Permanente)"
+                            : isTemporarilyLocked
+                            ? "Alto (Bloqueo Temporal)"
+                            : risk.level}
+                        </span>
+                      </td>
+
+                      <td>
+                        {user.last_failed_login
+                          ? new Date(user.last_failed_login).toLocaleString(
+                              "es-CO"
+                            )
+                          : "—"}
+                      </td>
+                      <td>
+                        {isPermanentlyLocked ? (
+                          <div className="permanent-lock-badge">
+                            <Lock size={14} />
+                            <span>Permanente</span>
+                          </div>
+                        ) : isTemporarilyLocked &&
+                          user.remaining_minutes > 0 ? (
+                          <div className="locked-info">
+                            <Clock size={14} />
+                            <span>
+                              {Math.max(1, Math.ceil(user.remaining_minutes))}{" "}
+                              min
+                            </span>
+                          </div>
+                        ) : (
+                          "—"
+                        )}
+                      </td>
+                      <td>
+                        <div className="actions-cell">
+                          {isLocked ? (
+                            <RestrictedButton
+                              className="btn-icon success"
+                              onClick={() => handleUnlockUser(user)}
+                              requiredPermission="canManageSecurity"
+                              tooltipMessage="Solo administradores pueden desbloquear usuarios"
+                              title="Desbloquear"
+                            >
+                              <Unlock size={18} />
+                            </RestrictedButton>
+                          ) : (
+                            <RestrictedButton
+                              className="btn-icon danger"
+                              onClick={() => handleOpenLockModal(user)}
+                              requiredPermission="canManageSecurity"
+                              tooltipMessage="Solo administradores pueden bloquear usuarios"
+                              title="Bloquear"
+                            >
+                              <Ban size={18} />
+                            </RestrictedButton>
+                          )}
+
+                          {user.login_attempts > 0 && !isLocked && (
+                            <RestrictedButton
+                              className="btn-icon warning"
+                              onClick={() =>
+                                handleAction(
+                                  () => resetUserAttempts(user.id),
+                                  user.id,
+                                  user.name
+                                )
+                              }
+                              requiredPermission="canManageSecurity"
+                              tooltipMessage="Solo administradores pueden resetear intentos"
+                              title="Resetear intentos"
+                            >
+                              <RefreshCw size={18} />
+                            </RestrictedButton>
+                          )}
                         </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Vista Mobile - Cards */}
+          <div className="mobile-cards-container">
+            {users.map((user) => {
+              const risk = getRiskLevel(user.login_attempts || 0);
+              const isPermanentlyLocked = user.is_permanently_locked;
+              const isTemporarilyLocked =
+                user.is_locked ||
+                (user.locked_until && new Date(user.locked_until) > new Date());
+              const isLocked = isPermanentlyLocked || isTemporarilyLocked;
+
+              return (
+                <div
+                  key={user.id}
+                  className={`user-card-mobile ${
+                    isPermanentlyLocked ? "permanent-locked" : ""
+                  } ${
+                    isTemporarilyLocked && !isPermanentlyLocked
+                      ? "temp-locked"
+                      : ""
+                  }`}
+                >
+                  {/* Header del Card */}
+                  <div className="card-header-mobile">
+                    <div className="user-cell">
+                      <div className="user-avatar">
+                        <span className="avatar-letter">
+                          {user.name?.[0]?.toUpperCase() || "U"}
+                        </span>
                       </div>
-                    </td>
-                    <td>{getStatusBadge(user)}</td>
-                    <td>
+                      <div className="user-info">
+                        <span className="user-name">
+                          {user.name || "Sin nombre"}
+                        </span>
+                        <span className="user-email">{user.email}</span>
+                      </div>
+                    </div>
+                    {getStatusBadge(user)}
+                  </div>
+
+                  {/* Stats Grid */}
+                  <div className="card-stats-grid">
+                    <div className="stat-item">
+                      <span className="stat-label">Intentos</span>
                       <span className="attempts-badge">
                         {user.login_attempts || 0}
                       </span>
-                    </td>
-                    <td>
+                    </div>
+
+                    <div className="stat-item">
+                      <span className="stat-label">Riesgo</span>
                       <span
                         className="risk-badge"
                         style={{
-                          backgroundColor: `${risk.color}20`,
-                          color: risk.color,
+                          backgroundColor: `${
+                            isPermanentlyLocked
+                              ? "#dc262620"
+                              : isTemporarilyLocked
+                              ? "#f59e0b20"
+                              : `${risk.color}20`
+                          }`,
+                          color: isPermanentlyLocked
+                            ? "#dc2626"
+                            : isTemporarilyLocked
+                            ? "#f59e0b"
+                            : risk.color,
                         }}
                       >
-                        {risk.level}
+                        {isPermanentlyLocked
+                          ? "Crítico (Bloqueado Permanente)"
+                          : isTemporarilyLocked
+                          ? "Alto (Bloqueo Temporal)"
+                          : risk.level}
                       </span>
-                    </td>
-                    <td>
-                      {user.last_failed_login
-                        ? new Date(user.last_failed_login).toLocaleString(
-                            "es-CO"
-                          )
-                        : "—"}
-                    </td>
-                    <td>
-                      {isPermanentlyLocked ? (
-                        <div className="permanent-lock-badge">
-                          <Lock size={14} />
-                          <span>Permanente</span>
-                        </div>
-                      ) : isTemporarilyLocked && user.remaining_minutes > 0 ? (
-                        <div className="locked-info">
-                          <Clock size={14} />
-                          <span>
-                            {Math.max(1, Math.ceil(user.remaining_minutes))} min
+                    </div>
+                  </div>
+
+                  {/* Info adicional */}
+                  <div className="card-info-section">
+                    {user.last_failed_login && (
+                      <div className="info-row">
+                        <AlertTriangle
+                          size={16}
+                          className="info-icon"
+                          color="orange"
+                        />
+                        <div>
+                          <span className="info-label">Último Fallido</span>
+                          <span className="info-value">
+                            {new Date(user.last_failed_login).toLocaleString(
+                              "es-CO"
+                            )}
                           </span>
                         </div>
-                      ) : (
-                        "—"
-                      )}
-                    </td>
-                    <td>
-                      <div className="actions-cell">
-                        {/* Botones con permisos */}
-                        {isLocked ? (
-                          <RestrictedButton
-                            className="btn-icon success"
-                            onClick={() => handleUnlockUser(user)}
-                            requiredPermission="canManageSecurity"
-                            tooltipMessage="Solo administradores pueden desbloquear usuarios"
-                            title="Desbloquear"
-                          >
-                            <Unlock size={18} />
-                          </RestrictedButton>
-                        ) : (
-                          <RestrictedButton
-                            className="btn-icon danger"
-                            onClick={() => handleOpenLockModal(user)}
-                            requiredPermission="canManageSecurity"
-                            tooltipMessage="Solo administradores pueden bloquear usuarios"
-                            title="Bloquear"
-                          >
-                            <Ban size={18} />
-                          </RestrictedButton>
-                        )}
-
-                        {/* Reset de intentos */}
-                        {user.login_attempts > 0 && !isLocked && (
-                          <RestrictedButton
-                            className="btn-icon warning"
-                            onClick={() =>
-                              handleAction(
-                                () => resetUserAttempts(user.id),
-                                user.id,
-                                user.name
-                              )
-                            }
-                            requiredPermission="canManageSecurity"
-                            tooltipMessage={
-                              isLocked
-                                ? "No puedes resetear intentos porque la cuenta está bloqueada"
-                                : "Solo administradores pueden resetear intentos"
-                            }
-                            disabled={isLocked || user.login_attempts === 0}
-                            title="Resetear intentos"
-                          >
-                            <RefreshCw size={18} />
-                          </RestrictedButton>
-                        )}
                       </div>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+                    )}
+
+                    {(isPermanentlyLocked ||
+                      (isTemporarilyLocked && user.remaining_minutes > 0)) && (
+                      <div className="info-row">
+                        <Clock size={16} className="info-icon" color="red" />
+                        <div>
+                          <span className="info-label">Bloqueo</span>
+                          {isPermanentlyLocked ? (
+                            <div className="permanent-lock-badge">
+                              <Lock size={14} />
+                              <span>Permanente</span>
+                            </div>
+                          ) : (
+                            <span className="locked-info">
+                              {Math.max(1, Math.ceil(user.remaining_minutes))}{" "}
+                              minutos
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Acciones */}
+                  <div className="card-actions-mobile">
+                    {isLocked ? (
+                      <RestrictedButton
+                        className="btn-mobile success"
+                        onClick={() => handleUnlockUser(user)}
+                        requiredPermission="canManageSecurity"
+                        tooltipMessage="Solo administradores pueden desbloquear usuarios"
+                      >
+                        <Unlock size={18} />
+                        <span>Desbloquear</span>
+                      </RestrictedButton>
+                    ) : (
+                      <RestrictedButton
+                        className="btn-mobile danger"
+                        onClick={() => handleOpenLockModal(user)}
+                        requiredPermission="canManageSecurity"
+                        tooltipMessage="Solo administradores pueden bloquear usuarios"
+                      >
+                        <Ban size={18} />
+                        <span>Bloquear</span>
+                      </RestrictedButton>
+                    )}
+
+                    {user.login_attempts > 0 && !isLocked && (
+                      <RestrictedButton
+                        className="btn-mobile warning"
+                        onClick={() =>
+                          handleAction(
+                            () => resetUserAttempts(user.id),
+                            user.id,
+                            user.name
+                          )
+                        }
+                        requiredPermission="canManageSecurity"
+                        tooltipMessage="Solo administradores pueden resetear intentos"
+                      >
+                        <RefreshCw size={18} />
+                        <span>Resetear</span>
+                      </RestrictedButton>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </>
       )}
 
       {/* Paginación */}

@@ -46,13 +46,13 @@ async function request(path, { method = "GET", body } = {}) {
   }
 
   if (!res.ok) {
-    // ⚡ Detectar sesión expirada
+    // Detectar sesión expirada
     if (res.status === 401 && data?.error === "Sesión expirada") {
       await handleSessionExpired();
       throw new Error("Sesión expirada");
     }
 
-    // 🚫 Detectar cuenta bloqueada (status 423 = Locked)
+    // Detectar cuenta bloqueada (status 423 = Locked)
     if (res.status === 423) {
       await handleAccountLocked(data);
       throw new Error("Cuenta bloqueada");
@@ -91,7 +91,7 @@ async function handleSessionExpired() {
   }
 }
 
-// 🚫 Manejo de cuenta bloqueada
+// Manejo de cuenta bloqueada
 async function handleAccountLocked(data) {
   if (navigateRef) {
     const isPermanent =

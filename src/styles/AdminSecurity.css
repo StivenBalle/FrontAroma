@@ -330,16 +330,15 @@
 .status-badge {
   display: inline-flex;
   align-items: center;
-  padding: 0.375rem 0.875rem;
+  padding: 4px 8px;
   border-radius: 50px;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.3px;
-}
-
-.status-badge.locked {
-  background: #fee2e2;
-  color: #dc2626;
+  max-width: 100%;
+  flex-wrap: wrap;
+  white-space: normal;
+  word-break: break-word;
 }
 
 .status-badge.warning {
@@ -365,7 +364,7 @@
 .risk-badge {
   display: inline-flex;
   padding: 0.375rem 0.875rem;
-  border-radius: 50px;
+  border-radius: 10px;
   font-size: 0.8rem;
   font-weight: 700;
   letter-spacing: 0.3px;
@@ -2057,20 +2056,6 @@
   }
 }
 
-/* Badge para bloqueo permanente */
-.status-badge.permanent {
-  background: linear-gradient(135deg, #450a0a 0%, #7f1d1d 100%);
-  color: #fff;
-  font-weight: 700;
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  box-shadow: 0 2px 8px rgba(127, 29, 29, 0.3);
-  animation: pulse-permanent 2s infinite;
-}
-
 @keyframes pulse-permanent {
   0%,
   100% {
@@ -2145,10 +2130,238 @@
   color: black;
 }
 
-/* ===== RESPONSIVE DESIGN ===== */
+.desktop-only {
+  display: block;
+}
 
-/* Tablets (768px - 1024px) */
+.mobile-cards-container {
+  display: none;
+  flex-direction: column;
+  gap: 20px;
+  padding: 16px;
+}
+
+.user-card-mobile {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e5e7eb;
+  transition: all 0.3s ease;
+  margin-bottom: 10px;
+}
+
+.user-card-mobile:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
+}
+
+/* Estados de bloqueo */
+.user-card-mobile.permanent-locked {
+  border-left: 4px solid #7f1d1d;
+  background: linear-gradient(90deg, rgba(127, 29, 29, 0.05) 0%, white 100%);
+}
+
+.user-card-mobile.temp-locked {
+  border-left: 4px solid #dc2626;
+  background: linear-gradient(90deg, rgba(220, 38, 38, 0.05) 0%, white 100%);
+}
+
+.card-header-mobile {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.card-header-mobile .user-cell {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.card-header-mobile .user-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.card-header-mobile .avatar-letter {
+  color: white;
+  font-weight: 700;
+  font-size: 20px;
+}
+
+.card-header-mobile .user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.card-header-mobile .user-name {
+  font-weight: 600;
+  font-size: 16px;
+  color: #111827;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-header-mobile .user-email {
+  font-size: 13px;
+  color: #6b7280;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px;
+  background: #f9fafb;
+  border-radius: 10px;
+}
+
+.stat-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-item .attempts-badge,
+.stat-item .risk-badge {
+  align-self: flex-start;
+}
+
+.card-info-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.info-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px;
+  background: #f9fafb;
+  border-radius: 8px;
+}
+
+.info-icon {
+  flex-shrink: 0;
+  color: #6b7280;
+  margin-top: 2px;
+}
+
+.info-row > div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+}
+
+.info-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: #6b7280;
+}
+
+.info-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+  word-break: break-word;
+}
+
+.card-actions-mobile {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.btn-mobile {
+  flex: 1;
+  min-width: calc(50% - 5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: none;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-mobile span {
+  white-space: nowrap;
+}
+
+.btn-mobile.success {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+}
+
+.btn-mobile.success:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+}
+
+.btn-mobile.danger {
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+  color: white;
+}
+
+.btn-mobile.danger:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4);
+}
+
+.btn-mobile.warning {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: white;
+}
+
+.btn-mobile.warning:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+}
+
+.btn-mobile:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 @media (max-width: 1024px) {
+  .desktop-only {
+    display: none;
+  }
+
   .locked-title {
     font-size: 2rem;
   }
@@ -2156,10 +2369,153 @@
   .countdown-time {
     font-size: 3rem;
   }
+
+  .user-card-mobile {
+    animation: slideInUp 0.3s ease;
+    animation-fill-mode: both;
+  }
+
+  @keyframes slideInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .user-card-mobile:nth-child(1) {
+    animation-delay: 0s;
+  }
+  .user-card-mobile:nth-child(2) {
+    animation-delay: 0.05s;
+  }
+  .user-card-mobile:nth-child(3) {
+    animation-delay: 0.1s;
+  }
+  .user-card-mobile:nth-child(4) {
+    animation-delay: 0.15s;
+  }
+  .user-card-mobile:nth-child(5) {
+    animation-delay: 0.2s;
+  }
 }
 
 /* Mobile (481px - 768px) */
 @media (max-width: 768px) {
+  .panel-header {
+    padding: 16px;
+  }
+
+  .header-content {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .header-title {
+    width: 100%;
+  }
+
+  .header-title h2 {
+    font-size: 20px;
+  }
+
+  .header-title p {
+    font-size: 13px;
+  }
+
+  .btn-refresh,
+  .back-btn-modern {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .metric-card {
+    padding: 16px;
+  }
+
+  .metric-value {
+    font-size: 24px;
+  }
+
+  .metric-label {
+    font-size: 12px;
+  }
+
+  .controls-section {
+    flex-direction: column;
+    padding: 16px;
+    gap: 12px;
+  }
+
+  .search-input-wrapper {
+    width: 100%;
+  }
+
+  .filter-buttons {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .filter-buttons::-webkit-scrollbar {
+    display: none;
+  }
+
+  .filter-btn {
+    flex-shrink: 0;
+    min-width: auto;
+    padding: 10px 16px;
+    font-size: 13px;
+  }
+
+  .filter-btn svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .viewer-banner {
+    padding: 12px 16px;
+    font-size: 13px;
+    margin: 16px;
+    border-radius: 10px;
+  }
+
+  .viewer-banner svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .empty-state {
+    padding: 40px 20px;
+  }
+
+  .empty-state svg {
+    width: 48px;
+    height: 48px;
+  }
+
+  .empty-state h3 {
+    font-size: 18px;
+  }
+
+  .empty-state p {
+    font-size: 14px;
+  }
+
+  .mobile-cards-container {
+    display: block;
+  }
+
   .account-locked-page {
     padding: 1.5rem 1rem;
   }
@@ -2222,6 +2578,26 @@
 
 /* Small Mobile (320px - 480px) */
 @media (max-width: 480px) {
+  .metrics-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .card-header-mobile {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .status-badge {
+    font-size: 0.7rem;
+    padding: 3px 6px;
+    align-self: flex-start;
+  }
+
+  .mobile-cards-container {
+    display: block;
+  }
+
   .modal-container-lock {
     max-height: 100vh;
     border-radius: 16px 16px 0 0;
