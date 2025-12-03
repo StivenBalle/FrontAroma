@@ -6,6 +6,7 @@ import HeaderTitle from "../../components/HeaderTitle.jsx";
 import LoadingScreen from "../../components/LoadingScreen.jsx";
 import Cafetera from "../../components/Cafetera.jsx";
 import usePermissions from "../../hooks/usePermissions.jsx";
+import { useModernAlert } from "../../hooks/useModernAlert.jsx";
 import Swal from "sweetalert2";
 import "../../styles/AdminSecurity.css";
 import {
@@ -21,7 +22,6 @@ import {
   X,
   Logs,
   Lock,
-  Download,
   Trash2,
 } from "lucide-react";
 import RestrictedButton from "../../components/RestrictedButton.jsx";
@@ -36,6 +36,7 @@ const AdminLogs = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pagination, setPagination] = useState(null);
   const [selectedLog, setSelectedLog] = useState(null);
+  const { alert, success, error } = useModernAlert();
   const permissions = usePermissions();
   const pageSize = 15;
 
@@ -69,7 +70,7 @@ const AdminLogs = () => {
         setStats(data.stats || null);
       } catch (err) {
         console.error("Error cargando logs:", err);
-        Swal.fire("Error", "No se pudieron cargar los logs", "error");
+        error("Error", "No se pudieron cargar los logs");
         setLogs([]);
         setPagination(null);
       } finally {
@@ -135,15 +136,14 @@ const AdminLogs = () => {
     if (value) {
       try {
         const res = await deleteLogs(value);
-        Swal.fire(
+        await success(
           "Éxito",
-          `Se eliminaron ${res.deleted} logs antiguos`,
-          "success"
+          `Se eliminaron <strong>${res.deleted}</strong> logs antiguos`
         );
         setCurrentPage(1);
         fetchLogs();
       } catch {
-        Swal.fire("Error", "No se pudieron eliminar los logs", "error");
+        error("Error", "No se pudieron eliminar los logs");
       }
     }
   };
@@ -604,6 +604,7 @@ const AdminLogs = () => {
           </div>
         </div>
       )}
+      {alert}
     </div>
   );
 };

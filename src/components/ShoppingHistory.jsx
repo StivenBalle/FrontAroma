@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
-import Swal from "sweetalert2";
 import { getHistorial } from "../utils/api.js";
+import { useModernAlert } from "../hooks/useModernAlert.jsx";
 import logger from "../utils/logger";
 import "../App.css";
 
@@ -9,6 +9,7 @@ const ShoppingHistory = ({ isOpen, toggleHistory }) => {
   const { user } = useAuth();
   const [compras, setCompras] = useState([]);
   const [loading, setLoading] = useState(false);
+  const { alert, error } = useModernAlert();
 
   useEffect(() => {
     if (!isOpen || !user) return;
@@ -21,11 +22,7 @@ const ShoppingHistory = ({ isOpen, toggleHistory }) => {
         setCompras(data.compras);
       } catch (err) {
         logger.error("❌ Error fetching history:", err.message);
-        Swal.fire(
-          "Error",
-          "No se pudo cargar el historial de compras",
-          "error"
-        );
+        error("Error", "No se pudo cargar el historial de compras");
       } finally {
         setLoading(false);
       }
@@ -76,6 +73,7 @@ const ShoppingHistory = ({ isOpen, toggleHistory }) => {
       <button onClick={toggleHistory} className="close-history-btn">
         Cerrar
       </button>
+      {alert}
     </div>
   );
 };

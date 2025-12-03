@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import LoadingScreen from "../components/LoadingScreen";
 import { useMinimumLoadingTime } from "../hooks/useMinimumLoading.jsx";
+import { useModernAlert } from "../hooks/useModernAlert.jsx";
 import logger from "../utils/logger";
-import Swal from "sweetalert2";
 import { getProfile } from "../utils/api.js";
 
 const withSessionGuard = (WrappedComponent) => {
@@ -13,6 +13,7 @@ const withSessionGuard = (WrappedComponent) => {
     const navigate = useNavigate();
     const [checkingSession, setCheckingSession] = useState(true);
     const showLoading = useMinimumLoadingTime(checkingSession, 1000);
+    const { alert, warning } = useModernAlert();
 
     useEffect(() => {
       const verifySession = async () => {
@@ -22,12 +23,10 @@ const withSessionGuard = (WrappedComponent) => {
         } catch (error) {
           logger.warn("🔒 Sesión inválida o expirada:", error.message);
 
-          await Swal.fire({
-            icon: "warning",
-            title: "Sesión expirada",
-            text: "Tu sesión ha terminado. Inicia sesión nuevamente para continuar.",
-            confirmButtonText: "Aceptar",
-          });
+          await warning(
+            "Sesión expirada",
+            "Tu sesión ha terminado. Inicia sesión nuevamente para continuar."
+          );
 
           if (setUser) setUser(null);
           navigate("/");
@@ -38,10 +37,20 @@ const withSessionGuard = (WrappedComponent) => {
     }, [navigate, setUser]);
 
     if (showLoading) {
-      return <LoadingScreen title="Verificando sesión..." />;
+      return (
+        <>
+          {alert}
+          <LoadingScreen title="Verificando sesión..." />
+        </>
+      );
     }
 
-    return <WrappedComponent {...props} />;
+    return (
+      <>
+        {alert}
+        <WrappedComponent {...props} />
+      </>
+    );
   };
 };
 

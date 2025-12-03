@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import Swal from "sweetalert2";
+import { useModernAlert } from "../hooks/useModernAlert.jsx";
 import { useNavigate } from "react-router-dom";
 import logoCafe from "../assets/LogoCafe.png";
 import Cafetera from "./Cafetera";
@@ -7,19 +7,13 @@ import "../App.css";
 
 const NotFound = () => {
   const navigate = useNavigate();
+  const { alert, error } = useModernAlert();
 
   useEffect(() => {
-    Swal.fire({
-      icon: "error",
-      title: "¡Página no encontrada!",
-      text: "Lo sentimos, la página que buscas no existe.",
-      confirmButtonText: "Volver al inicio",
-      confirmButtonColor: "#4a2c2a",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        navigate("/");
-      }
-    });
+    error(
+      "¡Página no encontrada!",
+      "Lo sentimos, la página que buscas no existe."
+    );
   }, [navigate]);
 
   return (
@@ -42,6 +36,7 @@ const NotFound = () => {
           Volver al inicio
         </button>
       </div>
+      {alert}
     </div>
   );
 };

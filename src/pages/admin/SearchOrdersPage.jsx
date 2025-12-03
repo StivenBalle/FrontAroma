@@ -12,7 +12,7 @@ import {
   updateOrderStatus,
 } from "../../utils/api.js";
 import logger from "../../utils/logger.js";
-import Swal from "sweetalert2";
+import { useModernAlert } from "../../hooks/useModernAlert.jsx";
 import "../../App.css";
 import {
   ArrowBigLeft,
@@ -42,6 +42,7 @@ const OrdersPageInner = () => {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [showTrackingModal, setShowTrackingModal] = useState(false);
   const permissions = usePermissions();
+  const { alert, error } = useModernAlert();
   const pageSize = 10;
 
   useEffect(() => {
@@ -66,7 +67,7 @@ const OrdersPageInner = () => {
       if (err.status === 401 || err.status === 403) {
         logger.log("Error de acceso detectado; manejado por HOC");
       } else {
-        Swal.fire("Error", "No se pudieron cargar las órdenes", "error");
+        error("Error", "No se pudieron cargar las órdenes");
       }
     } finally {
       setLoading(false);
@@ -555,6 +556,7 @@ const OrdersPageInner = () => {
           onUpdateStatus={handleUpdateStatus}
         />
       )}
+      {alert}
     </div>
   );
 };

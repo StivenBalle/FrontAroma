@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import {
   CheckCircle,
@@ -12,11 +11,11 @@ import {
   CreditCard,
   Home,
   Download,
-  Share2,
   Truck,
 } from "lucide-react";
 import bolsaCafe from "../assets/LogoCafe.png";
 import LoadingScreen from "../components/LoadingScreen";
+import { useModernAlert } from "../hooks/useModernAlert.jsx";
 import { getPurchaseDetails } from "../utils/api.js";
 import logger from "../utils/logger.js";
 import "../App.css";
@@ -26,6 +25,7 @@ const Success = () => {
   const [purchase, setPurchase] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showConfetti, setShowConfetti] = useState(false);
+  const { alert, success, error } = useModernAlert();
 
   useEffect(() => {
     const fetchPurchase = async () => {
@@ -33,7 +33,7 @@ const Success = () => {
       const sessionId = urlParams.get("session_id");
 
       if (!sessionId) {
-        Swal.fire("Error", "No se encontró el ID de la sesión", "error");
+        error("Error", "No se encontró el ID de la sesión");
         navigate("/");
         return;
       }
@@ -47,20 +47,12 @@ const Success = () => {
       } catch (err) {
         logger.error("❌ Error cargando detalles:", err.message);
         if (err.response?.status === 403) {
-          Swal.fire(
-            "Acceso denegado",
-            "Esta compra no pertenece a tu cuenta",
-            "error"
-          );
+          error("Acceso denegado", "Esta compra no pertenece a tu cuenta");
           navigate("/");
           return;
         }
 
-        Swal.fire(
-          "Error",
-          "No se pudo obtener la información de la compra",
-          "error"
-        );
+        error("Error", "No se pudo obtener la información de la compra");
       } finally {
         setLoading(false);
       }
@@ -70,34 +62,15 @@ const Success = () => {
   }, [navigate]);
 
   const handleDownloadReceipt = () => {
-    Swal.fire({
-      title: "Descargando recibo...",
-      text: "Tu recibo se descargará en breve",
-      icon: "success",
-      timer: 2000,
-      showConfirmButton: false,
-    });
-    // Aquí iría la lógica para descargar el PDF del recibo
-  };
+    const alertInstance = success(
+      "Descargando recibo...",
+      "Tu recibo se descargará en breve"
+    );
 
-  const handleShare = async () => {
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: "Mi compra en Aromas de Serranía",
-          text: `¡Acabo de comprar ${purchase?.producto}!`,
-          url: window.location.href,
-        });
-      } catch (err) {
-        console.log("Error sharing:", err);
-      }
-    } else {
-      Swal.fire({
-        title: "Compartir",
-        text: "Función de compartir no disponible en este navegador",
-        icon: "info",
-      });
-    }
+    setTimeout(() => {
+      alertInstance && alertInstance.close?.();
+    }, 2000);
+    // Aquí iría la lógica para descargar el PDF del recibo
   };
 
   if (loading) {
@@ -334,6 +307,7 @@ const Success = () => {
           </div>
         )}
       </div>
+      {alert}
     </div>
   );
 };

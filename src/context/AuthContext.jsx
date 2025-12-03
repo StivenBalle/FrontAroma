@@ -1,4 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useModernAlert } from "../hooks/useModernAlert.jsx";
 import {
   login,
   googleLogin,
@@ -9,14 +11,15 @@ import {
   setUserHandler,
 } from "../utils/api.js";
 import logger from "../utils/logger";
-import Swal from "sweetalert2";
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
   const [authModalOpen, setAuthModalOpen] = useState(false);
+  const { alert, confirm, success, error, warning } = useModernAlert();
 
   const openAuthModal = () => setAuthModalOpen(true);
   const closeAuthModal = () => setAuthModalOpen(false);
@@ -60,11 +63,10 @@ export const AuthProvider = ({ children }) => {
     try {
       // Verifica consentimiento de cookies antes del login
       if (!hasCookieConsent()) {
-        Swal.fire({
-          icon: "warning",
-          title: "Cookies necesarias",
-          text: "Debes aceptar las cookies para iniciar sesión. Por favor, haz clic en 'Aceptar Cookies' en el aviso.",
-        });
+        warning(
+          "Cookies necesarias",
+          "Debes aceptar las cookies para iniciar sesión. Por favor, haz clic en 'Aceptar Cookies' en el aviso."
+        );
         return {
           success: false,
           error: "Por favor acepte las cookies para poder iniciar sesión.",
@@ -74,15 +76,11 @@ export const AuthProvider = ({ children }) => {
       if (data?.message === "Login exitoso") {
         setUser(data.user);
         setAuthModalOpen(false);
-        Swal.fire({
-          icon: "success",
-          title: "✅ Inicio de sesión exitoso",
-          text: `Bienvenido, ${data.user.name}!`,
-          timer: 2000,
-          showConfirmButton: false,
-        }).then(() => {
-          window.location.reload();
-        });
+        await success(
+          "✅ Inicio de sesión exitoso",
+          `Bienvenido, ${data.user.name}!`
+        );
+        window.location.reload();
         return { success: true };
       }
       return { success: false };
@@ -95,52 +93,43 @@ export const AuthProvider = ({ children }) => {
 
       if (errorData?.code === "ACCOUNT_LOCKED") {
         const mins = Math.max(1, errorData.remainingMin || 15);
-        Swal.fire({
-          icon: "error",
-          title: "Cuenta bloqueada",
-          html: `
-          <p>Demasiados intentos fallidos</p>
-          <h3 style="color:#dc2626; margin:15px 0; font-weight:bold;">
-            Espera ${mins} minuto${mins > 1 ? "s" : ""}
-          </h3>
-          <small>Tu cuenta se desbloqueará automáticamente</small>
-        `,
-          allowOutsideClick: false,
-          confirmButtonText: "Entendido",
-          confirmButtonColor: "#dc2626",
-        });
+        error(
+          "Cuenta bloqueada",
+          `
+            <p>Demasiados intentos fallidos</p>
+            <h3 style="color:#dc2626; margin:15px 0; font-weight:bold;">
+              Espera ${mins} minuto${mins > 1 ? "s" : ""}
+            </h3>
+            <small>Tu cuenta se desbloqueará automáticamente</small>
+          `
+        );
+
+        navigate("/");
         return { success: false };
       }
 
       if (errorData?.code === "INVALID_PASSWORD") {
         const remaining = errorData.remaining || 1;
-        Swal.fire({
-          icon: "warning",
-          title: "Contraseña incorrecta",
-          html: `
-          <div style="text-align:center;">
-            <p style="font-size:1.2em; margin:10px 0;">
-              Te quedan <strong style="color:#f59e0b;">${remaining} intento${
+        await warning(
+          "Contraseña incorrecta",
+          `
+            <div style="text-align:center;">
+              <p style="font-size:1.2em; margin:10px 0;">
+                Te quedan <strong style="color:#f59e0b;">${remaining} intento${
             remaining > 1 ? "s" : ""
           }</strong>
-            </p>
-            <small style="color:#dc2626;">
-              Tras 5 intentos fallidos, tu cuenta se bloqueará por 15 minutos
-            </small>
-          </div>
-        `,
-          confirmButtonText: "OK",
-          confirmButtonColor: "#f59e0b",
-        });
+              </p>
+              <small style="color:#dc2626;">
+                Tras 5 intentos fallidos, tu cuenta se bloqueará por 15 minutos
+              </small>
+            </div>
+          `
+        );
         return { success: false };
       }
 
       const msg = errorData?.error || err.message || "Error desconocido";
-      Swal.fire({
-        icon: "error",
-        title: "Error de inicio de sesión",
-        text: msg,
-      });
+      error("Error", "Error de inicio de sesión");
       return { success: false };
     }
   };
@@ -158,10 +147,9 @@ export const AuthProvider = ({ children }) => {
   // Nueva función para Google Login
   const googleLoginUser = async (credential, nonce) => {
     if (!hasCookieConsent()) {
-      Swal.fire(
+      error(
         "Error",
-        "Debes aceptar las cookies para iniciar sesión con Google",
-        "error"
+        "Debes aceptar las cookies para iniciar sesión con Google"
       );
       return { success: false, error: "Cookies no aceptadas" };
     }
@@ -170,13 +158,13 @@ export const AuthProvider = ({ children }) => {
       if (data.message === "✅ Google login exitoso") {
         setUser(data.user);
         setAuthModalOpen(false);
-        Swal.fire(
-          "✅ Inicio de sesión con Google exitoso",
-          `Bienvenido, ${data.user.name}!`,
-          "success"
-        ).then(() => {
-          window.location.reload();
-        });
+        success(
+          "Inicio de sesión con Google exitoso",
+          `Bienvenido, ${data.user.name}!`
+        );
+
+        window.location.reload();
+
         return { success: true };
       }
       return { success: false, error: data.error };
@@ -191,14 +179,10 @@ export const AuthProvider = ({ children }) => {
     try {
       const data = await updatePhone(phone_number);
       setUser(data.user);
-      Swal.fire(
-        "✅ Teléfono actualizado",
-        "Tu teléfono ha sido guardado",
-        "success"
-      );
+      success("✅ Teléfono actualizado", "Tu teléfono ha sido guardado");
     } catch (err) {
       logger.error("❌ Error updating phone:", err.message);
-      Swal.fire("Error", "No se pudo actualizar el teléfono", "error");
+      error("Error", "No se pudo actualizar el teléfono");
     }
   };
 
@@ -218,6 +202,7 @@ export const AuthProvider = ({ children }) => {
       }}
     >
       {children}
+      {alert}
     </AuthContext.Provider>
   );
 };

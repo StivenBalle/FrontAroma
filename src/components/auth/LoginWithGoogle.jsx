@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import { AuthContext } from "../../context/AuthContext.jsx";
-import Swal from "sweetalert2";
+import { useModernAlert } from "../../hooks/useModernAlert.jsx";
 import "../../styles/header.css";
 import logger from "../../utils/logger.js";
 
@@ -12,6 +12,7 @@ function generateNonce() {
 
 const LoginWithGoogle = () => {
   const { googleLogin, closeAuthModal } = useContext(AuthContext);
+  const { alert, error } = useModernAlert();
 
   useEffect(() => {
     const nonce = generateNonce();
@@ -35,15 +36,14 @@ const LoginWithGoogle = () => {
               if (result.success) {
                 closeAuthModal();
               } else {
-                Swal.fire(
+                error(
                   "Error",
-                  result.error || "No se pudo iniciar sesión con Google.",
-                  "error"
+                  result.error || "No se pudo iniciar sesión con Google."
                 );
               }
             } catch (error) {
               logger.error("Error en el callback de Google:", error);
-              Swal.fire("Error", "Fallo la autenticación con Google.", "error");
+              error("Error", "Fallo la autenticación con Google.");
             }
           },
           ux_mode: "popup",
@@ -59,13 +59,13 @@ const LoginWithGoogle = () => {
         );
       } catch (err) {
         logger.error("❌ Error inicializando Google Sign-In:", err.message);
-        Swal.fire("Error", "No se pudo inicializar Google Sign-In", "error");
+        error("Error", "No se pudo inicializar Google Sign-In");
       }
     };
 
     script.onerror = () => {
       logger.error("❌ Error al cargar el script de Google");
-      Swal.fire("Error", "No se pudo cargar el script de Google", "error");
+      error("Error", "No se pudo cargar el script de Google");
     };
 
     return () => {
@@ -123,6 +123,7 @@ const LoginWithGoogle = () => {
         />
       </svg>
       <span>Iniciar Sesión con Google</span>
+      {alert}
     </button>
   );
 };

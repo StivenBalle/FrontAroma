@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import Swal from "sweetalert2";
 import { useAuth } from "../context/AuthContext";
 import logoCafe from "../assets/LogoCafe.png";
 import bolsaCafe from "../assets/Bolsa_café.png";
 import TestimonialSection from "../components/TestimonialSection.jsx";
+import { useModernAlert } from "../hooks/useModernAlert.jsx";
 import HeroSection from "../components/HeroSection.jsx";
 import tostado from "../assets/Tostado.jpeg";
 import logger from "../utils/logger";
@@ -17,7 +17,6 @@ import {
 import "../App.css";
 import { Link } from "react-router-dom";
 import {
-  Bean,
   Coffee,
   Egg,
   FileText,
@@ -34,8 +33,9 @@ function App() {
   const [prices, setPrices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [stripe, setStripe] = useState(null);
+  const { alert, confirm, success, error } = useModernAlert();
 
-  // 🔹 Cargar Stripe y productos
+  // Cargar Stripe y productos
   useEffect(() => {
     async function initApp() {
       setLoading(true);
@@ -45,16 +45,12 @@ function App() {
         setStripe(stripeInstance);
 
         const data = await getProducts();
-        logger.log(
-          "✅ Productos obtenidos:",
-          data.products.length,
-          "productos"
-        );
+        logger.log("Productos obtenidos:", data.products.length);
         setProducts(data.products);
         setPrices(data.prices);
       } catch (err) {
         logger.error("❌ Error inicializando:", err.message);
-        Swal.fire("Error", "No se pudieron cargar los productos", "error");
+        error("Error", "No se pudieron cargar los productos");
       } finally {
         setLoading(false);
       }
@@ -70,7 +66,7 @@ function App() {
     }
   }, []);
 
-  // 🔹 Iniciar checkout
+  // Iniciar checkout
   const handleCheckout = async (priceId) => {
     try {
       const profile = await getProfile();
@@ -82,43 +78,50 @@ function App() {
       if (!addressData.address) missingFields.push("dirección de envío");
 
       if (missingFields.length > 0) {
-        Swal.fire({
-          icon: "warning",
-          title: "Completa tu perfil",
-          html: `
-          <p>Antes de realizar una compra, debes completar tu perfil:</p>
-          <ul style="text-align:left; margin:10px 0 0 20px;">
-            ${missingFields.map((f) => `<li>${f}</li>`).join("")}
-          </ul>
-        `,
-          confirmButtonText: "Ir al perfil",
-          confirmButtonColor: "#4a2c2a",
-        }).then((result) => {
-          if (result.isConfirmed) {
-            window.location.href = "/profile";
-          }
+        const missingList = (
+          <div>
+            <p>Antes de realizar una compra, debes completar tu perfil:</p>
+            <ul style={{ textAlign: "left", margin: "10px 0 0 20px" }}>
+              {missingFields.map((f, idx) => (
+                <li key={idx}>{f}</li>
+              ))}
+            </ul>
+          </div>
+        );
+
+        const result = await confirm("Completa tu perfil", missingList, {
+          okText: "Ir al perfil",
         });
+
+        if (result.isConfirmed) {
+          window.location.href = "/profile";
+        }
+
         return;
       }
       const session = await createCheckout(priceId);
       window.location.href = session.url;
     } catch (err) {
       if (err.status === 401) {
-        Swal.fire({
-          icon: "warning",
-          title: "Inicia sesión",
-          text: "Debes iniciar sesión para comprar.",
-          confirmButtonText: "Iniciar sesión",
-        }).then(() => openAuthModal());
+        const result = await confirm(
+          "Inicia sesión",
+          "Debes iniciar sesión para comprar.",
+          { okText: "Iniciar sesión" }
+        );
+
+        if (result.isConfirmed) {
+          openAuthModal();
+        }
+
         return;
       }
 
       logger.error("❌ Error Stripe:", err.message);
-      Swal.fire("Error", "No se pudo iniciar el pago", "error");
+      error("Error", "No se pudo iniciar el pago");
     }
   };
 
-  // 🔹 Polling para nuevos productos
+  // Polling para nuevos productos
   useEffect(() => {
     let lastProductCount = 0;
 
@@ -135,18 +138,15 @@ function App() {
           }).length;
 
           if (currentActiveCount > lastProductCount && lastProductCount > 0) {
-            Swal.fire({
-              icon: "info",
-              title: "¡Nuevos productos disponibles!",
-              text: "¿Deseas recargar la página para verlos?",
-              showCancelButton: true,
-              confirmButtonText: "Recargar",
-              cancelButtonText: "Cancelar",
-            }).then((result) => {
-              if (result.isConfirmed) {
-                window.location.reload();
-              }
-            });
+            const result = await confirm(
+              "¡Nuevos productos disponibles!",
+              "¿Deseas recargar la página para verlos?",
+              { okText: "Recargar", cancelText: "Cancelar" }
+            );
+
+            if (result.isConfirmed) {
+              window.location.reload();
+            }
           }
           lastProductCount = currentActiveCount;
         } catch (err) {
@@ -162,7 +162,7 @@ function App() {
     }
   }, [loading]);
 
-  // 🔹 Filtrar productos y precios activos
+  // Filtrar productos y precios activos
   const activePrices = prices.filter((price) => {
     const product = products.find((p) => p.id === price.product);
     return price.active && product?.active;
@@ -497,7 +497,7 @@ function App() {
           </div>
         </div>
       </section>
-
+      {alert}
       <TestimonialSection />
     </>
   );

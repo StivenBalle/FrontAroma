@@ -21,7 +21,7 @@ import { usePermissions } from "../../hooks/usePermissions.jsx";
 import LoadingScreen from "../../components/LoadingScreen.jsx";
 import LockUserModal from "../../components/LockUserModal.jsx";
 import RestrictedButton from "../../components/RestrictedButton.jsx";
-import Swal from "sweetalert2";
+import { useModernAlert } from "../../hooks/useModernAlert.jsx";
 import {
   getSecurityUsers,
   unlockUserAccount,
@@ -29,6 +29,7 @@ import {
   resetUserAttempts,
 } from "../../utils/api.js";
 import "../../styles/AdminSecurity.css";
+import logger from "../../utils/logger.js";
 
 const AdminSecurityPanel = () => {
   const navigate = useNavigate();
@@ -43,6 +44,7 @@ const AdminSecurityPanel = () => {
   const [pagination, setPagination] = useState(null);
   const [lockModalOpen, setLockModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
+  const { alert, confirm, success, error } = useModernAlert();
 
   const loadData = useCallback(
     async (isSearch = false) => {
@@ -63,10 +65,10 @@ const AdminSecurityPanel = () => {
         setStats(data.stats || {});
         setPagination(data.pagination || { page: 1, totalPages: 1 });
       } catch (err) {
-        console.error("Error cargando usuarios:", err);
+        logger.error("Error cargando usuarios:", err);
         setUsers([]);
         setStats({});
-        Swal.fire("Error", "No se pudieron cargar los usuarios", "error");
+        error("Error", "No se pudieron cargar los usuarios");
       } finally {
         const elapsed = Date.now() - startTime;
         const remaining = MIN_LOAD_TIME - elapsed;
@@ -97,14 +99,15 @@ const AdminSecurityPanel = () => {
   const handleAction = async (action, id, name) => {
     try {
       await action(id);
-      Swal.fire(
+
+      await success(
         "Éxito",
-        `Acción realizada en ${name || "el usuario"}`,
-        "success"
+        `Se resetearon los reintentos a ${name || "el usuario"}`
       );
+
       loadData();
     } catch (err) {
-      Swal.fire("Error", "No se pudo completar la acción", "error");
+      error("Error", "No se pudo completar la acción");
     }
   };
 
@@ -134,47 +137,52 @@ const AdminSecurityPanel = () => {
         ? "permanentemente"
         : `temporalmente por ${lockData.duration} minutos`;
 
-      await Swal.fire({
-        icon: "success",
-        title: "Usuario bloqueado",
-        html: `
-          <p><strong>${selectedUser.name}</strong> ha sido bloqueado ${lockTypeText}.</p>
-          <p style="margin-top: 10px; color: #666;">
-            Será desconectado automáticamente en su próxima acción.
-          </p>
-        `,
-        confirmButtonText: "Entendido",
-      });
+      await success(
+        "Usuario bloqueado",
+        `
+        <p style="color: white;"><strong>${selectedUser.name}</strong> ha sido bloqueado ${lockTypeText}.</p>
+        <p style="margin-top: 10px; color: #666;">
+          Será desconectado automáticamente en su próxima acción.
+        </p>
+      `
+      );
 
       loadData();
     } catch (err) {
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: "No se pudo bloquear al usuario. Intenta nuevamente.",
-      });
+      error("Error", "No se pudo bloquear al usuario. Intenta nuevamente.");
     }
   };
 
   // Desbloquear usuario con confirmación
   const handleUnlockUser = async (user) => {
-    const result = await Swal.fire({
-      title: `¿Desbloquear a ${user.name}?`,
-      html: `
-        <p>El usuario podrá acceder inmediatamente a su cuenta.</p>
-        <p style="margin-top: 10px; color: #666;">
-          Los intentos de login fallidos serán reseteados a 0.
-        </p>
-      `,
-      icon: "question",
-      showCancelButton: true,
-      confirmButtonText: "Sí, desbloquear",
-      cancelButtonText: "Cancelar",
-      confirmButtonColor: "#10b981",
-    });
+    const result = await confirm(
+      `¿Desbloquear a ${user.name}?`,
+      `
+      <p style="color: white;">El usuario podrá acceder inmediatamente a su cuenta.</p>
+      <p style="margin-top: 10px; color: #666;">
+        Los intentos de login fallidos serán reseteados a 0.
+      </p>
+    `
+    );
 
     if (result.isConfirmed) {
-      await handleAction(() => unlockUserAccount(user.id), user.id, user.name);
+      try {
+        await unlockUserAccount(user.id);
+
+        await success(
+          "Usuario desbloqueado",
+          `
+          <p style="color: white;"><strong>${user.name}</strong> ahora puede acceder normalmente.</p>
+          <p style="margin-top: 10px; color: #666;">
+            Intentos fallidos reiniciados.
+          </p>
+        `
+        );
+
+        loadData();
+      } catch (err) {
+        error("Error", "No se pudo desbloquear al usuario");
+      }
     }
   };
 
@@ -774,6 +782,7 @@ const AdminSecurityPanel = () => {
           </button>
         </div>
       )}
+      {alert}
     </div>
   );
 };

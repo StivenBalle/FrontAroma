@@ -8,7 +8,7 @@ import UserDetailsModal from "../../components/UserDetails.jsx";
 import Cafetera from "../../components/Cafetera.jsx";
 import { getUsers } from "../../utils/api.js";
 import usePermissions from "../../hooks/usePermissions.jsx";
-import Swal from "sweetalert2";
+import { useModernAlert } from "../../hooks/useModernAlert.jsx";
 import "../../App.css";
 import {
   ArrowBigLeft,
@@ -32,6 +32,7 @@ const SearchUsersPageInner = () => {
   const showLoading = useMinimumLoadingTime(loading, 1000);
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
+  const { alert, error } = useModernAlert();
   const pageSize = 20;
 
   useEffect(() => {
@@ -41,7 +42,7 @@ const SearchUsersPageInner = () => {
         const data = await getUsers("");
         setUsers(data.users || []);
       } catch (err) {
-        Swal.fire("Error", "No se pudieron cargar los usuarios", "error");
+        error("Error", "No se pudieron cargar los usuarios");
       } finally {
         setLoading(false);
       }
@@ -57,7 +58,7 @@ const SearchUsersPageInner = () => {
       const data = await getUsers(searchTerm);
       setUsers(data.users || []);
     } catch (err) {
-      Swal.fire("Error", "No se pudieron buscar usuarios", "error");
+      error("Error", "No se pudieron buscar usuarios");
     } finally {
       setTimeout(() => setSearched(false), 1000);
     }
@@ -71,7 +72,7 @@ const SearchUsersPageInner = () => {
       const data = await getUsers("");
       setUsers(data.users || []);
     } catch (err) {
-      Swal.fire("Error", "No se pudieron cargar los usuarios", "error");
+      error("Error", "No se pudieron cargar los usuarios");
     } finally {
       setLoading(false);
     }
@@ -383,6 +384,7 @@ const SearchUsersPageInner = () => {
       {showDetailsModal && (
         <UserDetailsModal userId={selectedUserId} onClose={handleCloseModal} />
       )}
+      {alert}
     </div>
   );
 };

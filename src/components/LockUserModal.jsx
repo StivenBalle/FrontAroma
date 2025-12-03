@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { X, Lock, Clock, AlertTriangle } from "lucide-react";
 import "../styles/AdminSecurity.css";
+import logger from "../utils/logger";
 
 const LockUserModal = ({ isOpen, onClose, onConfirm, userName }) => {
   const [lockType, setLockType] = useState("temporary");
@@ -41,7 +42,7 @@ const LockUserModal = ({ isOpen, onClose, onConfirm, userName }) => {
       setReason("");
       setErrors({});
     } catch (error) {
-      console.error("Error al bloquear:", error);
+      logger.error("Error al bloquear:", error);
     } finally {
       setIsSubmitting(false);
     }

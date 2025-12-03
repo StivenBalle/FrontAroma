@@ -8,7 +8,7 @@ import HeaderTitle from "../../components/HeaderTitle.jsx";
 import LoadingScreen from "../../components/LoadingScreen";
 import { getUsers, deleteUser } from "../../utils/api.js";
 import Cafetera from "../../components/Cafetera.jsx";
-import Swal from "sweetalert2";
+import { useModernAlert } from "../../hooks/useModernAlert.jsx";
 import "../../App.css";
 import {
   ArrowBigLeft,
@@ -30,6 +30,7 @@ const DeleteUsersPage = () => {
   const [searched, setSearched] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const showLoading = useMinimumLoadingTime(loading, 1000);
+  const { alert, confirm, success, error } = useModernAlert();
   const permissions = usePermissions();
   const pageSize = 20;
 
@@ -40,7 +41,7 @@ const DeleteUsersPage = () => {
         const data = await getUsers("");
         setUsers(data.users || []);
       } catch (err) {
-        Swal.fire("Error", "No se pudieron cargar los usuarios", "error");
+        error("Error", "No se pudieron cargar los usuarios");
       } finally {
         setLoading(false);
       }
@@ -55,31 +56,31 @@ const DeleteUsersPage = () => {
       const data = await getUsers(searchTerm);
       setUsers(data.users || []);
     } catch (err) {
-      Swal.fire("Error", "No se pudieron buscar usuarios", "error");
+      error("Error", "No se pudieron buscar usuarios");
     } finally {
       setTimeout(() => setSearched(false), 1000);
     }
   };
 
   const handleDelete = async (userId) => {
-    Swal.fire({
-      icon: "warning",
-      title: "¿Eliminar usuario?",
-      text: "Esta acción no se puede deshacer.",
-      showCancelButton: true,
-      confirmButtonText: "Sí, eliminar",
-      cancelButtonText: "Cancelar",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          await deleteUser(userId);
-          Swal.fire("Éxito", "Usuario eliminado", "success");
-          setUsers(users.filter((u) => u.id !== userId));
-        } catch (err) {
-          Swal.fire("Error", "No se pudo eliminar el usuario", "error");
-        }
+    const result = await confirm(
+      "¿Eliminar usuario?",
+      "Esta acción no se puede deshacer.",
+      {
+        okText: "Sí, eliminar",
+        cancelText: "Cancelar",
       }
-    });
+    );
+
+    if (!result.isConfirmed) return;
+
+    try {
+      await deleteUser(userId);
+      await success("Éxito", "Usuario eliminado");
+      setUsers(users.filter((u) => u.id !== userId));
+    } catch (err) {
+      error("Error", "No se pudo eliminar el usuario");
+    }
   };
 
   const handleReset = async () => {
@@ -89,7 +90,7 @@ const DeleteUsersPage = () => {
       const data = await getUsers("");
       setUsers(data.users || []);
     } catch (err) {
-      Swal.fire("Error", "No se pudieron cargar los usuarios", "error");
+      error("Error", "No se pudieron cargar los usuarios");
     } finally {
       setLoading(false);
     }
@@ -338,7 +339,7 @@ const DeleteUsersPage = () => {
                 <div className="user-actions">
                   <RestrictedButton
                     className="btn-delete-user"
-                    requiredPermission="canManageUsers" // o el permiso que uses para borrar
+                    requiredPermission="canManageUsers"
                     tooltipMessage="Solo administradores pueden eliminar usuarios"
                     onClick={() => handleDelete(user.id)}
                   >
@@ -382,6 +383,7 @@ const DeleteUsersPage = () => {
           )}
         </>
       )}
+      {alert}
     </div>
   );
 };

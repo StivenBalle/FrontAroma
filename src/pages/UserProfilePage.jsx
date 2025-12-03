@@ -7,7 +7,7 @@ import UserTrackingModal from "../components/UserTrackingModal.jsx";
 import HeaderTitle from "../components/HeaderTitle.jsx";
 import LoadingScreen from "../components/LoadingScreen";
 import logger from "../utils/logger";
-import Swal from "sweetalert2";
+import { useModernAlert } from "../hooks/useModernAlert.jsx";
 import {
   getHistorial,
   getShippingAddress,
@@ -78,6 +78,7 @@ const UserProfilePage = () => {
   const showLoading = useMinimumLoadingTime(loading, 1000);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [showTrackingModal, setShowTrackingModal] = useState(false);
+  const { alert, confirm, success, error } = useModernAlert();
   const pageSize = 10;
 
   const handleViewTracking = (order) => {
@@ -148,24 +149,20 @@ const UserProfilePage = () => {
     e.preventDefault();
     try {
       const updated = await updateUserProfile(formData);
+
       setProfile({
         ...profile,
         name: updated.name,
         email: updated.email,
         phone: updated.phone_number,
       });
+
       setIsEditingProfile(false);
-      Swal.fire({
-        icon: "success",
-        title: "¡Éxito!",
-        text: "Perfil actualizado correctamente",
-        timer: 1500,
-        showConfirmButton: true,
-      }).then(() => {
-        window.location.reload();
-      });
+
+      await success("¡Éxito!", "Perfil actualizado correctamente");
+      window.location.reload();
     } catch (err) {
-      Swal.fire("Error", "No se pudo actualizar", "error");
+      error("Error", "No se pudo actualizar");
     }
   };
 
@@ -179,30 +176,29 @@ const UserProfilePage = () => {
       const apiCall = shippingAddress
         ? updateShippingAddress
         : createShippingAddress;
+
       const response = await apiCall(addressForm);
+
       setShippingAddress(response.address);
       setIsEditingAddress(false);
+
       const updatedAddress = await getShippingAddress();
       setShippingAddress(updatedAddress.address || null);
-      Swal.fire({
-        icon: "success",
-        title: "¡Éxito!",
-        text: shippingAddress
+
+      await success(
+        "¡Éxito!",
+        shippingAddress
           ? "Dirección actualizada correctamente"
-          : "Dirección creada correctamente",
-        timer: 1500,
-        showConfirmButton: true,
-      }).then(() => {
-        window.location.reload();
-      });
+          : "Dirección creada correctamente"
+      );
+
+      window.location.reload();
     } catch (err) {
-      logger.error("❌ Error saving address:", err.message);
-      Swal.fire(
+      error(
         "Error",
         shippingAddress
           ? "No se pudo actualizar la dirección"
-          : "No se pudo crear la dirección",
-        "error"
+          : "No se pudo crear la dirección"
       );
     }
   };
@@ -244,30 +240,20 @@ const UserProfilePage = () => {
   const handlePasswordSubmit = async (e) => {
     e.preventDefault();
 
-    // Validaciones
     if (passwordForm.newPassword !== passwordForm.confirmPassword) {
-      return Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: "Las contraseñas nuevas no coinciden",
-      });
+      return error("Error", "Las contraseñas nuevas no coinciden");
     }
 
     const passwordError = validatePassword(passwordForm.newPassword);
     if (passwordError) {
-      return Swal.fire({
-        icon: "error",
-        title: "Contraseña inválida",
-        text: passwordError,
-      });
+      return error("Contraseña inválida", passwordError);
     }
 
     if (passwordForm.currentPassword === passwordForm.newPassword) {
-      return Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: "La nueva contraseña debe ser diferente a la actual",
-      });
+      return error(
+        "Error",
+        "La nueva contraseña debe ser diferente a la actual"
+      );
     }
 
     try {
@@ -281,100 +267,80 @@ const UserProfilePage = () => {
         newPassword: "",
         confirmPassword: "",
       });
+
       setIsChangingPassword(false);
 
-      Swal.fire({
-        icon: "success",
-        title: "¡Contraseña actualizada!",
-        text: "Tu contraseña ha sido cambiada exitosamente",
-        timer: 2000,
-        showConfirmButton: true,
-      });
+      await success(
+        "¡Contraseña actualizada!",
+        "Tu contraseña ha sido cambiada exitosamente"
+      );
     } catch (err) {
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text:
-          err.response?.data?.message || "No se pudo actualizar la contraseña",
-      });
+      error(
+        "Error",
+        err.response?.data?.message || "No se pudo actualizar la contraseña"
+      );
     }
   };
 
   const handleImageChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
+
     if (!["image/jpeg", "image/png"].includes(file.type)) {
-      return Swal.fire("Error", "Solo JPEG o PNG", "error");
+      return error("Error", "Solo se permiten imágenes JPEG o PNG");
     }
+
     if (file.size > 5 * 1024 * 1024) {
-      return Swal.fire("Error", "Imagen menor a 5MB", "error");
+      return error("Error", "La imagen debe ser menor a 5MB");
     }
+
     try {
       const formDataUpload = new FormData();
       formDataUpload.append("profileImage", file);
+
       const response = await uploadProfileImage(formDataUpload);
-      setProfile({ ...profile, image: getImageUrl(response.image) });
-      Swal.fire({
-        icon: "success",
-        title: "¡Éxito!",
-        text: "Imagen de perfil cargada correctamente",
-        timer: 1500,
-        showConfirmButton: true,
-      }).then(() => {
-        window.location.reload();
+
+      setProfile({
+        ...profile,
+        image: getImageUrl(response.image),
       });
+
+      await success("¡Éxito!", "Imagen de perfil cargada correctamente");
+      window.location.reload();
     } catch (err) {
-      Swal.fire("Error", "No se pudo cargar la imagen", "error");
+      error("Error", "No se pudo cargar la imagen");
     }
   };
 
-  const handleImageDelete = () => {
-    Swal.fire({
-      icon: "warning",
-      title: "¿Eliminar imagen de perfil?",
-      text: "¿Estás seguro de que quieres eliminar tu imagen de perfil?",
-      showCancelButton: true,
-      confirmButtonText: "Sí, eliminar",
-      cancelButtonText: "Cancelar",
-      confirmButtonColor: "#4a2c2a",
-      cancelButtonColor: "#d33",
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          await deleteProfileImage();
-          setProfile({ ...profile, image: null });
-          Swal.fire("Éxito", "Imagen eliminada", "success").then(() => {
-            window.location.reload();
-          });
-        } catch (err) {
-          Swal.fire("Error", "No se pudo eliminar", "error");
-        }
+  const handleImageDelete = async () => {
+    const result = await confirm(
+      "¿Eliminar imagen de perfil?",
+      "¿Estás seguro de que quieres eliminar tu imagen?"
+    );
+
+    if (result.isConfirmed) {
+      try {
+        await deleteProfileImage();
+        setProfile({ ...profile, image: null });
+        await success("Éxito", "Imagen eliminada");
+        window.location.reload();
+      } catch (err) {
+        error("Error", "No se pudo eliminar la imagen");
       }
-    });
+    }
   };
 
-  const handleLogout = () => {
-    Swal.fire({
-      icon: "question",
-      title: "¿Cerrar sesión?",
-      text: "¿Estás seguro de que quieres cerrar tu sesión?",
-      showCancelButton: true,
-      confirmButtonText: "Sí, cerrar",
-      cancelButtonText: "Cancelar",
-      confirmButtonColor: "#4a2c2a",
-      cancelButtonColor: "#d33",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        logout();
-        Swal.fire(
-          "✅ Sesión cerrada",
-          "Has cerrado sesión exitosamente",
-          "success"
-        ).then(() => {
-          window.location.href = "/";
-        });
-      }
-    });
+  const handleLogout = async () => {
+    const result = await confirm(
+      "¿Cerrar sesión?",
+      "¿Estás seguro de que quieres cerrar tu sesión?"
+    );
+
+    if (result.isConfirmed) {
+      logout();
+      await success("✅ Sesión cerrada", "Has cerrado sesión exitosamente");
+      window.location.href = "/";
+    }
   };
 
   const totalPages = Math.ceil(orders.length / pageSize);
@@ -512,7 +478,8 @@ const UserProfilePage = () => {
                 <h2>Editar perfil</h2>
                 <button
                   onClick={() => setIsEditingProfile(false)}
-                  className="modal-close"
+                  className="close-modal-btn"
+                  aria-label="Cerrar modal"
                 >
                   <X strokeWidth="2.5px" />
                 </button>
@@ -575,7 +542,7 @@ const UserProfilePage = () => {
                 </h2>
                 <button
                   onClick={() => setIsEditingAddress(false)}
-                  className="modal-close"
+                  className="close-modal-btn"
                 >
                   <X strokeWidth="2.5px" />
                 </button>
@@ -666,7 +633,7 @@ const UserProfilePage = () => {
                       confirmPassword: "",
                     });
                   }}
-                  className="modal-close"
+                  className="close-modal-btn"
                 >
                   <X strokeWidth="2.5px" />
                 </button>
@@ -1056,6 +1023,7 @@ const UserProfilePage = () => {
           isAdmin={false}
         />
       )}
+      {alert}
     </div>
   );
 };

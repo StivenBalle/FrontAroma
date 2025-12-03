@@ -3,6 +3,9 @@ import { useNavigate } from "react-router-dom";
 import withAdminGuard from "../../hooks/withAdminGuard.jsx";
 import withSessionGuard from "../../hooks/withSessionGuard.jsx";
 import "../../App.css";
+import usePermissions from "../../hooks/usePermissions.jsx";
+import HeaderTitle from "../../components/HeaderTitle.jsx";
+import { Card, Row, Col, Typography, Alert } from "antd";
 import {
   ChartColumnBig,
   CircleUser,
@@ -14,8 +17,8 @@ import {
   UserStar,
   Lock,
 } from "lucide-react";
-import usePermissions from "../../hooks/usePermissions.jsx";
-import HeaderTitle from "../../components/HeaderTitle.jsx";
+
+const { Title, Text } = Typography;
 
 const AdminOrdersInner = () => {
   const navigate = useNavigate();
@@ -25,6 +28,57 @@ const AdminOrdersInner = () => {
     navigate(path);
   };
 
+  const cards = [
+    {
+      title: "Buscar Compras",
+      desc: "Ver y filtrar historial de órdenes",
+      path: "/admin/orders",
+      icon: <Search size={40} strokeWidth={2.5} />,
+    },
+    {
+      title: "Buscar Usuario",
+      desc: "Localizar usuarios por nombre o email",
+      path: "/admin/users/search",
+      icon: <UserSearch size={40} strokeWidth={2.5} />,
+    },
+    {
+      title: "Borrar Usuario",
+      desc: "Eliminar cuentas de usuarios",
+      path: "/admin/users/delete",
+      icon: <Trash2 size={40} strokeWidth={2.5} />,
+    },
+    {
+      title: "Cambiar Rol de Usuario",
+      desc: "Promover o degradar a admin/user",
+      path: "/admin/users/role",
+      icon: <CircleUser size={40} strokeWidth={2.5} />,
+    },
+    {
+      title: "Estadísticas",
+      desc: "Ventas, productos y usuarios nuevos",
+      path: "/admin/stats",
+      icon: <ChartColumnBig size={40} strokeWidth={2.5} />,
+    },
+    {
+      title: "Reseñas",
+      desc: "Revisa las reseñas que han dejado tus clientes",
+      path: "/admin/reviews",
+      icon: <UserStar size={40} strokeWidth={2.5} />,
+    },
+    {
+      title: "Administrar Cuentas",
+      desc: "Bloquea, desbloquea y monitorea las cuentas",
+      path: "/admin/security-accounts",
+      icon: <UserLock size={40} strokeWidth={2.5} />,
+    },
+    {
+      title: "Revisión Logs",
+      desc: "Monitorea los logs y eventos de tus clientes",
+      path: "/admin/logs-viewer",
+      icon: <Logs size={40} strokeWidth={2.5} />,
+    },
+  ];
+
   return (
     <div className="admin-dashboard">
       {permissions.isViewer && (
@@ -33,109 +87,47 @@ const AdminOrdersInner = () => {
           <span>Modo de solo lectura - No puedes realizar modificaciones</span>
         </div>
       )}
+
       <HeaderTitle
         title="Panel de Administración"
         subtitle="Administra la página y controla los usuarios"
         backPath="/"
-        backText="Volvel al inicio"
+        backText="Volver al inicio"
       />
-      <div className="admin-cards-container">
-        {/* Card 1: Buscar Compras */}
-        <button
-          className="admin-card-button stats-card"
-          onClick={() => handleNavigate("/admin/orders")}
-        >
-          <div className="card-icon">
-            <Search strokeWidth="2.5px" size={40} />
-          </div>
-          <h2>Buscar Compras</h2>
-          <p>Ver y filtrar historial de órdenes</p>
-        </button>
 
-        {/* Card 2: Buscar Usuario */}
-        <button
-          className="admin-card-button stats-card"
-          onClick={() => handleNavigate("/admin/users/search")}
-        >
-          <div className="card-icon">
-            <UserSearch strokeWidth="2.5px" size={40} />
-          </div>
-          <h2>Buscar Usuario</h2>
-          <p>Localizar usuarios por nombre o email</p>
-        </button>
+      <Row gutter={[24, 24]} style={{ marginTop: "20px" }}>
+        {cards.map((card, index) => (
+          <Col xs={24} sm={12} md={12} lg={8} xl={6} key={index}>
+            <Card
+              hoverable
+              className="admin-card-button stats-card"
+              onClick={() => handleNavigate(card.path)}
+              style={{
+                borderRadius: "14px",
+                padding: "10px",
+                textAlign: "center",
+                cursor: "pointer",
+                maxHeight: "180px",
+              }}
+            >
+              <div style={{ marginBottom: "10px" }}>{card.icon}</div>
 
-        {/* Card 3: Borrar Usuario */}
-        <button
-          className="admin-card-button stats-card"
-          onClick={() => handleNavigate("/admin/users/delete")}
-        >
-          <div className="card-icon">
-            <Trash2 strokeWidth="2.5px" size={40} />
-          </div>
-          <h2>Borrar Usuario</h2>
-          <p>Eliminar cuentas de usuarios</p>
-        </button>
+              <Title
+                level={4}
+                style={{
+                  margin: 0,
+                  fontFamily: "Georgia, serif",
+                  color: "#4a2c2a",
+                }}
+              >
+                {card.title}
+              </Title>
 
-        {/* Card 4: Cambiar Rol */}
-        <button
-          className="admin-card-button stats-card"
-          onClick={() => handleNavigate("/admin/users/role")}
-        >
-          <div className="card-icon">
-            <CircleUser strokeWidth="2.5px" size={40} />
-          </div>
-          <h2>Cambiar Rol de Usuario</h2>
-          <p>Promover o degradar a admin/user</p>
-        </button>
-
-        {/* Card 5: Estadísticas */}
-        <button
-          className="admin-card-button stats-card"
-          onClick={() => handleNavigate("/admin/stats")}
-        >
-          <div className="card-icon">
-            <ChartColumnBig strokeWidth="2.5px" size={40} />
-          </div>
-          <h2>Estadísticas</h2>
-          <p>Ventas, productos y usuarios nuevos</p>
-        </button>
-
-        {/* Card 6: Reseñas */}
-        <button
-          className="admin-card-button stats-card"
-          onClick={() => handleNavigate("/admin/reviews")}
-        >
-          <div className="card-icon">
-            <UserStar strokeWidth="2.5px" size={40} />
-          </div>
-          <h2>Reseñas</h2>
-          <p>Revisa las reseñas que han dejado tus clientes</p>
-        </button>
-
-        {/* Card 7: Administrar Cuentas */}
-        <button
-          className="admin-card-button stats-card"
-          onClick={() => handleNavigate("/admin/security-accounts")}
-        >
-          <div className="card-icon">
-            <UserLock strokeWidth="2.5px" size={40} />
-          </div>
-          <h2>Administrar Cuentas</h2>
-          <p>Bloquea, desbloquea y monitorea las cuentas tus clientes.</p>
-        </button>
-
-        {/* Card 8: Administrar Logs */}
-        <button
-          className="admin-card-button stats-card"
-          onClick={() => handleNavigate("/admin/logs-viewer")}
-        >
-          <div className="card-icon">
-            <Logs strokeWidth="2.5px" size={40} />
-          </div>
-          <h2>Revisión Logs</h2>
-          <p>Monitorea los logs y los eventos de tus clientes</p>
-        </button>
-      </div>
+              <Text type="secondary">{card.desc}</Text>
+            </Card>
+          </Col>
+        ))}
+      </Row>
     </div>
   );
 };

@@ -5,12 +5,12 @@ import { useMinimumLoadingTime } from "../../hooks/useMinimumLoading.jsx";
 import withSessionGuard from "../../hooks/withSessionGuard.jsx";
 import HeaderTitle from "../../components/HeaderTitle.jsx";
 import Cafetera from "../../components/Cafetera.jsx";
-import Swal from "sweetalert2";
 import LoadingScreen from "../../components/LoadingScreen.jsx";
-import "../../App.css";
+import { useModernAlert } from "../../hooks/useModernAlert.jsx";
 import { Mail, Search, ShieldUser, User, Users, Lock, Eye } from "lucide-react";
 import usePermissions from "../../hooks/usePermissions.jsx";
 import RestrictedButton from "../../components/RestrictedButton.jsx";
+import "../../App.css";
 
 const ChangeRolePageInner = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -19,6 +19,7 @@ const ChangeRolePageInner = () => {
   const [searched, setSearched] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const showLoading = useMinimumLoadingTime(loading, 1000);
+  const { alert, confirm, success, error } = useModernAlert();
   const permissions = usePermissions();
   const pageSize = 20;
 
@@ -29,7 +30,7 @@ const ChangeRolePageInner = () => {
         const data = await getUsers("");
         setUsers(data.users || []);
       } catch (err) {
-        Swal.fire("Error", "No se pudieron cargar los usuarios", "error");
+        error("Error", "No se pudieron cargar los usuarios");
       } finally {
         setLoading(false);
       }
@@ -44,55 +45,56 @@ const ChangeRolePageInner = () => {
       const data = await getUsers(searchTerm);
       setUsers(data.users || []);
     } catch (err) {
-      Swal.fire("Error", "No se pudieron buscar usuarios", "error");
+      error("Error", "No se pudieron buscar usuarios");
     } finally {
       setTimeout(() => setSearched(false), 1000);
     }
   };
 
   const handleChangeRole = async (userId, currentRole) => {
-    const { value: selectedRole } = await Swal.fire({
-      title: "Cambiar Rol",
-      html: `
-      <label for="role-select" style="font-weight: 600">Selecciona un nuevo rol:</label>
-      <select id="role-select" class="swal2-select">
-        <option value="admin" ${
-          currentRole === "admin" ? "selected" : ""
-        }>Admin</option>
-        <option value="viewer" ${
-          currentRole === "viewer" ? "selected" : ""
-        }>Viewer</option>
-        <option value="user" ${
-          currentRole === "user" ? "selected" : ""
-        }>User</option>
-      </select>
-    `,
-      focusConfirm: false,
-      showCancelButton: true,
-      confirmButtonText: "Cambiar rol",
-      cancelButtonText: "Cancelar",
-      preConfirm: () => {
-        const selected = document.getElementById("role-select").value;
-        if (!selected) {
-          Swal.showValidationMessage("Debes seleccionar un rol");
-        }
-        return selected;
-      },
+    const html = `
+    <label style="font-weight: 600; display:block; margin-bottom:8px; color: white;">
+      Selecciona un nuevo rol:
+    </label>
+    <select id="role-select" style="
+      padding: 10px; 
+      width: 100%; 
+      border-radius: 8px; 
+      border: 1px solid #ccc;
+      font-size: 15px;
+    ">
+      <option value="admin" ${
+        currentRole === "admin" ? "selected" : ""
+      }>Admin</option>
+      <option value="viewer" ${
+        currentRole === "viewer" ? "selected" : ""
+      }>Viewer</option>
+      <option value="user" ${
+        currentRole === "user" ? "selected" : ""
+      }>User</option>
+    </select>
+  `;
+
+    const result = await confirm("Cambiar Rol", html, {
+      html: true,
+      okText: "Cambiar rol",
+      cancelText: "Cancelar",
     });
 
-    // ❌ Si canceló, no hacemos nada
-    if (!selectedRole || selectedRole === currentRole) return;
+    if (!result.isConfirmed) return;
+    const selectedRole = document.getElementById("role-select").value;
 
-    // ✔️ Aplicar cambio
+    if (!selectedRole || selectedRole === currentRole) return;
     try {
       await updateUserRole(userId, selectedRole);
-      Swal.fire("Éxito", `Rol cambiado a ${selectedRole}`, "success");
+
+      await success("Éxito", `Rol cambiado a ${selectedRole}`);
 
       setUsers((prev) =>
         prev.map((u) => (u.id === userId ? { ...u, role: selectedRole } : u))
       );
     } catch (err) {
-      Swal.fire("Error", "No se pudo cambiar el rol", "error");
+      error("Error", "No se pudo cambiar el rol");
     }
   };
 
@@ -104,7 +106,7 @@ const ChangeRolePageInner = () => {
       const data = await getUsers("");
       setUsers(data.users || []);
     } catch (err) {
-      Swal.fire("Error", "No se pudieron cargar los usuarios", "error");
+      error("Error", "No se pudieron cargar los usuarios");
     } finally {
       setLoading(false);
     }
@@ -416,6 +418,7 @@ const ChangeRolePageInner = () => {
           )}
         </>
       )}
+      {alert}
     </div>
   );
 };

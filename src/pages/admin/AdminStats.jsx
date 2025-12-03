@@ -21,6 +21,7 @@ import { useMinimumLoadingTime } from "../../hooks/useMinimumLoading.jsx";
 import LoadingScreen from "../../components/LoadingScreen.jsx";
 import withSessionGuard from "../../hooks/withSessionGuard.jsx";
 import usePermissions from "../../hooks/usePermissions.jsx";
+import { useModernAlert } from "../../hooks/useModernAlert.jsx";
 import "../../styles/AdminStats.css";
 import logger from "../../utils/logger.js";
 import {
@@ -41,6 +42,7 @@ const AdminStats = () => {
   const [newUsers, setNewUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const showLoading = useMinimumLoadingTime(loading, 1000);
+  const { alert, error } = useModernAlert();
   const permissions = usePermissions();
 
   useEffect(() => {
@@ -55,6 +57,7 @@ const AdminStats = () => {
         setTopProducts(productsRes || []);
         setNewUsers(usersRes || []);
       } catch (err) {
+        error("Error", "Error al obtener las estadísticas");
         logger.error("Error al obtener estadísticas:", err);
       } finally {
         setLoading(false);
@@ -336,6 +339,7 @@ const AdminStats = () => {
           </div>
         </div>
       </div>
+      {alert}
     </div>
   );
 };

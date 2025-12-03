@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import Swal from "sweetalert2";
 import { createReview, checkOrderReview } from "../utils/api.js";
-import "../App.css";
+import { useModernAlert } from "../hooks/useModernAlert.jsx";
 import logger from "../utils/logger.js";
-import { CircleCheck, CircleCheckBig, CircleX, Star, X } from "lucide-react";
+import { CircleCheck, CircleCheckBig, CircleX, X } from "lucide-react";
+import "../App.css";
 
 const OrderTrackingModal = ({
   order,
@@ -18,6 +18,7 @@ const OrderTrackingModal = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [reviewSubmitted, setReviewSubmitted] = useState(false);
   const [userReview, setUserReview] = useState(null);
+  const { alert, success, error } = useModernAlert();
 
   useEffect(() => {
     const handleEsc = (e) => {
@@ -118,18 +119,13 @@ const OrderTrackingModal = ({
   const handleSubmitReview = async (e) => {
     e.preventDefault();
     if (rating === 0) {
-      Swal.fire(
-        "Advertencia",
-        "Por favor selecciona una calificación",
-        "warning"
-      );
+      error("Advertencia", "Por favor selecciona una calificación");
       return;
     }
     if (comment.trim().length < 10) {
-      Swal.fire(
+      error(
         "Advertencia",
-        "Por favor escribe un comentario de al menos 10 caracteres",
-        "warning"
+        "Por favor escribe un comentario de al menos 10 caracteres"
       );
       return;
     }
@@ -141,12 +137,10 @@ const OrderTrackingModal = ({
         comment: comment.trim(),
       });
       if (response.success) {
-        Swal.fire({
-          icon: "success",
-          title: "¡Gracias por tu reseña!",
-          text: "Tu opinión nos ayuda a mejorar cada día.",
-          confirmButtonText: "Aceptar",
-        });
+        await success(
+          "¡Gracias por tu reseña!",
+          "Tu opinión nos ayuda a mejorar cada día."
+        );
 
         setReviewSubmitted(true);
         setShowReviewForm(false);
@@ -155,16 +149,15 @@ const OrderTrackingModal = ({
           onClose();
         }, 2000);
       } else {
-        Swal.fire("Error", "No se pudo enviar la reseña", "error");
+        error("Error", "No se pudo enviar la reseña");
         throw new Error(response.error || "Error al enviar reseña");
       }
     } catch (error) {
       logger.error("Error:", error);
-      Swal.fire({
-        icon: "error",
-        title: "Error al enviar reseña",
-        text: "Hubo un problema al enviar tu opinión. Intenta de nuevo.",
-      });
+      error(
+        "Error al enviar reseña",
+        "Hubo un problema al enviar tu opinión. Intenta de nuevo."
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -488,6 +481,7 @@ const OrderTrackingModal = ({
           </button>
         </div>
       </div>
+      {alert}
     </>
   );
 };

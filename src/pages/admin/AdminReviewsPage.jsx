@@ -5,8 +5,8 @@ import withSessionGuard from "../../hooks/withSessionGuard.jsx";
 import HeaderTitle from "../../components/HeaderTitle.jsx";
 import LoadingScreen from "../../components/LoadingScreen.jsx";
 import { useMinimumLoadingTime } from "../../hooks/useMinimumLoading.jsx";
+import { useModernAlert } from "../../hooks/useModernAlert.jsx";
 import usePermissions from "../../hooks/usePermissions.jsx";
-import Swal from "sweetalert2";
 import { getReviews, getAdminOrders } from "../../utils/api.js";
 import "../../App.css";
 import logger from "../../utils/logger.js";
@@ -38,6 +38,7 @@ const AdminReviewsPage = () => {
   const [showDetailModal, setShowDetailModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const showLoading = useMinimumLoadingTime(loading, 1000);
+  const { alert, error } = useModernAlert();
   const permissions = usePermissions();
   const pageSize = 12;
 
@@ -97,11 +98,7 @@ const AdminReviewsPage = () => {
       });
     } catch (err) {
       logger.error("Error al cargar reseñas:", err);
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: "No se pudieron cargar las reseñas",
-      });
+      error("Error", "No se pudieron cargar las reseñas");
     } finally {
       setLoading(false);
     }
@@ -591,6 +588,7 @@ const AdminReviewsPage = () => {
           </div>
         </div>
       )}
+      {alert}
     </div>
   );
 };

@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { useAuth } from "../../context/AuthContext.jsx";
-import Swal from "sweetalert2";
 import { register } from "../../utils/api.js";
 import "../../styles/header.css";
 import logger from "../../utils/logger.js";
 import { LockKeyhole, Mail, Phone, User } from "lucide-react";
 import LogoCafe from "../../assets/LogoCafe.png";
+import { useModernAlert } from "../../hooks/useModernAlert.jsx";
 
 const SignupForm = ({ switchToLogin }) => {
   const { closeAuthModal } = useAuth();
@@ -16,6 +16,7 @@ const SignupForm = ({ switchToLogin }) => {
     password: "",
   });
   const [errors, setErrors] = useState({});
+  const { alert, success, error } = useModernAlert();
 
   const validateForm = () => {
     const newErrors = {};
@@ -49,11 +50,7 @@ const SignupForm = ({ switchToLogin }) => {
     e.preventDefault();
 
     if (!validateForm()) {
-      Swal.fire(
-        "❌ Error",
-        "Por favor corrige los errores en el formulario",
-        "error"
-      );
+      error("❌ Error", "Por favor corrige los errores en el formulario");
       return;
     }
 
@@ -66,18 +63,10 @@ const SignupForm = ({ switchToLogin }) => {
       );
 
       if (data.message === "✅ Registro exitoso") {
-        await Swal.fire({
-          icon: "success",
-          title: "✅ Registro exitoso",
-          text: "Usuario creado",
-          timer: 1500,
-          showConfirmButton: false,
-        });
+        await success("✅ Registro exitoso", "Usuario creado exitosamente");
         switchToLogin();
         closeAuthModal();
-        setTimeout(() => {
-          window.location.reload();
-        }, 1500);
+        window.location.reload();
       } else {
         const serverMsg = data.error || data.message || "No se pudo registrar";
         if (/contraseña|carácter|mayúscula|minúscula|número/i.test(serverMsg)) {
@@ -87,7 +76,7 @@ const SignupForm = ({ switchToLogin }) => {
         ) {
           setErrors((prev) => ({ ...prev, email: serverMsg }));
         }
-        Swal.fire({ icon: "error", title: "❌ Error", text: serverMsg });
+        error("❌ Error", serverMsg);
       }
     } catch (err) {
       logger.error("❌ Error en registro:", err);
@@ -100,11 +89,7 @@ const SignupForm = ({ switchToLogin }) => {
         setErrors({});
       }
 
-      Swal.fire({
-        icon: "error",
-        title: "❌ Error",
-        text: serverMsg,
-      });
+      error("❌ Error", serverMsg);
     }
   };
 
@@ -212,6 +197,7 @@ const SignupForm = ({ switchToLogin }) => {
           Inicia Sesión
         </span>
       </p>
+      {alert}
     </form>
   );
 };
