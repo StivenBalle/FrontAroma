@@ -42,7 +42,7 @@ const OrdersPageInner = () => {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [showTrackingModal, setShowTrackingModal] = useState(false);
   const permissions = usePermissions();
-  const { alert, error } = useModernAlert();
+  const { alert, success, error } = useModernAlert();
   const pageSize = 10;
 
   useEffect(() => {
@@ -93,10 +93,43 @@ const OrdersPageInner = () => {
 
   const handleUpdateStatus = async (orderId, newStatus) => {
     try {
-      await updateOrderStatus(orderId, newStatus);
-      setSelectedOrder({ ...selectedOrder, status: newStatus });
-    } catch (error) {
-      logger.error("Error al actualizar estado:", error);
+      const res = await updateOrderStatus(orderId, newStatus);
+
+      if (res.success) {
+        setSelectedOrder({ ...selectedOrder, status: newStatus });
+        setOrders((prev) =>
+          prev.map((o) => (o.id === orderId ? { ...o, status: newStatus } : o))
+        );
+
+        setFilteredOrders((prev) =>
+          prev.map((o) => (o.id === orderId ? { ...o, status: newStatus } : o))
+        );
+        if (newStatus === "completado") {
+          success(
+            "Pedido completado",
+            "El pedido ha sido marcado como entregado correctamente."
+          );
+        }
+
+        if (newStatus === "cancelado") {
+          success(
+            "Pedido cancelado",
+            "El pedido ha sido cancelado correctamente."
+          );
+        }
+      } else {
+        error(
+          "Error",
+          res.error || "No se pudo actualizar el estado del pedido"
+        );
+      }
+    } catch (err) {
+      logger.error("Error al actualizar estado:", err);
+
+      error(
+        "Error inesperado",
+        "Hubo un problema con el servidor. Intenta nuevamente."
+      );
     }
   };
 

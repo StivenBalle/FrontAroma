@@ -152,11 +152,19 @@ const OrderTrackingModal = ({
         error("Error", "No se pudo enviar la reseña");
         throw new Error(response.error || "Error al enviar reseña");
       }
-    } catch (error) {
-      logger.error("Error:", error);
+    } catch (err) {
+      logger.error("Error:", err);
+
+      const backendMessage =
+        err?.response?.data?.error ||
+        err?.message ||
+        "Ocurrió un error inesperado";
+
       error(
         "Error al enviar reseña",
-        "Hubo un problema al enviar tu opinión. Intenta de nuevo."
+        backendMessage === "Error interno del servidor"
+          ? "Hubo un problema inesperado. Intenta nuevamente."
+          : backendMessage
       );
     } finally {
       setIsSubmitting(false);

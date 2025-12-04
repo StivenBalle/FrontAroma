@@ -129,7 +129,7 @@ export const AuthProvider = ({ children }) => {
       }
 
       const msg = errorData?.error || err.message || "Error desconocido";
-      error("Error", "Error de inicio de sesión");
+      error("Error de inicio de sesión", msg);
       return { success: false };
     }
   };
